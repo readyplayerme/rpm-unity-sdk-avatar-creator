@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NUnit.Framework;
+using UnityEngine;
 
 namespace NativeAvatarCreator
 {
@@ -9,15 +11,26 @@ namespace NativeAvatarCreator
     {
         public static async Task<UserStore> LoginAsAnonymous(string domain)
         {
-            var url = Urls.AUTH_ENDPOINT.Replace("[domain]", domain);
-            var request = await WebRequestDispatcher.SendRequest(url, Method.POST);
+            var url = Endpoints.AUTH.Replace("[domain]", domain);
+            var headers = new Dictionary<string, string>
+            {
+                { "Content-Type", "application/json" },
+            };
 
-            Assert.False(string.IsNullOrEmpty(request.Text));
+            var request = await WebRequestDispatcher.SendRequest(url, Method.POST, headers);
+
+            if (string.IsNullOrEmpty(request.Text))
+            {
+                throw new Exception("No response received");
+            }
 
             var response = JObject.Parse(request.Text);
             var data = response.GetValue("data");
 
-            Assert.IsNotNull(data);
+            if (data == null)
+            {
+                throw new Exception("No data received");
+            }
 
             return JsonConvert.DeserializeObject<UserStore>(data!.ToString());
         }

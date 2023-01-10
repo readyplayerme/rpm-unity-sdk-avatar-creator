@@ -14,11 +14,14 @@ namespace Tests
         public async Task Receive_Correct_Partner_Assets_Json()
         {
             var userStore = await Auth.LoginAsAnonymous(DOMAIN);
-            var request = await WebRequestDispatcher.SendRequest(Urls.ASSETS_ENDPOINT, Method.GET, new Dictionary<string, string>
-            {
-                { "Authorization", $"Bearer {userStore.Token}" }
-            });
-            Debug.Log(request.Text);
+            var request = await WebRequestDispatcher.SendRequest(
+                Endpoints.ASSETS.Replace("[domain]", DOMAIN),
+                Method.GET,
+                new Dictionary<string, string>
+                {
+                    { "Authorization", $"Bearer {userStore.Token}" }
+                });
+          
             Assert.IsNotNull(request.Text);
             Assert.IsNotEmpty(request.Text);
         }

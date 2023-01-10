@@ -6,7 +6,7 @@ namespace NativeAvatarCreator
 {
     public static class Extensions
     {
-        public static byte[] ToBytes(this Payload payload, bool ignoreEmptyFields = false)
+        public static string ToJson(this Payload payload, bool ignoreEmptyFields = false)
         {
             var contractResolver = new DefaultContractResolver
             {
@@ -24,9 +24,7 @@ namespace NativeAvatarCreator
                 settings.DefaultValueHandling = DefaultValueHandling.Ignore;
             }
 
-            var json = JsonConvert.SerializeObject(payload, settings);
-
-            return Encoding.UTF8.GetBytes(json);
+            return JsonConvert.SerializeObject(payload, settings);
         }
     }
 }

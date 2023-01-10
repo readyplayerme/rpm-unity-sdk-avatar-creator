@@ -20,9 +20,9 @@ namespace NativeAvatarCreator
         public async Task<string> Create(Payload payload)
         {
             var response = await WebRequestDispatcher.SendRequest(
-                Urls.AVATAR_API_V2,
+                Endpoints.AVATAR_API_V2,
                 Method.POST, headers,
-                payload.ToBytes());
+                payload.ToJson());
 
             var metadata = JObject.Parse(response.Text);
             var avatarId = metadata["data"]?["id"]?.ToString();
@@ -32,7 +32,7 @@ namespace NativeAvatarCreator
         public async Task<byte[]> GetPreviewAvatar(string avatarId)
         {
             var response = await WebRequestDispatcher.SendRequest(
-                $"{Urls.AVATAR_API_V2}/{avatarId}.glb?preview=true",
+                $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb?preview=true",
                 Method.GET,
                 headers);
             return response.Data;
@@ -41,10 +41,10 @@ namespace NativeAvatarCreator
         public async Task<byte[]> UpdateAvatar(string avatarId, Payload payload)
         {
             var response = await WebRequestDispatcher.SendRequest(
-                $"{Urls.AVATAR_API_V2}/{avatarId}?responseType=glb",
+                $"{Endpoints.AVATAR_API_V2}/{avatarId}?responseType=glb",
                 Method.PATCH,
                 headers,
-                payload.ToBytes(true));
+                payload.ToJson(true));
 
             return response.Data;
         }
@@ -52,7 +52,7 @@ namespace NativeAvatarCreator
         public async Task<string> SaveAvatar(string avatarId)
         {
             var response = await WebRequestDispatcher.SendRequest(
-                $"{Urls.AVATAR_API_V2}/{avatarId}",
+                $"{Endpoints.AVATAR_API_V2}/{avatarId}",
                 Method.PUT,
                 headers);
             return response.Text;
@@ -61,7 +61,7 @@ namespace NativeAvatarCreator
         public async Task DeleteAvatar(string avatarId)
         {
             await WebRequestDispatcher.SendRequest(
-                $"{Urls.AVATAR_API_V1}/{avatarId}",
+                $"{Endpoints.AVATAR_API_V1}/{avatarId}",
                 Method.DELETE,
                 headers);
         }

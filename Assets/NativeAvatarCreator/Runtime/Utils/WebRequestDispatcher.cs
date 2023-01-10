@@ -24,7 +24,7 @@ namespace NativeAvatarCreator
             string url,
             Method method,
             Dictionary<string, string> headers = null,
-            byte[] bytes = null,
+            string payload = null,
             CancellationToken token = new CancellationToken())
         {
             using var request = new UnityWebRequest();
@@ -41,8 +41,9 @@ namespace NativeAvatarCreator
             }
 
             request.downloadHandler = new DownloadHandlerBuffer();
-            if (bytes != null)
+            if (!string.IsNullOrEmpty(payload))
             {
+                var bytes = System.Text.Encoding.UTF8.GetBytes(payload);
                 request.uploadHandler = new UploadHandlerRaw(bytes);
             }
 
