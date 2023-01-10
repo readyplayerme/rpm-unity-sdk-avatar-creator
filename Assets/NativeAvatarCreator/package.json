@@ -1,0 +1,25 @@
+{
+  "name": "com.readyplayerme.nativeavatarcreator",
+  "version": "0.1.0",
+  "displayName": "Ready Player Me Native Avatar Creator",
+  "description": "For Creating RPM Avatars",
+  "unity": "2020.3",
+  "unityRelease": "0f1",
+  "documentationUrl": "https://bit.ly/UnitySDKDocs",
+  "changelogUrl": "https://docs.readyplayer.me/ready-player-me/integration-guides/unity-sdk/changelog",
+  "licensesUrl": "https://github.com/readyplayerme/Unity-Native-Avatar-Creator/blob/main/LICENSE.md",
+  "dependencies": {
+    "com.unity.ugui": "1.0.0",
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
+  },
+  "keywords": [
+    "avatar",
+    "creator",
+    "rpm"
+  ],
+  "author": {
+    "name": "Ready Player Me",
+    "email": "info@readyplayer.me",
+    "url": "https://readyplayer.me"
+  }
+}
