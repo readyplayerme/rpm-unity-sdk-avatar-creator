@@ -1,14 +1,15 @@
 using System.Threading.Tasks;
+using NativeAvatarCreator;
 using NUnit.Framework;
 
-namespace ReadyPlayerMe.NativeAvatarCreator.Tests
+namespace Tests
 {
     public class AuthTests
     {
         [Test]
-        public async Task AnonymousAuthTest()
+        public async Task Login_As_Anonymous()
         {
-            var userStore = await LoginUtil.LoginAsAnonymous();
+            var userStore = await Auth.LoginAsAnonymous("dev-sdk");
 
             Assert.False(string.IsNullOrEmpty(userStore.Id));
             Assert.False(string.IsNullOrEmpty(userStore.Token));

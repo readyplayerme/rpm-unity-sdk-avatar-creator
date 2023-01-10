@@ -31,6 +31,7 @@ namespace NativeAvatarCreator
             request.timeout = TIMEOUT;
             request.url = url;
             request.method = method.ToString();
+
             if (headers != null)
             {
                 foreach (var header in headers)

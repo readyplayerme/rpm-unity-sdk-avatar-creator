@@ -1,8 +1,8 @@
-﻿namespace ReadyPlayerMe.NativeAvatarCreator.Tests
+﻿namespace NativeAvatarCreator
 {
     public static class Urls
     {
-        public const string DOMAIN_URL = "https://dev-sdk.readyplayer.me";
+        public const string DOMAIN_URL = "https://[domain].readyplayer.me";
         public const string AUTH_ENDPOINT = DOMAIN_URL + "/api/users";
         public const string ASSETS_ENDPOINT = DOMAIN_URL + "/api/assets";
 

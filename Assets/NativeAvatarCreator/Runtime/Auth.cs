@@ -1,16 +1,16 @@
 ﻿using System.Threading.Tasks;
-using NativeAvatarCreator;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace ReadyPlayerMe.NativeAvatarCreator.Tests
+namespace NativeAvatarCreator
 {
-    public static class LoginUtil
+    public static class Auth
     {
-        public static async Task<UserStore> LoginAsAnonymous()
+        public static async Task<UserStore> LoginAsAnonymous(string domain)
         {
-            var request = await WebRequestDispatcher.SendRequest(Urls.AUTH_ENDPOINT, Method.POST);
+            var url = Urls.AUTH_ENDPOINT.Replace("[domain]", domain);
+            var request = await WebRequestDispatcher.SendRequest(url, Method.POST);
 
             Assert.False(string.IsNullOrEmpty(request.Text));
 
