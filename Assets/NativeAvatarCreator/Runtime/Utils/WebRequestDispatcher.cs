@@ -25,6 +25,7 @@ namespace NativeAvatarCreator
             Method method,
             Dictionary<string, string> headers = null,
             string payload = null,
+            DownloadHandler downloadHandler = default,
             CancellationToken token = new CancellationToken())
         {
             using var request = new UnityWebRequest();
@@ -40,7 +41,10 @@ namespace NativeAvatarCreator
                 }
             }
 
-            request.downloadHandler = new DownloadHandlerBuffer();
+            downloadHandler ??= new DownloadHandlerBuffer();
+
+            request.downloadHandler = downloadHandler;
+
             if (!string.IsNullOrEmpty(payload))
             {
                 var bytes = System.Text.Encoding.UTF8.GetBytes(payload);
@@ -59,10 +63,17 @@ namespace NativeAvatarCreator
                 throw new Exception(request.error);
             }
 
+            Texture texture = null;
+            if (downloadHandler is DownloadHandlerTexture downloadHandlerTexture)
+            {
+                texture = downloadHandlerTexture.texture;
+            }
+
             return new Response
             {
                 Text = request.downloadHandler.text,
-                Data = request.downloadHandler.data
+                Data = request.downloadHandler.data,
+                Texture = texture
             };
         }
     }
