@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fde9617bf3f140b2a23e609dddaede85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatarConfig: {fileID: 0}
+  avatarConfig: {fileID: 11400000, guid: bfbcd552d69ab1547b6e372c53c978b7, type: 2}
   dataStore: {fileID: 13055037}
 --- !u!4 &200487911
 Transform:
