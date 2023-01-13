@@ -34,9 +34,7 @@ namespace NativeAvatarCreator
                 null,
                 downloadHandler);
 
-            var texture = response.Texture;
-
-            return texture;
+            return response.Texture;
         }
     }
 }

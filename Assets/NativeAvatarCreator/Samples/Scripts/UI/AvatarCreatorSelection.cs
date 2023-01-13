@@ -28,24 +28,29 @@ namespace AvatarCreatorExample
         }
 
 
-        public void InstantNoodles(Dictionary<PartnerAsset, Texture> assets)
+        public void InstantNoodles(Dictionary<PartnerAsset, Texture> assets, Action<string, string> onClick)
         {
             assetTypes = new Dictionary<string, Transform>();
 
             foreach (var asset in assets)
             {
+                var assetType = asset.Key.AssetType;
+
                 Transform parent;
-                if (assetTypes.ContainsKey(asset.Key.AssetType))
+                if (assetTypes.ContainsKey(assetType))
                 {
-                    parent = assetTypes[asset.Key.AssetType];
+                    parent = assetTypes[assetType];
                 }
                 else
                 {
                     var assetTypeButton = Instantiate(assetTypePrefab, assetTypeParent);
-                    assetTypeButton.GetComponentInChildren<Text>().text = asset.Key.AssetType;
+                    assetTypeButton.GetComponentInChildren<Text>().text = assetType;
+                    assetTypeButton.name = assetType + "Button";
 
                     var assetTypePanel = Instantiate(assetTypePanelPrefab, assetTypePanelParent);
-                    assetTypes.Add(asset.Key.AssetType, assetTypePanel.transform);
+                    assetTypePanel.name = assetType + "Panel";
+
+                    assetTypes.Add(assetType, assetTypePanel.transform);
                     assetTypePanel.SetActive(false);
                     parent = assetTypePanel.transform;
 
@@ -59,6 +64,11 @@ namespace AvatarCreatorExample
 
                 var assetButton = Instantiate(assetButtonPrefab, parent.GetChild(0).GetChild(0));
                 assetButton.GetComponent<RawImage>().texture = asset.Value;
+                assetButton.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    var assetId = asset.Key.Id;
+                    onClick?.Invoke(assetId, assetType);
+                });
             }
 
             selectedAssetType = assetTypes.First().Value;

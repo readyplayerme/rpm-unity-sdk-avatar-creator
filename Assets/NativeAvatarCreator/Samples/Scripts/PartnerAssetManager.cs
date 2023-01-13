@@ -10,6 +10,10 @@ namespace AvatarCreatorExample
     {
         [SerializeField] private DataStore dataStore;
         [SerializeField] private AvatarCreatorSelection avatarCreatorSelection;
+        [SerializeField] private AvatarLoader avatarLoader;
+
+        private string avatarId;
+        private AvatarAPIRequests avatarAPIRequests;
 
         private void OnEnable()
         {
@@ -23,6 +27,8 @@ namespace AvatarCreatorExample
 
         private async void Show()
         {
+            avatarAPIRequests = new AvatarAPIRequests(dataStore.User.Token);
+
             await GetAllAssets();
             await CreateDefaultModel();
         }
@@ -30,24 +36,27 @@ namespace AvatarCreatorExample
         private async Task GetAllAssets()
         {
             var assets = await PartnerAssetsRequests.Get(dataStore.User.Token, dataStore.Payload.Partner);
-
-            var assetsByGenderType = assets
-                .Where(asset => (asset.Gender == dataStore.Payload.Gender || asset.AssetType != "outfit") && asset.AssetType != "shirt").ToList();
+            assets = assets.Where(asset => (asset.Gender == dataStore.Payload.Gender || asset.AssetType != "outfit") && asset.AssetType != "shirt")
+                .ToArray();
 
             var assetIcons = new Dictionary<PartnerAsset, Texture>();
-            foreach (var asset in assetsByGenderType)
+
+            var time = Time.realtimeSinceStartup;
+
+            foreach (var asset in assets)
             {
                 var texture = await PartnerAssetsRequests.GetAssetIcon(dataStore.User.Token, asset.Icon);
                 assetIcons.Add(asset, texture);
             }
 
-            avatarCreatorSelection.InstantNoodles(assetIcons);
+            Debug.Log("Downloaded asset icons: " + (Time.realtimeSinceStartup - time));
+
+            avatarCreatorSelection.InstantNoodles(assetIcons, UpdateAvatar);
             await Task.Yield();
         }
 
         private async Task CreateDefaultModel()
         {
-            var avatarAPIRequests = new AvatarAPIRequests(dataStore.User.Token);
             dataStore.Payload.Assets = new PayloadAssets
             {
                 SkinColor = 5,
@@ -58,8 +67,61 @@ namespace AvatarCreatorExample
                 Outfit = "109373713"
             };
 
-            // var response = await avatarAPIRequests.Create(dataHolder.Payload);
-            // Debug.Log(response);
+            avatarId = await avatarAPIRequests.Create(dataStore.Payload);
+
+            var data = await avatarAPIRequests.GetPreviewAvatar(avatarId);
+            await avatarLoader.LoadAvatar(avatarId, data);
+        }
+
+        private async void UpdateAvatar(string assetId, string assetType)
+        {
+            var payload = new Payload
+            {
+                Assets = new PayloadAssets()
+            };
+
+            switch (assetType)
+            {
+                case "outfit":
+                    payload.Assets.Outfit = assetId;
+                    break;
+                case "headwear":
+                    payload.Assets.Headwear = assetId;
+                    break;
+                case "beard":
+                    payload.Assets.BeardStyle = assetId;
+                    break;
+                case "eyeShape":
+                    payload.Assets.EyeShape = assetId;
+                    break;
+                case "eyebrowStyle":
+                    payload.Assets.EyebrowStyle = assetId;
+                    break;
+                case "faceMask":
+                    payload.Assets.FaceMask = assetId;
+                    break;
+                case "faceShape":
+                    payload.Assets.FaceShape = assetId;
+                    break;
+                case "glasses":
+                    payload.Assets.Glasses = assetId;
+                    break;
+                case "hair":
+                    payload.Assets.HairStyle = assetId;
+                    break;
+                case "lipShape":
+                    payload.Assets.LipShape = assetId;
+                    break;
+                case "noseShape":
+                    payload.Assets.NoseShape = assetId;
+                    break;
+                case "shirt":
+                    payload.Assets.Shirt = assetId;
+                    break;
+            }
+
+            var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload);
+            await avatarLoader.LoadAvatar(avatarId, data);
         }
     }
 }
