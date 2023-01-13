@@ -1,21 +1,16 @@
 ﻿namespace NativeAvatarCreator
 {
-    public struct Payload
-    {
-        public Data Data;
-    }
-
-    public struct Data
+    public class Payload
     {
         // Required Fields
         public string Partner;
         public string Gender;
         public string BodyType;
 
-        public Assets Assets;
+        public PayloadAssets Assets;
     }
 
-    public struct Assets
+    public class PayloadAssets
     {
         public int SkinColor;
         public string EyeColor;
@@ -38,5 +33,3 @@
         public string FaceStyle;
     }
 }
-
-

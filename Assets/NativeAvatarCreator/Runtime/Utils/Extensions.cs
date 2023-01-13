@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -17,6 +18,11 @@ namespace NativeAvatarCreator
                 ContractResolver = contractResolver,
                 Formatting = Formatting.Indented,
             };
+            
+            var data = new Dictionary<string, Payload>()
+            {
+                {"data" , payload}
+            } ;
 
             if (ignoreEmptyFields)
             {
@@ -24,7 +30,7 @@ namespace NativeAvatarCreator
                 settings.DefaultValueHandling = DefaultValueHandling.Ignore;
             }
 
-            return JsonConvert.SerializeObject(payload, settings);
+            return JsonConvert.SerializeObject(data, settings);
         }
     }
 }

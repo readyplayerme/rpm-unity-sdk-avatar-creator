@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NativeAvatarCreator;
 using NUnit.Framework;
 using UnityEngine;
@@ -11,19 +10,13 @@ namespace Tests
         private const string DOMAIN = "dev-sdk";
 
         [Test]
-        public async Task Receive_Correct_Partner_Assets_Json()
+        public async Task Receive_Partner_Assets()
         {
             var userStore = await Auth.LoginAsAnonymous(DOMAIN);
-            var request = await WebRequestDispatcher.SendRequest(
-                Endpoints.ASSETS.Replace("[domain]", DOMAIN),
-                Method.GET,
-                new Dictionary<string, string>
-                {
-                    { "Authorization", $"Bearer {userStore.Token}" }
-                });
-          
-            Assert.IsNotNull(request.Text);
-            Assert.IsNotEmpty(request.Text);
+            var avatarAssets = await PartnerAssetsRequests.Get(userStore.Token, DOMAIN);
+
+            Assert.IsNotNull(avatarAssets);
+            Assert.Greater(avatarAssets.Length, 0);
         }
 
         [Test]
@@ -37,20 +30,17 @@ namespace Tests
             // Create avatar
             var createAvatarPayload = new Payload
             {
-                Data = new Data
+                Partner = "dev-sdk",
+                Gender = "male",
+                BodyType = "fullbody",
+                Assets = new PayloadAssets
                 {
-                    Partner = "dev-sdk",
-                    Gender = "male",
-                    BodyType = "fullbody",
-                    Assets = new Assets
-                    {
-                        SkinColor = 5,
-                        EyeColor = "9781796",
-                        HairStyle = "23368535",
-                        EyebrowStyle = "41308196",
-                        Shirt = "9247449",
-                        Outfit = "109373713"
-                    }
+                    SkinColor = 5,
+                    EyeColor = "9781796",
+                    HairStyle = "23368535",
+                    EyebrowStyle = "41308196",
+                    Shirt = "9247449",
+                    Outfit = "109373713"
                 }
             };
 
@@ -67,12 +57,9 @@ namespace Tests
             // Update Avatar
             var updateAvatarPayload = new Payload
             {
-                Data = new Data
+                Assets = new PayloadAssets
                 {
-                    Assets = new Assets
-                    {
-                        SkinColor = 2,
-                    }
+                    SkinColor = 2,
                 }
             };
             var updatedAvatar = await avatarCreator.UpdateAvatar(avatarId, updateAvatarPayload);
