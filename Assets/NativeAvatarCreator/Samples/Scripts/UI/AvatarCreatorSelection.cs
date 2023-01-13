@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NativeAvatarCreator;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,7 +29,7 @@ namespace AvatarCreatorExample
         }
 
 
-        public void InstantNoodles(Dictionary<PartnerAsset, Texture> assets, Action<string, string> onClick)
+        public void InstantNoodles(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, string> onClick)
         {
             assetTypes = new Dictionary<string, Transform>();
 
@@ -62,19 +63,24 @@ namespace AvatarCreatorExample
                     });
                 }
 
-                var assetButton = Instantiate(assetButtonPrefab, parent.GetChild(0).GetChild(0));
-                assetButton.GetComponent<RawImage>().texture = asset.Value;
-                assetButton.GetComponent<Button>().onClick.AddListener(() =>
-                {
-                    var assetId = asset.Key.Id;
-                    onClick?.Invoke(assetId, assetType);
-                });
+                AddButton(parent, asset.Key.Id, assetType, onClick, asset.Value);
             }
 
             selectedAssetType = assetTypes.First().Value;
             selectedAssetType.gameObject.SetActive(true);
 
             Loading.SetActive(false);
+        }
+
+        private async void AddButton(Transform parent, string assetId, string assetType, Action<string, string> onClick,
+            Task<Texture> iconDownloadTask)
+        {
+            var assetButton = Instantiate(assetButtonPrefab, parent.GetChild(0).GetChild(0));
+            assetButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                onClick?.Invoke(assetId, assetType);
+            });
+            assetButton.GetComponent<RawImage>().texture = await iconDownloadTask;
         }
 
     }

@@ -39,19 +39,18 @@ namespace AvatarCreatorExample
             assets = assets.Where(asset => (asset.Gender == dataStore.Payload.Gender || asset.AssetType != "outfit") && asset.AssetType != "shirt")
                 .ToArray();
 
-            var assetIcons = new Dictionary<PartnerAsset, Texture>();
+            var assetIconDownloadTasks = new Dictionary<PartnerAsset, Task<Texture>>();
 
             var time = Time.realtimeSinceStartup;
 
             foreach (var asset in assets)
             {
-                var texture = await PartnerAssetsRequests.GetAssetIcon(dataStore.User.Token, asset.Icon);
-                assetIcons.Add(asset, texture);
+                var iconDownloadTask =  PartnerAssetsRequests.GetAssetIcon(dataStore.User.Token, asset.Icon);
+                assetIconDownloadTasks.Add(asset, iconDownloadTask);
             }
-
             Debug.Log("Downloaded asset icons: " + (Time.realtimeSinceStartup - time));
 
-            avatarCreatorSelection.InstantNoodles(assetIcons, UpdateAvatar);
+            avatarCreatorSelection.InstantNoodles(assetIconDownloadTasks, UpdateAvatar);
             await Task.Yield();
         }
 
