@@ -30,7 +30,7 @@ namespace AvatarCreatorExample
         private async Task GetAllAssets()
         {
             var assets = await PartnerAssetsRequests.Get(dataStore.User.Token, dataStore.Payload.Partner);
-            assets = assets.Where(ValidateAsset).ToArray();
+            assets = assets.Where(FilterAssets).ToArray();
 
             var assetIconDownloadTasks = new Dictionary<PartnerAsset, Task<Texture>>();
 
@@ -47,7 +47,7 @@ namespace AvatarCreatorExample
             await Task.Yield();
         }
 
-        private bool ValidateAsset(PartnerAsset asset)
+        private bool FilterAssets(PartnerAsset asset)
         {
             // Outfit is only for fullbody and are gender specific.
             // Shirt is only for halfbody.
