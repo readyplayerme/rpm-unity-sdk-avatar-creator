@@ -25,8 +25,6 @@ namespace Tests
             var userStore = await Auth.LoginAsAnonymous(DOMAIN);
             Debug.Log("Logged In with token: " + userStore.Token);
 
-            var avatarCreator = new AvatarAPIRequests(userStore.Token);
-
             // Create avatar
             var createAvatarPayload = new Payload
             {
@@ -44,13 +42,13 @@ namespace Tests
                 }
             };
 
-            var avatarId = await avatarCreator.Create(createAvatarPayload);
+            var avatarId = await AvatarAPIRequests.Create(userStore.Token, createAvatarPayload);
             Assert.IsNotNull(avatarId);
             Assert.IsNotEmpty(avatarId);
             Debug.Log("Avatar created with id: " + avatarId);
 
             // Get Preview GLB
-            var previewAvatar = await avatarCreator.GetPreviewAvatar(avatarId);
+            var previewAvatar = await AvatarAPIRequests.GetPreviewAvatar(userStore.Token, avatarId);
             Assert.Greater(previewAvatar.Length, 0);
             Debug.Log("Preview avatar download completed.");
 
@@ -62,18 +60,18 @@ namespace Tests
                     SkinColor = 2,
                 }
             };
-            var updatedAvatar = await avatarCreator.UpdateAvatar(avatarId, updateAvatarPayload);
+            var updatedAvatar = await AvatarAPIRequests.UpdateAvatar(userStore.Token, avatarId, updateAvatarPayload);
             Assert.Greater(updatedAvatar.Length, 0);
             Debug.Log("Avatar skinColor updated, and glb downloaded.");
 
             // Save Avatar
-            var metaData = await avatarCreator.SaveAvatar(avatarId);
+            var metaData = await AvatarAPIRequests.SaveAvatar(userStore.Token, avatarId);
             Assert.IsNotNull(avatarId);
             Assert.IsNotEmpty(metaData);
             Debug.Log("Avatar metadata saved to permanent storage on server.");
 
             // Delete the Avatar
-            await avatarCreator.DeleteAvatar(avatarId);
+            await AvatarAPIRequests.DeleteAvatar(userStore.Token, avatarId);
             Debug.Log("Avatar deleted.");
             Assert.Pass();
         }
