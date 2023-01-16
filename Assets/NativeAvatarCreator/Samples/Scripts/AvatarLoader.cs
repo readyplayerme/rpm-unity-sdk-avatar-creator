@@ -50,6 +50,7 @@ namespace AvatarCreatorExample
 
             var avatar = (GameObject) context.Data;
             avatar.SetActive(true);
+            avatar.AddComponent<RotateAvatar>();
             return avatar;
         }
     }
