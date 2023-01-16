@@ -37,6 +37,7 @@ namespace AvatarCreatorExample
 
         private async Task CreateDefaultModel()
         {
+            var startTime = Time.time;
             dataStore.Payload.Assets = new PayloadAssets
             {
                 SkinColor = 5,
@@ -49,8 +50,18 @@ namespace AvatarCreatorExample
 
             avatarId = await AvatarAPIRequests.Create(dataStore.User.Token, dataStore.Payload);
 
+            var timeForCreateRequest = Time.time - startTime;
+            DebugPanel.AddLogWithDuration("Avatar metadata created in temp storage", timeForCreateRequest);
+            startTime = timeForCreateRequest;
+
             var data = await AvatarAPIRequests.GetPreviewAvatar(dataStore.User.Token, avatarId);
+            var timeForGettingPreviewAvatar = Time.time - startTime;
+            DebugPanel.AddLogWithDuration("Downloaded preview avatar", timeForGettingPreviewAvatar);
+            startTime = timeForGettingPreviewAvatar;
+
             avatar = await avatarLoader.LoadAvatar(avatarId, data);
+            var avatarLoadingTime = Time.time - startTime;
+            DebugPanel.AddLogWithDuration("Avatar loaded",avatarLoadingTime);
         }
 
         public async void UpdateAvatar(string assetId, string assetType)

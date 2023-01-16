@@ -29,19 +29,18 @@ namespace AvatarCreatorExample
 
         private async Task GetAllAssets()
         {
+            var startTime = Time.time;
             var assets = await PartnerAssetsRequests.Get(dataStore.User.Token, dataStore.Payload.Partner);
             assets = assets.Where(FilterAssets).ToArray();
+            DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
 
             var assetIconDownloadTasks = new Dictionary<PartnerAsset, Task<Texture>>();
-
-            var time = Time.realtimeSinceStartup;
 
             foreach (var asset in assets)
             {
                 var iconDownloadTask = PartnerAssetsRequests.GetAssetIcon(dataStore.User.Token, asset.Icon);
                 assetIconDownloadTasks.Add(asset, iconDownloadTask);
             }
-            Debug.Log("Downloaded asset icons: " + (Time.realtimeSinceStartup - time));
 
             avatarCreatorSelection.InstantNoodles(assetIconDownloadTasks, avatarCreator.UpdateAvatar);
             await Task.Yield();
