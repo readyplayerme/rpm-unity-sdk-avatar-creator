@@ -20,6 +20,7 @@ namespace AvatarCreatorExample
         public Action Hide;
 
         private Dictionary<string, Transform> assetTypes;
+        private Dictionary<string, AssetButton> selectedAssetByType = new Dictionary<string, AssetButton>();
 
         private List<Transform> assetTypePanels;
         private Transform selectedAssetType;
@@ -52,7 +53,8 @@ namespace AvatarCreatorExample
         {
             assetTypes = new Dictionary<string, Transform>();
             assetTypePanels = new List<Transform>();
-
+            selectedAssetByType = new Dictionary<string, AssetButton>();
+            
             foreach (var asset in assets)
             {
                 var assetType = asset.Key.AssetType;
@@ -99,15 +101,28 @@ namespace AvatarCreatorExample
             return parent;
         }
 
+
         private async void AddAssetButton(Transform parent, string assetId, string assetType, Action<string, string> onClick,
             Task<Texture> iconDownloadTask)
         {
-            var assetButton = Instantiate(assetButtonPrefab, parent.GetComponent<ScrollRect>().content);
-            assetButton.GetComponent<Button>().onClick.AddListener(() =>
+            var assetButtonGameObject = Instantiate(assetButtonPrefab, parent.GetComponent<ScrollRect>().content);
+            var assetButton = assetButtonGameObject.GetComponent<AssetButton>();
+            assetButton.AddListener(() =>
             {
+                if (selectedAssetByType.ContainsKey(assetType))
+                {
+                    selectedAssetByType[assetType].SetSelect(false);
+                    selectedAssetByType[assetType] = assetButton;
+                }
+                else
+                {
+                    selectedAssetByType.Add(assetType, assetButton);
+                }
+                
+                assetButton.SetSelect(true);
                 onClick?.Invoke(assetId, assetType);
             });
-            assetButton.GetComponent<RawImage>().texture = await iconDownloadTask;
+            assetButton.SetIcon(await iconDownloadTask);
         }
     }
 }
