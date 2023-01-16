@@ -71,16 +71,22 @@ namespace AvatarCreatorExample
                 case "beard":
                     payload.Assets.BeardStyle = assetId;
                     break;
-                case "eyeShape":
+                case "eyeshape":
                     payload.Assets.EyeShape = assetId;
                     break;
-                case "eyebrowStyle":
+                case "eye":
+                    payload.Assets.EyeColor = assetId;
+                    break;
+                case "eyebrows":
                     payload.Assets.EyebrowStyle = assetId;
                     break;
-                case "faceMask":
+                case "facewear":
+                    payload.Assets.Facewear = assetId;
+                    break;
+                case "facemask":
                     payload.Assets.FaceMask = assetId;
                     break;
-                case "faceShape":
+                case "faceshape":
                     payload.Assets.FaceShape = assetId;
                     break;
                 case "glasses":
@@ -89,10 +95,10 @@ namespace AvatarCreatorExample
                 case "hair":
                     payload.Assets.HairStyle = assetId;
                     break;
-                case "lipShape":
+                case "lipshape":
                     payload.Assets.LipShape = assetId;
                     break;
-                case "noseShape":
+                case "noseshape":
                     payload.Assets.NoseShape = assetId;
                     break;
                 case "shirt":
