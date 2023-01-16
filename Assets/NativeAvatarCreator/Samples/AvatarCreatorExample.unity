@@ -359,6 +359,7 @@ MonoBehaviour:
   assetTypeParent: {fileID: 2677449318281061027}
   assetTypePanelPrefab: {fileID: 8634944322326073872, guid: b5927d8bfb6d7434b8043ee7777f7601, type: 3}
   assetTypePanelParent: {fileID: 253641662}
+  clearAssetSelectionButton: {fileID: 3533925521447789852, guid: 9ae39b2477877814bbda5f30ccd568b5, type: 3}
 --- !u!222 &78456334
 CanvasRenderer:
   m_ObjectHideFlags: 0

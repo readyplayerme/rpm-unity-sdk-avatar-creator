@@ -15,6 +15,7 @@ namespace AvatarCreatorExample
         [SerializeField] private Transform assetTypeParent;
         [SerializeField] private GameObject assetTypePanelPrefab;
         [SerializeField] private Transform assetTypePanelParent;
+        [SerializeField] private GameObject clearAssetSelectionButton;
 
         public Action Show;
         public Action Hide;
@@ -54,12 +55,20 @@ namespace AvatarCreatorExample
             assetTypes = new Dictionary<string, Transform>();
             assetTypePanels = new List<Transform>();
             selectedAssetByType = new Dictionary<string, AssetButton>();
-            
+
             foreach (var asset in assets)
             {
                 var assetType = asset.Key.AssetType;
                 var parent = AddAssetTypeButtonAndPanel(assetType);
                 AddAssetButton(parent, asset.Key.Id, assetType, onClick, asset.Value);
+            }
+
+            foreach (var assetType in assetTypes)
+            {
+                if (assetType.Key != "outfit")
+                {
+                    AddAssetSelectionClearButton(assetType.Value, assetType.Key, onClick);
+                }
             }
 
             selectedAssetType = assetTypes.First().Value;
@@ -101,6 +110,21 @@ namespace AvatarCreatorExample
             return parent;
         }
 
+        private void AddAssetSelectionClearButton(Transform parent, string assetType, Action<string, string> onClick)
+        {
+            var assetButtonGameObject = Instantiate(clearAssetSelectionButton, parent.GetComponent<ScrollRect>().content);
+            assetButtonGameObject.transform.SetSiblingIndex(0);
+            assetButtonGameObject.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                if (selectedAssetByType.ContainsKey(assetType))
+                {
+                    selectedAssetByType[assetType].SetSelect(false);
+                }
+
+                onClick?.Invoke(string.Empty, assetType);
+            });
+        }
+
 
         private async void AddAssetButton(Transform parent, string assetId, string assetType, Action<string, string> onClick,
             Task<Texture> iconDownloadTask)
@@ -118,7 +142,7 @@ namespace AvatarCreatorExample
                 {
                     selectedAssetByType.Add(assetType, assetButton);
                 }
-                
+
                 assetButton.SetSelect(true);
                 onClick?.Invoke(assetId, assetType);
             });
