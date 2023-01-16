@@ -17,9 +17,11 @@ namespace AvatarCreatorExample
         [SerializeField] private Transform assetTypePanelParent;
 
         public Action Show;
+        public Action Hide;
 
         private Dictionary<string, Transform> assetTypes;
 
+        private List<Transform> assetTypePanels;
         private Transform selectedAssetType;
 
         public void OnEnable()
@@ -28,9 +30,28 @@ namespace AvatarCreatorExample
             Show?.Invoke();
         }
 
+        public void OnDisable()
+        {
+            Hide?.Invoke();
+            foreach (var assetTypePanel in assetTypePanels)
+            {
+                foreach (Transform assetButton in assetTypePanel)
+                {
+                    Destroy(assetButton.gameObject);
+                }
+                Destroy(assetTypePanel.gameObject);
+            }
+
+            foreach (Transform assetTypeButton in assetTypeParent)
+            {
+                Destroy(assetTypeButton.gameObject);
+            }
+        }
+
         public void InstantNoodles(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, string> onClick)
         {
             assetTypes = new Dictionary<string, Transform>();
+            assetTypePanels = new List<Transform>();
 
             foreach (var asset in assets)
             {
@@ -64,6 +85,8 @@ namespace AvatarCreatorExample
                 assetTypes.Add(assetType, assetTypePanel.transform);
                 assetTypePanel.SetActive(false);
                 parent = assetTypePanel.transform;
+
+                assetTypePanels.Add(assetTypePanel.transform);
 
                 assetTypeButton.GetComponent<Button>().onClick.AddListener(() =>
                 {

@@ -1,16 +1,17 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarLoader;
 using ReadyPlayerMe.Core;
 using UnityEngine;
 
 namespace AvatarCreatorExample
 {
-    public  class AvatarLoader : MonoBehaviour
+    public class AvatarLoader : MonoBehaviour
     {
         [SerializeField] private AvatarConfig avatarConfig;
         [SerializeField] private DataStore dataStore;
-        
-        public  async Task LoadAvatar( string avatarId, byte[] data)
+
+        public async Task<GameObject> LoadAvatar(string avatarId, byte[] data)
         {
             var avatarMetadata = new AvatarMetadata();
             avatarMetadata.BodyType = dataStore.Payload.BodyType == "fullbody" ? BodyType.FullBody : BodyType.HalfBody;
@@ -44,12 +45,12 @@ namespace AvatarCreatorExample
             }
             catch (CustomException exception)
             {
-                Debug.LogError(exception.FailureType + "" + exception.Message);
-                return;
+                throw new CustomException(executor.IsCancelled ? FailureType.OperationCancelled : exception.FailureType, exception.Message);
             }
 
             var avatar = (GameObject) context.Data;
             avatar.SetActive(true);
+            return avatar;
         }
     }
 }

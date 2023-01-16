@@ -11,21 +11,28 @@ namespace AvatarCreatorExample
         [SerializeField] private AvatarLoader avatarLoader;
 
         private string avatarId;
+        private GameObject avatar;
 
         private void OnEnable()
         {
             avatarCreatorSelection.Show += Show;
+            avatarCreatorSelection.Hide += Hide;
         }
 
         private void OnDisable()
         {
-
             avatarCreatorSelection.Show -= Show;
+            avatarCreatorSelection.Hide -= Hide;
         }
 
         private async void Show()
         {
             await CreateDefaultModel();
+        }
+
+        private void Hide()
+        {
+            Destroy(avatar);
         }
 
         private async Task CreateDefaultModel()
@@ -43,7 +50,7 @@ namespace AvatarCreatorExample
             avatarId = await AvatarAPIRequests.Create(dataStore.User.Token, dataStore.Payload);
 
             var data = await AvatarAPIRequests.GetPreviewAvatar(dataStore.User.Token, avatarId);
-            await avatarLoader.LoadAvatar(avatarId, data);
+            avatar = await avatarLoader.LoadAvatar(avatarId, data);
         }
 
         public async void UpdateAvatar(string assetId, string assetType)
@@ -94,7 +101,7 @@ namespace AvatarCreatorExample
             }
 
             var data = await AvatarAPIRequests.UpdateAvatar(dataStore.User.Token, avatarId, payload);
-            await avatarLoader.LoadAvatar(avatarId, data);
+            avatar = await avatarLoader.LoadAvatar(avatarId, data);
         }
     }
 }
