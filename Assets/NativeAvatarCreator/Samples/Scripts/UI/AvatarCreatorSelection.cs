@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using NativeAvatarCreator;
 using UnityEngine;
@@ -16,54 +15,89 @@ namespace AvatarCreatorExample
         [SerializeField] private GameObject assetTypePanelPrefab;
         [SerializeField] private Transform assetTypePanelParent;
         [SerializeField] private GameObject clearAssetSelectionButton;
+        [SerializeField] private GameObject faceAssetTypeButton;
+        [SerializeField] private GameObject faceAssetTypePanel;
+        [SerializeField] private GameObject faceAssetTypeParent;
+        [SerializeField] private GameObject faceAssetPanelPrefab;
 
         public Action Show;
         public Action Hide;
 
-        private Dictionary<string, Transform> assetTypes;
-        private Dictionary<string, AssetButton> selectedAssetByType = new Dictionary<string, AssetButton>();
+        private Dictionary<string, Transform> assetTypesPanels;
+        private Dictionary<string, AssetButton> selectedAssetByType;
 
-        private List<Transform> assetTypePanels;
         private Transform selectedAssetType;
 
-        public void OnEnable()
+        private void Awake()
+        {
+            Initialize();
+        }
+
+        private void OnEnable()
         {
             Loading.SetActive(true);
             Show?.Invoke();
         }
 
-        public void OnDisable()
+        private void OnDisable()
         {
             Hide?.Invoke();
-            foreach (var assetTypePanel in assetTypePanels)
+            foreach (var assetTypePanel in assetTypesPanels)
             {
-                foreach (Transform assetButton in assetTypePanel)
+                var parent = assetTypePanel.Value.GetComponent<ScrollRect>().content;
+                foreach (Transform assetButton in parent)
                 {
                     Destroy(assetButton.gameObject);
                 }
-                Destroy(assetTypePanel.gameObject);
+            }
+        }
+
+        private void Initialize()
+        {
+            assetTypesPanels = new Dictionary<string, Transform>();
+            selectedAssetByType = new Dictionary<string, AssetButton>();
+
+            foreach (var assetType in AssetType.Face)
+            {
+                var assetTypePanel = AddAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypePanelParent);
+
+                AddAssetTypeButton(assetType, faceAssetTypeParent.transform, () =>
+                {
+                    faceAssetTypePanel.SetActive(true);
+                    selectedAssetType.gameObject.SetActive(false);
+                    assetTypePanel.gameObject.SetActive(true);
+                    selectedAssetType = assetTypePanel.transform;
+                });
             }
 
-            foreach (Transform assetTypeButton in assetTypeParent)
+            foreach (var assetType in AssetType.Body)
             {
-                Destroy(assetTypeButton.gameObject);
+                var assetTypePanel = AddAssetTypePanel(assetType, assetTypePanelPrefab, assetTypePanelParent);
+
+                AddAssetTypeButton(assetType, assetTypeParent, () =>
+                {
+                    faceAssetTypePanel.SetActive(false);
+                    selectedAssetType.gameObject.SetActive(false);
+                    assetTypePanel.gameObject.SetActive(true);
+                    selectedAssetType = assetTypePanel.transform;
+                });
             }
+
+            selectedAssetType = assetTypePanelParent.GetChild(1);
+            selectedAssetType.gameObject.SetActive(true);
+
+            faceAssetTypeButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                selectedAssetType.gameObject.SetActive(false);
+                selectedAssetType = assetTypePanelParent.GetChild(1);
+                selectedAssetType.gameObject.SetActive(true);
+                faceAssetTypePanel.SetActive(true);
+            });
         }
 
         public void InstantNoodles(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, string> onClick)
         {
-            assetTypes = new Dictionary<string, Transform>();
-            assetTypePanels = new List<Transform>();
-            selectedAssetByType = new Dictionary<string, AssetButton>();
-
-            foreach (var asset in assets)
-            {
-                var assetType = asset.Key.AssetType;
-                var parent = AddAssetTypeButtonAndPanel(assetType);
-                AddAssetButton(parent, asset.Key.Id, assetType, onClick, asset.Value);
-            }
-
-            foreach (var assetType in assetTypes)
+            foreach (var assetType in assetTypesPanels)
             {
                 if (assetType.Key != "outfit")
                 {
@@ -71,49 +105,35 @@ namespace AvatarCreatorExample
                 }
             }
 
-            selectedAssetType = assetTypes.First().Value;
-            selectedAssetType.gameObject.SetActive(true);
+            foreach (var asset in assets)
+            {
+                AddAssetButton(asset.Key.Id, asset.Key.AssetType, onClick, asset.Value);
+            }
 
+            faceAssetTypePanel.SetActive(true);
             Loading.SetActive(false);
         }
 
-        private Transform AddAssetTypeButtonAndPanel(string assetType)
+        private Transform AddAssetTypePanel(string assetType, GameObject panelPrefab, Transform parent)
         {
-            Transform parent;
-            if (assetTypes.ContainsKey(assetType))
-            {
-                parent = assetTypes[assetType];
-            }
-            else
-            {
-                var assetTypeButton = Instantiate(assetTypePrefab, assetTypeParent);
-                assetTypeButton.GetComponentInChildren<Text>().text = assetType;
-                assetTypeButton.name = assetType + "Button";
+            var assetTypePanel = Instantiate(panelPrefab, parent);
+            assetTypePanel.name = assetType + "Panel";
+            assetTypePanel.SetActive(false);
 
-                var assetTypePanel = Instantiate(assetTypePanelPrefab, assetTypePanelParent);
-                assetTypePanel.name = assetType + "Panel";
+            assetTypesPanels.Add(assetType, assetTypePanel.transform);
+            return assetTypePanel.transform;
+        }
 
-                assetTypes.Add(assetType, assetTypePanel.transform);
-                assetTypePanel.SetActive(false);
-                parent = assetTypePanel.transform;
-
-                assetTypePanels.Add(assetTypePanel.transform);
-
-                assetTypeButton.GetComponent<Button>().onClick.AddListener(() =>
-                {
-                    selectedAssetType.gameObject.SetActive(false);
-                    assetTypePanel.SetActive(true);
-                    selectedAssetType = assetTypePanel.transform;
-                });
-            }
-
-            return parent;
+        private void AddAssetTypeButton(string assetType, Transform parent, Action onClick)
+        {
+            var assetTypeButton = Instantiate(assetTypePrefab, parent);
+            assetTypeButton.name = assetType + "Button";
+            assetTypeButton.GetComponent<Button>().onClick.AddListener(onClick.Invoke);
         }
 
         private void AddAssetSelectionClearButton(Transform parent, string assetType, Action<string, string> onClick)
         {
             var assetButtonGameObject = Instantiate(clearAssetSelectionButton, parent.GetComponent<ScrollRect>().content);
-            assetButtonGameObject.transform.SetSiblingIndex(0);
             assetButtonGameObject.GetComponent<Button>().onClick.AddListener(() =>
             {
                 if (selectedAssetByType.ContainsKey(assetType))
@@ -125,10 +145,11 @@ namespace AvatarCreatorExample
             });
         }
 
-
-        private async void AddAssetButton(Transform parent, string assetId, string assetType, Action<string, string> onClick,
+        private async void AddAssetButton(string assetId, string assetType, Action<string, string> onClick,
             Task<Texture> iconDownloadTask)
         {
+            var parent = assetTypesPanels[assetType];
+
             var assetButtonGameObject = Instantiate(assetButtonPrefab, parent.GetComponent<ScrollRect>().content);
             var assetButton = assetButtonGameObject.GetComponent<AssetButton>();
             assetButton.AddListener(() =>
