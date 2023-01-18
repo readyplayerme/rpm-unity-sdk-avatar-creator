@@ -6,11 +6,11 @@ namespace AvatarCreatorExample
     public class DataStore : MonoBehaviour
     {
         public UserStore User;
-        public Payload Payload;
+        public AvatarProperties AvatarProperties;
 
         public void Awake()
         {
-            Payload = new Payload();
+            AvatarProperties = new AvatarProperties();
         }
     }
 }

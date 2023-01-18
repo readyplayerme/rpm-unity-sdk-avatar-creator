@@ -41,32 +41,32 @@ namespace AvatarCreatorExample
         {
             var startTime = Time.time;
 
-            dataStore.Payload.Assets = new Dictionary<AssetType.PartnerAssetType, object>()
+            dataStore.AvatarProperties.Assets = new Dictionary<AssetTypeData.PartnerAssetType, object>()
             {
-                { AssetType.PartnerAssetType.SkinColor, 5 },
-                { AssetType.PartnerAssetType.EyeColor, "9781796" },
-                { AssetType.PartnerAssetType.HairStyle, "9781796" },
-                { AssetType.PartnerAssetType.EyebrowStyle, "9781796" },
-                { AssetType.PartnerAssetType.Shirt, "9247449" },
-                { AssetType.PartnerAssetType.Outfit, "9781796" }
+                { AssetTypeData.PartnerAssetType.SkinColor, 5 },
+                { AssetTypeData.PartnerAssetType.EyeColor, "9781796" },
+                { AssetTypeData.PartnerAssetType.HairStyle, "9781796" },
+                { AssetTypeData.PartnerAssetType.EyebrowStyle, "9781796" },
+                { AssetTypeData.PartnerAssetType.Shirt, "9247449" },
+                { AssetTypeData.PartnerAssetType.Outfit, "9781796" }
             };
-            foreach (AssetType.PartnerAssetType assetType in Enum.GetValues(typeof(AssetType.PartnerAssetType)))
+            foreach (AssetTypeData.PartnerAssetType assetType in Enum.GetValues(typeof(AssetTypeData.PartnerAssetType)))
             {
-                if (dataStore.Payload.Assets.ContainsKey(assetType)) continue;
-                if (assetType == AssetType.PartnerAssetType.None)
+                if (dataStore.AvatarProperties.Assets.ContainsKey(assetType)) continue;
+                if (assetType == AssetTypeData.PartnerAssetType.None)
                     continue;
 
                 if (assetType.ToString().Contains("Color"))
                 {
-                    dataStore.Payload.Assets.Add(assetType, 0);
+                    dataStore.AvatarProperties.Assets.Add(assetType, 0);
                 }
                 else
                 {
-                    dataStore.Payload.Assets.Add(assetType, null);
+                    dataStore.AvatarProperties.Assets.Add(assetType, null);
                 }
             }
 
-            avatarId = await AvatarAPIRequests.Create(dataStore.User.Token, dataStore.Payload);
+            avatarId = await AvatarAPIRequests.Create(dataStore.User.Token, dataStore.AvatarProperties);
 
             var timeForCreateRequest = Time.time - startTime;
             DebugPanel.AddLogWithDuration("Avatar metadata created in temp storage", timeForCreateRequest);
@@ -84,12 +84,12 @@ namespace AvatarCreatorExample
 
         public async void UpdateAvatar(string assetId, string assetType)
         {
-            var payload = new Payload
+            var payload = new AvatarProperties
             {
-                Assets = new Dictionary<AssetType.PartnerAssetType, object>()
+                Assets = new Dictionary<AssetTypeData.PartnerAssetType, object>()
             };
 
-            payload.Assets.Add(AssetType.PartnerAssetTypeMap[assetType], assetId);
+            payload.Assets.Add(AssetTypeData.PartnerAssetTypeEnumDictionary[assetType], assetId);
 
             var data = await AvatarAPIRequests.UpdateAvatar(dataStore.User.Token, avatarId, payload);
             avatar = await avatarLoader.LoadAvatar(avatarId, data);

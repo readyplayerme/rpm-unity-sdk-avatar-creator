@@ -30,7 +30,7 @@ namespace AvatarCreatorExample
         private async Task GetAllAssets()
         {
             var startTime = Time.time;
-            var assets = await PartnerAssetsRequests.Get(dataStore.User.Token, dataStore.Payload.Partner);
+            var assets = await PartnerAssetsRequests.Get(dataStore.User.Token, dataStore.AvatarProperties.Partner);
             assets = assets.Where(FilterAssets).ToArray();
             DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
 
@@ -51,11 +51,11 @@ namespace AvatarCreatorExample
             // Outfit is only for fullbody and are gender specific.
             // Shirt is only for halfbody.
 
-            if (dataStore.Payload.BodyType != "fullbody")
+            if (dataStore.AvatarProperties.BodyType != "fullbody")
                 return asset.AssetType != "outfit";
 
             if (asset.AssetType == "outfit")
-                return asset.Gender == dataStore.Payload.Gender;
+                return asset.Gender == dataStore.AvatarProperties.Gender;
 
             return asset.AssetType != "shirt";
         }

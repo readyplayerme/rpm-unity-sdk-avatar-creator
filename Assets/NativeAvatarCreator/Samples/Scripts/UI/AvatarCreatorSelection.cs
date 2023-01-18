@@ -76,9 +76,9 @@ namespace AvatarCreatorExample
             assetTypesPanels = new Dictionary<string, Transform>();
             selectedAssetByType = new Dictionary<string, AssetButton>();
 
-            foreach (var assetType in AssetType.PartnerAssetTypeMap.Keys)
+            foreach (var assetType in AssetTypeData.PartnerAssetTypeEnumDictionary.Keys)
             {
-                if (AssetType.IsFaceAsset(assetType))
+                if (AssetTypeData.IsFaceAsset(assetType))
                 {
                     var assetTypePanel = AddAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypePanelParent);
 

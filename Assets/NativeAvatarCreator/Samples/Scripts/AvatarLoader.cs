@@ -13,8 +13,8 @@ namespace AvatarCreatorExample
         public async Task<GameObject> LoadAvatar(string avatarId, byte[] data)
         {
             var avatarMetadata = new AvatarMetadata();
-            avatarMetadata.BodyType = dataStore.Payload.BodyType == "fullbody" ? BodyType.FullBody : BodyType.HalfBody;
-            avatarMetadata.OutfitGender = dataStore.Payload.Gender switch
+            avatarMetadata.BodyType = dataStore.AvatarProperties.BodyType == "fullbody" ? BodyType.FullBody : BodyType.HalfBody;
+            avatarMetadata.OutfitGender = dataStore.AvatarProperties.Gender switch
             {
                 "male" => OutfitGender.Masculine,
                 "female" => OutfitGender.Feminine,

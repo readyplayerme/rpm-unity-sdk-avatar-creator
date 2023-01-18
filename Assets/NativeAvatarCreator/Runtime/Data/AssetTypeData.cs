@@ -2,7 +2,7 @@
 
 namespace NativeAvatarCreator
 {
-    public static class AssetType
+    public static class AssetTypeData
     {
         public enum PartnerAssetType
         {
@@ -27,8 +27,8 @@ namespace NativeAvatarCreator
             BeardColor,
             FaceStyle,
         }
-        
-        public static readonly Dictionary<string, PartnerAssetType> PartnerAssetTypeMap = new Dictionary<string, PartnerAssetType>
+
+        public static readonly Dictionary<string, PartnerAssetType> PartnerAssetTypeEnumDictionary = new Dictionary<string, PartnerAssetType>
         {
             { "faceshape", PartnerAssetType.FaceShape },
             { "eyeshape", PartnerAssetType.EyeShape },

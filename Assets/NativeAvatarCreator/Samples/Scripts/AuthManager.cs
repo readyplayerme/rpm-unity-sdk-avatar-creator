@@ -16,7 +16,7 @@ namespace AvatarCreatorExample
         private async void Login(string partnerDomain)
         {
             var startTime = Time.time;
-            dataStore.Payload.Partner = partnerDomain;
+            dataStore.AvatarProperties.Partner = partnerDomain;
             dataStore.User = await Auth.LoginAsAnonymous(partnerDomain);
 
             DebugPanel.AddLogWithDuration($"Logged in with userId: {dataStore.User.Id}", Time.time - startTime);

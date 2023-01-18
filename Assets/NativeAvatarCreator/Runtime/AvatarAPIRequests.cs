@@ -6,12 +6,12 @@ namespace NativeAvatarCreator
 {
     public static class AvatarAPIRequests
     {
-        public static async Task<string> Create(string token, Payload payload)
+        public static async Task<string> Create(string token, AvatarProperties avatarProperties)
         {
             var response = await WebRequestDispatcher.SendRequest(
                 Endpoints.AVATAR_API_V2,
                 Method.POST, GetToken(token),
-                payload.ToJson());
+                avatarProperties.ToJson());
 
             var metadata = JObject.Parse(response.Text);
             var avatarId = metadata["data"]?["id"]?.ToString();
@@ -27,13 +27,13 @@ namespace NativeAvatarCreator
             return response.Data;
         }
 
-        public static async Task<byte[]> UpdateAvatar(string token, string avatarId, Payload payload)
+        public static async Task<byte[]> UpdateAvatar(string token, string avatarId, AvatarProperties avatarProperties)
         {
             var response = await WebRequestDispatcher.SendRequest(
                 $"{Endpoints.AVATAR_API_V2}/{avatarId}?responseType=glb",
                 Method.PATCH,
                 GetToken(token),
-                payload.ToJson(true));
+                avatarProperties.ToJson(true));
 
             return response.Data;
         }

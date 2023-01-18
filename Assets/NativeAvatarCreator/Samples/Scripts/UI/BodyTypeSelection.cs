@@ -23,13 +23,13 @@ namespace AvatarCreatorExample
 
         private void OnFullBodySelected()
         {
-            DataStore.Payload.BodyType = Payload.FULL_BODY;
+            DataStore.AvatarProperties.BodyType = AvatarProperties.FULL_BODY;
             IsSelected = true;
         }
 
         private void OnHalfBodySelected()
         {
-            DataStore.Payload.BodyType = Payload.HALF_BODY;
+            DataStore.AvatarProperties.BodyType = AvatarProperties.HALF_BODY;
             IsSelected = true;
         }
     }

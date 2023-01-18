@@ -6,7 +6,7 @@ namespace NativeAvatarCreator
 {
     public static class Extensions
     {
-        public static string ToJson(this Payload payload, bool ignoreEmptyFields = false)
+        public static string ToJson(this AvatarProperties avatarProperties, bool ignoreEmptyFields = false)
         {
             var contractResolver = new DefaultContractResolver
             {
@@ -18,9 +18,9 @@ namespace NativeAvatarCreator
                 Formatting = Formatting.Indented,
             };
 
-            var data = new Dictionary<string, Payload>
+            var data = new Dictionary<string, AvatarProperties>
             {
-                { "data", payload }
+                { "data", avatarProperties }
             };
 
             if (ignoreEmptyFields)

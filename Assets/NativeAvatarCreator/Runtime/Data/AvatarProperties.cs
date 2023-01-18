@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace NativeAvatarCreator
 {
-    public class Payload
+    public class AvatarProperties
     {
         public const string FULL_BODY = "fullbody";
         public const string HALF_BODY = "halfbody";
@@ -19,7 +19,7 @@ namespace NativeAvatarCreator
         public string BodyType;
 
         [JsonConverter(typeof(PartnerAssetsDictionaryConverter))]
-        public Dictionary<AssetType.PartnerAssetType, object> Assets;
+        public Dictionary<AssetTypeData.PartnerAssetType, object> Assets;
 
     }
 

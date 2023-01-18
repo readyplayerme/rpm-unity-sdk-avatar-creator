@@ -28,26 +28,26 @@ namespace Tests
             Debug.Log("Logged In with token: " + userStore.Token);
 
             // Create avatar
-            var createAvatarPayload = new Payload
+            var createAvatarPayload = new AvatarProperties
             {
                 Partner = "dev-sdk",
                 Gender = "male",
                 BodyType = "fullbody",
-                Assets = new Dictionary<AssetType.PartnerAssetType, object>()
+                Assets = new Dictionary<AssetTypeData.PartnerAssetType, object>()
                 {
-                    { AssetType.PartnerAssetType.SkinColor, 5 },
-                    { AssetType.PartnerAssetType.EyeColor, "9781796" },
-                    { AssetType.PartnerAssetType.HairStyle, "9781796" },
-                    { AssetType.PartnerAssetType.EyebrowStyle, "9781796" },
-                    { AssetType.PartnerAssetType.Shirt, "9247449" },
-                    { AssetType.PartnerAssetType.Outfit, "9781796" }
+                    { AssetTypeData.PartnerAssetType.SkinColor, 5 },
+                    { AssetTypeData.PartnerAssetType.EyeColor, "9781796" },
+                    { AssetTypeData.PartnerAssetType.HairStyle, "9781796" },
+                    { AssetTypeData.PartnerAssetType.EyebrowStyle, "9781796" },
+                    { AssetTypeData.PartnerAssetType.Shirt, "9247449" },
+                    { AssetTypeData.PartnerAssetType.Outfit, "9781796" }
                 }
             };
 
-            foreach (AssetType.PartnerAssetType assetType in Enum.GetValues(typeof(AssetType.PartnerAssetType)))
+            foreach (AssetTypeData.PartnerAssetType assetType in Enum.GetValues(typeof(AssetTypeData.PartnerAssetType)))
             {
                 if (createAvatarPayload.Assets.ContainsKey(assetType)) continue;
-                if (assetType == AssetType.PartnerAssetType.None)
+                if (assetType == AssetTypeData.PartnerAssetType.None)
                     continue;
 
                 if (assetType.ToString().Contains("Color"))
@@ -71,11 +71,11 @@ namespace Tests
             Debug.Log("Preview avatar download completed.");
 
             // Update Avatar
-            var updateAvatarPayload = new Payload
+            var updateAvatarPayload = new AvatarProperties
             {
-                Assets = new Dictionary<AssetType.PartnerAssetType, object>()
+                Assets = new Dictionary<AssetTypeData.PartnerAssetType, object>()
                 {
-                    { AssetType.PartnerAssetType.SkinColor, 2 }
+                    { AssetTypeData.PartnerAssetType.SkinColor, 2 }
                 }
             };
             var updatedAvatar = await AvatarAPIRequests.UpdateAvatar(userStore.Token, avatarId, updateAvatarPayload);

@@ -26,19 +26,19 @@ namespace AvatarCreatorExample
 
         private void OnMaleSelected()
         {
-            DataStore.Payload.Gender = Payload.MALE;
+            DataStore.AvatarProperties.Gender = AvatarProperties.MALE;
             IsSelected = true;
         }
 
         private void OnFemaleSelected()
         {
-            DataStore.Payload.Gender = Payload.FEMALE;
+            DataStore.AvatarProperties.Gender = AvatarProperties.FEMALE;
             IsSelected = true;
         }
 
         private void OnGenderNotSpecifiedSelected()
         {
-            DataStore.Payload.Gender = "";
+            DataStore.AvatarProperties.Gender = "";
             IsSelected = true;
         }
     }
