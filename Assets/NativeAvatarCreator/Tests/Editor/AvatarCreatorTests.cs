@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using NativeAvatarCreator;
 using NUnit.Framework;
 using UnityEngine;
@@ -31,16 +33,32 @@ namespace Tests
                 Partner = "dev-sdk",
                 Gender = "male",
                 BodyType = "fullbody",
-                Assets = new PayloadAssets
+                Assets = new Dictionary<AssetType.PartnerAssetType, object>()
                 {
-                    SkinColor = 5,
-                    EyeColor = "9781796",
-                    HairStyle = "23368535",
-                    EyebrowStyle = "41308196",
-                    Shirt = "9247449",
-                    Outfit = "109373713"
+                    { AssetType.PartnerAssetType.SkinColor, 5 },
+                    { AssetType.PartnerAssetType.EyeColor, "9781796" },
+                    { AssetType.PartnerAssetType.HairStyle, "9781796" },
+                    { AssetType.PartnerAssetType.EyebrowStyle, "9781796" },
+                    { AssetType.PartnerAssetType.Shirt, "9247449" },
+                    { AssetType.PartnerAssetType.Outfit, "9781796" }
                 }
             };
+
+            foreach (AssetType.PartnerAssetType assetType in Enum.GetValues(typeof(AssetType.PartnerAssetType)))
+            {
+                if (createAvatarPayload.Assets.ContainsKey(assetType)) continue;
+                if (assetType == AssetType.PartnerAssetType.None)
+                    continue;
+
+                if (assetType.ToString().Contains("Color"))
+                {
+                    createAvatarPayload.Assets.Add(assetType, 0);
+                }
+                else
+                {
+                    createAvatarPayload.Assets.Add(assetType, null);
+                }
+            }
 
             var avatarId = await AvatarAPIRequests.Create(userStore.Token, createAvatarPayload);
             Assert.IsNotNull(avatarId);
@@ -55,9 +73,9 @@ namespace Tests
             // Update Avatar
             var updateAvatarPayload = new Payload
             {
-                Assets = new PayloadAssets
+                Assets = new Dictionary<AssetType.PartnerAssetType, object>()
                 {
-                    SkinColor = 2,
+                    { AssetType.PartnerAssetType.SkinColor, 2 }
                 }
             };
             var updatedAvatar = await AvatarAPIRequests.UpdateAvatar(userStore.Token, avatarId, updateAvatarPayload);

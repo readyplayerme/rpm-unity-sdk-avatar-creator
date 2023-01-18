@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using NativeAvatarCreator;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace AvatarCreatorExample
@@ -22,13 +23,13 @@ namespace AvatarCreatorExample
 
         private void OnFullBodySelected()
         {
-            DataStore.Payload.BodyType = "fullbody";
+            DataStore.Payload.BodyType = Payload.FULL_BODY;
             IsSelected = true;
         }
 
         private void OnHalfBodySelected()
         {
-            DataStore.Payload.BodyType = "halfbody";
+            DataStore.Payload.BodyType = Payload.HALF_BODY;
             IsSelected = true;
         }
     }

@@ -1,36 +1,26 @@
-﻿namespace NativeAvatarCreator
-{
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
+namespace NativeAvatarCreator
+{
     public class Payload
     {
+        public const string FULL_BODY = "fullbody";
+        public const string HALF_BODY = "halfbody";
+        public const string MALE = "male";
+        public const string FEMALE = "female";
+        
         // Required Fields
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Partner;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Gender;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string BodyType;
 
-        public PayloadAssets Assets;
+        [JsonConverter(typeof(PartnerAssetsDictionaryConverter))]
+        public Dictionary<AssetType.PartnerAssetType, object> Assets;
+
     }
-    
-    public class PayloadAssets
-    {
-        public int SkinColor;
-        public string EyeColor;
-        public string HairStyle;
-        public int HairColor;
-        public string BeardStyle;
-        public int BeardColor;
-        public string EyebrowStyle;
-        public int EyebrowColor;
-        public string Shirt;
-        public string Outfit;
-        public string Glasses;
-        public string FaceMask;
-        public string Headwear;
-        public string Facewear;
-        public string LipShape;
-        public string EyeShape;
-        public string NoseShape;
-        public string FaceShape;
-        public string FaceStyle;
-    }
+
 }

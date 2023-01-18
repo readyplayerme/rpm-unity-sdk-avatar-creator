@@ -30,7 +30,7 @@ namespace AvatarCreatorExample
 
         private void Awake()
         {
-            Initialize();
+            AddAssetTypeButtonsAndPanels();
         }
 
         private void OnEnable()
@@ -52,49 +52,6 @@ namespace AvatarCreatorExample
             }
         }
 
-        private void Initialize()
-        {
-            assetTypesPanels = new Dictionary<string, Transform>();
-            selectedAssetByType = new Dictionary<string, AssetButton>();
-
-            foreach (var assetType in AssetType.Face)
-            {
-                var assetTypePanel = AddAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypePanelParent);
-
-                AddAssetTypeButton(assetType, faceAssetTypeParent.transform, () =>
-                {
-                    faceAssetTypePanel.SetActive(true);
-                    selectedAssetType.gameObject.SetActive(false);
-                    assetTypePanel.gameObject.SetActive(true);
-                    selectedAssetType = assetTypePanel.transform;
-                });
-            }
-
-            foreach (var assetType in AssetType.Body)
-            {
-                var assetTypePanel = AddAssetTypePanel(assetType, assetTypePanelPrefab, assetTypePanelParent);
-
-                AddAssetTypeButton(assetType, assetTypeParent, () =>
-                {
-                    faceAssetTypePanel.SetActive(false);
-                    selectedAssetType.gameObject.SetActive(false);
-                    assetTypePanel.gameObject.SetActive(true);
-                    selectedAssetType = assetTypePanel.transform;
-                });
-            }
-
-            selectedAssetType = assetTypePanelParent.GetChild(1);
-            selectedAssetType.gameObject.SetActive(true);
-
-            faceAssetTypeButton.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                selectedAssetType.gameObject.SetActive(false);
-                selectedAssetType = assetTypePanelParent.GetChild(1);
-                selectedAssetType.gameObject.SetActive(true);
-                faceAssetTypePanel.SetActive(true);
-            });
-        }
-
         public void InstantNoodles(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, string> onClick)
         {
             foreach (var assetType in assetTypesPanels)
@@ -112,6 +69,51 @@ namespace AvatarCreatorExample
 
             faceAssetTypePanel.SetActive(true);
             Loading.SetActive(false);
+        }
+
+        private void AddAssetTypeButtonsAndPanels()
+        {
+            assetTypesPanels = new Dictionary<string, Transform>();
+            selectedAssetByType = new Dictionary<string, AssetButton>();
+
+            foreach (var assetType in AssetType.PartnerAssetTypeMap.Keys)
+            {
+                if (AssetType.IsFaceAsset(assetType))
+                {
+                    var assetTypePanel = AddAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypePanelParent);
+
+                    AddAssetTypeButton(assetType, faceAssetTypeParent.transform, () =>
+                    {
+                        faceAssetTypePanel.SetActive(true);
+                        selectedAssetType.gameObject.SetActive(false);
+                        assetTypePanel.gameObject.SetActive(true);
+                        selectedAssetType = assetTypePanel.transform;
+                    });
+                }
+                else
+                {
+                    var assetTypePanel = AddAssetTypePanel(assetType, assetTypePanelPrefab, assetTypePanelParent);
+
+                    AddAssetTypeButton(assetType, assetTypeParent, () =>
+                    {
+                        faceAssetTypePanel.SetActive(false);
+                        selectedAssetType.gameObject.SetActive(false);
+                        assetTypePanel.gameObject.SetActive(true);
+                        selectedAssetType = assetTypePanel.transform;
+                    });
+                }
+            }
+
+            selectedAssetType = assetTypePanelParent.GetChild(1);
+            selectedAssetType.gameObject.SetActive(true);
+
+            faceAssetTypeButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                selectedAssetType.gameObject.SetActive(false);
+                selectedAssetType = assetTypePanelParent.GetChild(1);
+                selectedAssetType.gameObject.SetActive(true);
+                faceAssetTypePanel.SetActive(true);
+            });
         }
 
         private Transform AddAssetTypePanel(string assetType, GameObject panelPrefab, Transform parent)

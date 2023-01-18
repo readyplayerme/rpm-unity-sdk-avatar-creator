@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -18,11 +17,11 @@ namespace NativeAvatarCreator
                 ContractResolver = contractResolver,
                 Formatting = Formatting.Indented,
             };
-            
-            var data = new Dictionary<string, Payload>()
+
+            var data = new Dictionary<string, Payload>
             {
-                {"data" , payload}
-            } ;
+                { "data", payload }
+            };
 
             if (ignoreEmptyFields)
             {

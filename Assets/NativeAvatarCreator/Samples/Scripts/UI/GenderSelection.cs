@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using NativeAvatarCreator;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace AvatarCreatorExample
@@ -25,13 +26,13 @@ namespace AvatarCreatorExample
 
         private void OnMaleSelected()
         {
-            DataStore.Payload.Gender = "male";
+            DataStore.Payload.Gender = Payload.MALE;
             IsSelected = true;
         }
 
         private void OnFemaleSelected()
         {
-            DataStore.Payload.Gender = "female";
+            DataStore.Payload.Gender = Payload.FEMALE;
             IsSelected = true;
         }
 
