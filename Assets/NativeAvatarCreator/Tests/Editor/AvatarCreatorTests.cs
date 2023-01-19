@@ -36,22 +36,6 @@ namespace Tests
                 Assets = AvatarPropertiesConstants.DefaultAssets
             };
 
-            foreach (AssetTypeData.PartnerAssetType assetType in Enum.GetValues(typeof(AssetTypeData.PartnerAssetType)))
-            {
-                if (createAvatarPayload.Assets.ContainsKey(assetType)) continue;
-                if (assetType == AssetTypeData.PartnerAssetType.None)
-                    continue;
-
-                if (assetType.ToString().Contains("Color"))
-                {
-                    createAvatarPayload.Assets.Add(assetType, 0);
-                }
-                else
-                {
-                    createAvatarPayload.Assets.Add(assetType, null);
-                }
-            }
-
             var avatarId = await AvatarAPIRequests.Create(userStore.Token, createAvatarPayload);
             Assert.IsNotNull(avatarId);
             Assert.IsNotEmpty(avatarId);
@@ -65,9 +49,9 @@ namespace Tests
             // Update Avatar
             var updateAvatarPayload = new AvatarProperties
             {
-                Assets = new Dictionary<AssetTypeData.PartnerAssetType, object>()
+                Assets = new Dictionary<PartnerAssetType, object>()
                 {
-                    { AssetTypeData.PartnerAssetType.SkinColor, 2 }
+                    { PartnerAssetType.SkinColor, 2 }
                 }
             };
             var updatedAvatar = await AvatarAPIRequests.UpdateAvatar(userStore.Token, avatarId, updateAvatarPayload);

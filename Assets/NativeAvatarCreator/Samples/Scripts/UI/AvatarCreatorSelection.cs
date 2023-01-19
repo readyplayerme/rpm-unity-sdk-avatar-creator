@@ -16,7 +16,7 @@ namespace AvatarCreatorExample
         public Action Show;
         public Action Hide;
 
-        private Dictionary<string, AssetButton> selectedAssetByTypeMap;
+        private Dictionary<PartnerAssetType, AssetButton> selectedAssetByTypeMap;
 
         private void OnEnable()
         {
@@ -29,30 +29,33 @@ namespace AvatarCreatorExample
             Hide?.Invoke();
         }
 
-        public void AddAllAssetButtons(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, string> onClick)
+        public void AddAllAssetButtons(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, PartnerAssetType> onClick)
         {
-            selectedAssetByTypeMap = new Dictionary<string, AssetButton>();
+            selectedAssetByTypeMap = new Dictionary<PartnerAssetType, AssetButton>();
             foreach (var asset in assets)
             {
-                var parent = assetTypeUICreator.AssetTypesPanelsMap[asset.Key.AssetType];
+                var parent = assetTypeUICreator.AssetTypePanelsMap[asset.Key.AssetType];
                 AddAssetButton(asset.Key.Id, parent, asset.Key.AssetType, onClick, asset.Value);
             }
 
-            foreach (var assetType in assetTypeUICreator.AssetTypesPanelsMap)
+            foreach (var assetTypePanelMap in assetTypeUICreator.AssetTypePanelsMap)
             {
-                if (assetType.Key != "outfit" && assetType.Key != "shirt")
+                var assetType = assetTypePanelMap.Key;
+                var assetTypePanel = assetTypePanelMap.Value;
+                if (assetType != PartnerAssetType.Outfit && assetType != PartnerAssetType.Shirt)
                 {
-                    AddAssetSelectionClearButton(assetType.Value, assetType.Key, onClick);
+                    AddAssetSelectionClearButton(assetTypePanel, assetType, onClick);
                 }
 
                 // Disable the asset type which doesn't have any assets.
-                assetTypeUICreator.DisableAssetTypeButton(assetType.Key);
+                var scrollRect = assetTypePanel.GetComponent<ScrollRect>();
+                assetTypeUICreator.AssetTypeButtonsMap[assetType].gameObject.SetActive(scrollRect.content.childCount != 0);
             }
 
             Loading.SetActive(false);
         }
 
-        private async void AddAssetButton(string assetId, Transform parent, string assetType, Action<string, string> onClick,
+        private async void AddAssetButton(string assetId, Transform parent, PartnerAssetType assetType, Action<string, PartnerAssetType> onClick,
             Task<Texture> iconDownloadTask)
         {
             var assetButtonGameObject = Instantiate(assetButtonPrefab, parent.GetComponent<ScrollRect>().content);
@@ -75,7 +78,7 @@ namespace AvatarCreatorExample
             assetButton.SetIcon(await iconDownloadTask);
         }
 
-        private void AddAssetSelectionClearButton(Transform parent, string assetType, Action<string, string> onClick)
+        private void AddAssetSelectionClearButton(Transform parent, PartnerAssetType assetType, Action<string, PartnerAssetType> onClick)
         {
             var assetButtonGameObject = Instantiate(clearAssetSelectionButton, parent.GetComponent<ScrollRect>().content);
             assetButtonGameObject.transform.SetAsFirstSibling();

@@ -1,31 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace NativeAvatarCreator
 {
-    public static class AssetTypeData
+
+    public static class AssetTypeHelper
     {
-        public enum PartnerAssetType
+        public static List<PartnerAssetType> GetAssetTypeList()
         {
-            None,
-            SkinColor,
-            BeardStyle,
-            EyeColor,
-            EyeShape,
-            EyebrowStyle,
-            FaceMask,
-            FaceShape,
-            Glasses,
-            HairStyle,
-            Headwear,
-            Facewear,
-            LipShape,
-            NoseShape,
-            Outfit,
-            Shirt,
-            HairColor,
-            EyebrowColor,
-            BeardColor,
-            FaceStyle,
+            return PartnerAssetTypeMap.Select(x => x.Value)
+                .Where(x =>
+                    x != PartnerAssetType.BeardColor &&
+                    x != PartnerAssetType.EyebrowColor &&
+                    x != PartnerAssetType.HairColor &&
+                    x != PartnerAssetType.FaceStyle)
+                .ToList();
         }
 
         public static readonly Dictionary<string, PartnerAssetType> PartnerAssetTypeMap = new Dictionary<string, PartnerAssetType>
@@ -44,19 +33,23 @@ namespace NativeAvatarCreator
             { "facemask", PartnerAssetType.FaceMask },
             { "facewear", PartnerAssetType.Facewear },
             { "headwear", PartnerAssetType.Headwear },
+            { "hairColor", PartnerAssetType.HairColor },
+            { "eyebrowColor", PartnerAssetType.EyebrowColor },
+            { "beardColor", PartnerAssetType.BeardColor },
+            { "faceStyle", PartnerAssetType.FaceStyle },
         };
 
-        public static bool IsFaceAsset(string assetType)
+        public static bool IsFaceAsset(PartnerAssetType assetType)
         {
             switch (assetType)
             {
-                case "faceshape":
-                case "eyeshape":
-                case "eye":
-                case "eyebrows":
-                case "noseshape":
-                case "lipshape":
-                case "beard":
+                case PartnerAssetType.FaceShape:
+                case PartnerAssetType.EyeShape:
+                case PartnerAssetType.EyeColor:
+                case PartnerAssetType.EyebrowStyle:
+                case PartnerAssetType.NoseShape:
+                case PartnerAssetType.LipShape:
+                case PartnerAssetType.BeardStyle:
                     return true;
                 default:
                     return false;

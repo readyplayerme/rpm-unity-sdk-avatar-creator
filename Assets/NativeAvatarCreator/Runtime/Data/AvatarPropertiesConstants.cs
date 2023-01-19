@@ -8,19 +8,19 @@ namespace NativeAvatarCreator
         public const string HALF_BODY = "halfbody";
         public const string MALE = "male";
         public const string FEMALE = "female";
-        
-        public static readonly Dictionary<AssetTypeData.PartnerAssetType, object> DefaultAssets =
-            new Dictionary<AssetTypeData.PartnerAssetType, object>
+
+        public static readonly Dictionary<PartnerAssetType, object> DefaultAssets =
+            new Dictionary<PartnerAssetType, object>
             {
-                { AssetTypeData.PartnerAssetType.SkinColor, 5 },
-                { AssetTypeData.PartnerAssetType.EyeColor, "9781796" },
-                { AssetTypeData.PartnerAssetType.HairStyle, "9781796" },
-                { AssetTypeData.PartnerAssetType.EyebrowStyle, "9781796" },
-                { AssetTypeData.PartnerAssetType.Shirt, "9247449" },
-                { AssetTypeData.PartnerAssetType.Outfit, "9781796" },
-                { AssetTypeData.PartnerAssetType.HairColor, 0 },
-                { AssetTypeData.PartnerAssetType.EyebrowColor, 0 },
-                { AssetTypeData.PartnerAssetType.BeardColor, 0 },
+                { PartnerAssetType.SkinColor, 5 },
+                { PartnerAssetType.EyeColor, "9781796" },
+                { PartnerAssetType.HairStyle, "9781796" },
+                { PartnerAssetType.EyebrowStyle, "9781796" },
+                { PartnerAssetType.Shirt, "9247449" },
+                { PartnerAssetType.Outfit, "9781796" },
+                { PartnerAssetType.HairColor, 0 },
+                { PartnerAssetType.EyebrowColor, 0 },
+                { PartnerAssetType.BeardColor, 0 },
             };
     }
 }

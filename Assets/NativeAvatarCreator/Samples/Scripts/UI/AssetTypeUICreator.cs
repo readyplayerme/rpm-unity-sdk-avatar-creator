@@ -10,26 +10,30 @@ namespace AvatarCreatorExample
     public class AssetTypeUICreator : MonoBehaviour
     {
         [Serializable]
-        public class AssetTypeIcon
+        private class AssetTypeIcon
         {
-            public AssetTypeData.PartnerAssetType AssetType;
-            public Sprite Icon;
+            public PartnerAssetType assetType;
+            public Sprite icon;
         }
 
-        [SerializeField] private GameObject assetTypePrefab;
-        [SerializeField] private Transform assetTypeParent;
-        [SerializeField] private GameObject assetTypePanelPrefab;
-        [SerializeField] private Transform assetTypePanelParent;
+        [Serializable]
+        private class AssetTypeUI
+        {
+            public GameObject buttonPrefab;
+            public Transform buttonParent;
+            public GameObject panelPrefab;
+            public Transform panelParent;
+        }
+
+        [SerializeField] private AssetTypeUI assetTypeUI;
         [SerializeField] private AssetTypeButton faceAssetTypeButton;
         [SerializeField] private GameObject faceAssetTypePanel;
         [SerializeField] private GameObject faceAssetTypeParent;
         [SerializeField] private GameObject faceAssetPanelPrefab;
-        [SerializeField] public List<AssetTypeIcon> assetTypeIcons;
+        [SerializeField] private List<AssetTypeIcon> assetTypeIcons;
 
-        public Dictionary<string, Transform> AssetTypesPanelsMap => assetTypesPanelsMap;
-
-        private Dictionary<string, Transform> assetTypesPanelsMap;
-        private Dictionary<string, AssetTypeButton> assetTypeButtonsMap;
+        public Dictionary<PartnerAssetType, Transform> AssetTypePanelsMap { get; private set; }
+        public Dictionary<PartnerAssetType, AssetTypeButton> AssetTypeButtonsMap { get; private set; }
 
         private AssetTypeButton selectedAssetTypeButton;
         private Transform selectedAssetTypePanel;
@@ -44,28 +48,22 @@ namespace AvatarCreatorExample
             ResetUI();
         }
 
-        public void DisableAssetTypeButton(string assetType)
-        {
-            var scrollRect = assetTypesPanelsMap[assetType].GetComponent<ScrollRect>();
-            assetTypeButtonsMap[assetType].gameObject.SetActive(scrollRect.content.childCount != 0);
-        }
-
         private void AddAssetTypeButtonsAndPanels()
         {
-            assetTypesPanelsMap = new Dictionary<string, Transform>();
-            assetTypeButtonsMap = new Dictionary<string, AssetTypeButton>();
+            AssetTypePanelsMap = new Dictionary<PartnerAssetType, Transform>();
+            AssetTypeButtonsMap = new Dictionary<PartnerAssetType, AssetTypeButton>();
 
-            foreach (var assetType in AssetTypeData.PartnerAssetTypeMap.Keys)
+            foreach (var assetType in AssetTypeHelper.GetAssetTypeList())
             {
-                if (AssetTypeData.IsFaceAsset(assetType))
+                if (AssetTypeHelper.IsFaceAsset(assetType))
                 {
-                    var assetTypePanel = AddAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypePanelParent);
+                    var assetTypePanel = AddAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypeUI.panelParent);
                     AddAssetTypeButton(assetType, faceAssetTypeParent.transform, OnFaceTypeButton(assetTypePanel));
                 }
                 else
                 {
-                    var assetTypePanel = AddAssetTypePanel(assetType, assetTypePanelPrefab, assetTypePanelParent);
-                    AddAssetTypeButton(assetType, assetTypeParent, OnAssetTypeButton(assetTypePanel));
+                    var assetTypePanel = AddAssetTypePanel(assetType, assetTypeUI.panelPrefab, assetTypeUI.panelParent);
+                    AddAssetTypeButton(assetType, assetTypeUI.buttonParent, OnAssetTypeButton(assetTypePanel));
                 }
             }
 
@@ -122,36 +120,36 @@ namespace AvatarCreatorExample
             };
         }
 
-        private Transform AddAssetTypePanel(string assetType, GameObject panelPrefab, Transform parent)
+        private Transform AddAssetTypePanel(PartnerAssetType assetType, GameObject panelPrefab, Transform parent)
         {
             var assetTypePanel = Instantiate(panelPrefab, parent);
             assetTypePanel.name = assetType + "Panel";
             assetTypePanel.SetActive(false);
 
-            assetTypesPanelsMap.Add(assetType, assetTypePanel.transform);
+            AssetTypePanelsMap.Add(assetType, assetTypePanel.transform);
             return assetTypePanel.transform;
         }
 
-        private void AddAssetTypeButton(string assetType, Transform parent, Action<AssetTypeButton> onClick)
+        private void AddAssetTypeButton(PartnerAssetType assetType, Transform parent, Action<AssetTypeButton> onClick)
         {
-            var assetTypeButtonGameObject = Instantiate(assetTypePrefab, parent);
+            var assetTypeButtonGameObject = Instantiate(assetTypeUI.buttonPrefab, parent);
             var assetTypeButton = assetTypeButtonGameObject.GetComponent<AssetTypeButton>();
             assetTypeButton.name = assetType + "Button";
-            var assetTypeIcon = assetTypeIcons.FirstOrDefault(x => x.AssetType == AssetTypeData.PartnerAssetTypeMap[assetType]);
+            var assetTypeIcon = assetTypeIcons.FirstOrDefault(x => x.assetType == assetType);
             if (assetTypeIcon != null)
             {
-                assetTypeButton.SetIcon(assetTypeIcon.Icon);
+                assetTypeButton.SetIcon(assetTypeIcon.icon);
             }
             assetTypeButton.AddListener(() =>
             {
                 onClick?.Invoke(assetTypeButton);
             });
-            assetTypeButtonsMap.Add(assetType, assetTypeButton);
+            AssetTypeButtonsMap.Add(assetType, assetTypeButton);
         }
 
         private void ResetUI()
         {
-            foreach (var assetTypePanel in assetTypesPanelsMap)
+            foreach (var assetTypePanel in AssetTypePanelsMap)
             {
                 var parent = assetTypePanel.Value.GetComponent<ScrollRect>().content;
                 foreach (Transform assetButton in parent)
@@ -169,7 +167,7 @@ namespace AvatarCreatorExample
         {
             selectedAssetTypeButton = faceAssetTypeButton;
             selectedAssetTypeButton.SetSelect(true);
-            selectedAssetTypePanel = assetTypePanelParent.GetChild(1);
+            selectedAssetTypePanel = assetTypeUI.panelParent.GetChild(1);
             selectedAssetTypePanel.gameObject.SetActive(true);
         }
     }

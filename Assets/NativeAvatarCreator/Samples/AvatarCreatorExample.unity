@@ -355,43 +355,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557bc50befd76cc4b860f70a75fa873e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assetButtonPrefab: {fileID: 3533925521447789852, guid: 80a1b1f210f412d4c8b6bc1f7542904e, type: 3}
-  assetTypePrefab: {fileID: 3533925521447789852, guid: 33d8dc86a202ba44b8cb194156559a13, type: 3}
-  assetTypeParent: {fileID: 2677449318281061027}
-  assetTypePanelPrefab: {fileID: 8634944322326073872, guid: b5927d8bfb6d7434b8043ee7777f7601, type: 3}
-  assetTypePanelParent: {fileID: 1716912246}
-  clearAssetSelectionButton: {fileID: 3533925521447789852, guid: 9ae39b2477877814bbda5f30ccd568b5, type: 3}
+  assetTypeUI:
+    buttonPrefab: {fileID: 3533925521447789852, guid: 33d8dc86a202ba44b8cb194156559a13, type: 3}
+    buttonParent: {fileID: 2677449318281061027}
+    panelPrefab: {fileID: 8634944322326073872, guid: b5927d8bfb6d7434b8043ee7777f7601, type: 3}
+    panelParent: {fileID: 1716912246}
   faceAssetTypeButton: {fileID: 1786552760}
   faceAssetTypePanel: {fileID: 8469455003802138369}
   faceAssetTypeParent: {fileID: 1861407987055418634}
   faceAssetPanelPrefab: {fileID: 458400103088965232, guid: a5ed6191d7d0cd342a49ca4f06149214, type: 3}
   assetTypeIcons:
-  - AssetType: 2
-    Icon: {fileID: 21300000, guid: a0efe28bde3261749946881eb93d210d, type: 3}
-  - AssetType: 4
-    Icon: {fileID: 21300000, guid: 95540537d5e0151449fe796b65d1f97b, type: 3}
-  - AssetType: 5
-    Icon: {fileID: 21300000, guid: c643763b367cd9241b1baf154364ec0a, type: 3}
-  - AssetType: 6
-    Icon: {fileID: 21300000, guid: f933e74dee7862c4a983106d50699bea, type: 3}
-  - AssetType: 7
-    Icon: {fileID: 21300000, guid: b201425569fd97545bb246eb8a4dc268, type: 3}
-  - AssetType: 8
-    Icon: {fileID: 21300000, guid: 80b27e6127bbb1740a235f8dfe980970, type: 3}
-  - AssetType: 9
-    Icon: {fileID: 21300000, guid: c347327d3a4a3da43965d30b12c5adb0, type: 3}
-  - AssetType: 10
-    Icon: {fileID: 21300000, guid: ca5d98579f026b2458b4db438b38d69b, type: 3}
-  - AssetType: 11
-    Icon: {fileID: 21300000, guid: c03a24ffbc7040b48b2643ad417e4d1f, type: 3}
-  - AssetType: 12
-    Icon: {fileID: 21300000, guid: d209980974ba7e747b8db0e2eb5751e4, type: 3}
-  - AssetType: 13
-    Icon: {fileID: 21300000, guid: 4a231e061320a814286bc12960fb8ce7, type: 3}
-  - AssetType: 14
-    Icon: {fileID: 21300000, guid: 82c6ae5eb783ab6479720cb65d852e15, type: 3}
-  - AssetType: 15
-    Icon: {fileID: 21300000, guid: 82c6ae5eb783ab6479720cb65d852e15, type: 3}
+  - assetType: 2
+    icon: {fileID: 21300000, guid: 95540537d5e0151449fe796b65d1f97b, type: 3}
+  - assetType: 4
+    icon: {fileID: 21300000, guid: c643763b367cd9241b1baf154364ec0a, type: 3}
+  - assetType: 5
+    icon: {fileID: 21300000, guid: f933e74dee7862c4a983106d50699bea, type: 3}
+  - assetType: 6
+    icon: {fileID: 21300000, guid: b201425569fd97545bb246eb8a4dc268, type: 3}
+  - assetType: 7
+    icon: {fileID: 21300000, guid: 80b27e6127bbb1740a235f8dfe980970, type: 3}
+  - assetType: 8
+    icon: {fileID: 21300000, guid: c347327d3a4a3da43965d30b12c5adb0, type: 3}
+  - assetType: 9
+    icon: {fileID: 21300000, guid: c03a24ffbc7040b48b2643ad417e4d1f, type: 3}
+  - assetType: 10
+    icon: {fileID: 21300000, guid: ca5d98579f026b2458b4db438b38d69b, type: 3}
+  - assetType: 11
+    icon: {fileID: 21300000, guid: d209980974ba7e747b8db0e2eb5751e4, type: 3}
+  - assetType: 12
+    icon: {fileID: 21300000, guid: 4a231e061320a814286bc12960fb8ce7, type: 3}
+  - assetType: 13
+    icon: {fileID: 21300000, guid: 82c6ae5eb783ab6479720cb65d852e15, type: 3}
+  - assetType: 14
+    icon: {fileID: 21300000, guid: 82c6ae5eb783ab6479720cb65d852e15, type: 3}
+  - assetType: 1
+    icon: {fileID: 21300000, guid: a0efe28bde3261749946881eb93d210d, type: 3}
+  - assetType: 3
+    icon: {fileID: 21300000, guid: 95540537d5e0151449fe796b65d1f97b, type: 3}
 --- !u!222 &78456334
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -414,7 +415,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   assetButtonPrefab: {fileID: 3533925521447789852, guid: 80a1b1f210f412d4c8b6bc1f7542904e, type: 3}
   clearAssetSelectionButton: {fileID: 3533925521447789852, guid: 9ae39b2477877814bbda5f30ccd568b5, type: 3}
-  avatarCreatorSelection: {fileID: 78456333}
+  assetTypeUICreator: {fileID: 78456333}
 --- !u!1 &123713128
 GameObject:
   m_ObjectHideFlags: 0

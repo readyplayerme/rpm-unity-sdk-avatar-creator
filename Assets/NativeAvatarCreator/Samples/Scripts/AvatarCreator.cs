@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using NativeAvatarCreator;
 using UnityEngine;
@@ -59,14 +58,14 @@ namespace AvatarCreatorExample
             DebugPanel.AddLogWithDuration("Avatar loaded", avatarLoadingTime);
         }
 
-        public async void UpdateAvatar(string assetId, string assetType)
+        public async void UpdateAvatar(string assetId, PartnerAssetType assetType)
         {
             var payload = new AvatarProperties
             {
-                Assets = new Dictionary<AssetTypeData.PartnerAssetType, object>()
+                Assets = new Dictionary<PartnerAssetType, object>()
             };
 
-            payload.Assets.Add(AssetTypeData.PartnerAssetTypeMap[assetType], assetId);
+            payload.Assets.Add(assetType, assetId);
 
             var data = await AvatarAPIRequests.UpdateAvatar(dataStore.User.Token, avatarId, payload);
             avatar = await avatarLoader.LoadAvatar(avatarId, data);
