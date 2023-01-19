@@ -28,7 +28,7 @@ namespace NativeAvatarCreator
             FaceStyle,
         }
 
-        public static readonly Dictionary<string, PartnerAssetType> PartnerAssetTypeEnumDictionary = new Dictionary<string, PartnerAssetType>
+        public static readonly Dictionary<string, PartnerAssetType> PartnerAssetTypeMap = new Dictionary<string, PartnerAssetType>
         {
             { "faceshape", PartnerAssetType.FaceShape },
             { "eyeshape", PartnerAssetType.EyeShape },
@@ -37,13 +37,13 @@ namespace NativeAvatarCreator
             { "noseshape", PartnerAssetType.NoseShape },
             { "lipshape", PartnerAssetType.LipShape },
             { "beard", PartnerAssetType.BeardStyle },
-            { "facemask", PartnerAssetType.FaceMask },
-            { "glasses", PartnerAssetType.Glasses },
             { "hair", PartnerAssetType.HairStyle },
-            { "headwear", PartnerAssetType.Headwear },
-            { "facewear", PartnerAssetType.Facewear },
             { "outfit", PartnerAssetType.Outfit },
             { "shirt", PartnerAssetType.Shirt },
+            { "glasses", PartnerAssetType.Glasses },
+            { "facemask", PartnerAssetType.FaceMask },
+            { "facewear", PartnerAssetType.Facewear },
+            { "headwear", PartnerAssetType.Headwear },
         };
 
         public static bool IsFaceAsset(string assetType)

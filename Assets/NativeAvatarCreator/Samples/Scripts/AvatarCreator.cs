@@ -89,7 +89,7 @@ namespace AvatarCreatorExample
                 Assets = new Dictionary<AssetTypeData.PartnerAssetType, object>()
             };
 
-            payload.Assets.Add(AssetTypeData.PartnerAssetTypeEnumDictionary[assetType], assetId);
+            payload.Assets.Add(AssetTypeData.PartnerAssetTypeMap[assetType], assetId);
 
             var data = await AvatarAPIRequests.UpdateAvatar(dataStore.User.Token, avatarId, payload);
             avatar = await avatarLoader.LoadAvatar(avatarId, data);

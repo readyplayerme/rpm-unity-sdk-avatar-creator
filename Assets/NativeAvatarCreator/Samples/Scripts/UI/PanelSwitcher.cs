@@ -9,10 +9,10 @@ namespace AvatarCreatorExample
     {
         [SerializeField] private Button back;
         [SerializeField] private DataStore dataStore;
-        [SerializeField] private GameObject Loading;
+        [SerializeField] private GameObject loading;
         [SerializeField] private SelectionPanel[] panels;
 
-        private int currentIndex
+        private int CurrentIndex
         {
             get => index;
             set
@@ -44,7 +44,7 @@ namespace AvatarCreatorExample
 
         private async void ShowPanelAndWaitForSelection()
         {
-            if (currentIndex >= panels.Length)
+            if (CurrentIndex >= panels.Length)
             {
                 return;
             }
@@ -52,18 +52,18 @@ namespace AvatarCreatorExample
             panels[lastIndex].gameObject.SetActive(false);
             tokenSource = new CancellationTokenSource();
 
-            var currentPanel = panels[currentIndex];
+            var currentPanel = panels[CurrentIndex];
             currentPanel.DataStore = dataStore;
             currentPanel.IsSelected = false;
-            currentPanel.Loading = Loading;
+            currentPanel.Loading = loading;
             currentPanel.gameObject.SetActive(true);
 
             await currentPanel.WaitForSelection(tokenSource.Token);
-            lastIndex = currentIndex;
+            lastIndex = CurrentIndex;
 
             if (!tokenSource.IsCancellationRequested)
             {
-                currentIndex++;
+                CurrentIndex++;
                 ShowPanelAndWaitForSelection();
             }
         }
@@ -73,7 +73,7 @@ namespace AvatarCreatorExample
             tokenSource.Cancel();
             await Task.Yield();
 
-            currentIndex--;
+            CurrentIndex--;
             ShowPanelAndWaitForSelection();
         }
     }
