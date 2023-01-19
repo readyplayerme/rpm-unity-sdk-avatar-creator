@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NativeAvatarCreator;
 using UnityEngine;
@@ -26,12 +27,16 @@ namespace AvatarCreatorExample
 
         private void OnDisable()
         {
+            assetTypeUICreator.ResetUI();
             Hide?.Invoke();
         }
 
         public void AddAllAssetButtons(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, AssetType> onClick)
         {
             selectedAssetByTypeMap = new Dictionary<AssetType, AssetButton>();
+            var distinctAssetType = assets.Keys.Select(x => x.AssetType).Distinct();
+            assetTypeUICreator.CreateUI(AssetTypeHelper.GetAssetTypeList().Where(x => distinctAssetType.Contains(x)));
+
             foreach (var asset in assets)
             {
                 var parent = assetTypeUICreator.AssetTypePanelsMap[asset.Key.AssetType];
@@ -46,10 +51,6 @@ namespace AvatarCreatorExample
                 {
                     AddAssetSelectionClearButton(assetTypePanel, assetType, onClick);
                 }
-
-                // Disable the asset type which doesn't have any assets.
-                var scrollRect = assetTypePanel.GetComponent<ScrollRect>();
-                assetTypeUICreator.AssetTypeButtonsMap[assetType].gameObject.SetActive(scrollRect.content.childCount != 0);
             }
 
             Loading.SetActive(false);
