@@ -52,12 +52,12 @@ namespace AvatarCreatorExample
             // Shirt is only for halfbody.
 
             if (dataStore.AvatarProperties.BodyType != "fullbody")
-                return asset.AssetType != PartnerAssetType.Outfit;
+                return asset.AssetType != AssetType.Outfit;
 
-            if (asset.AssetType == PartnerAssetType.Outfit)
+            if (asset.AssetType == AssetType.Outfit)
                 return asset.Gender == dataStore.AvatarProperties.Gender;
 
-            return asset.AssetType != PartnerAssetType.Shirt;
+            return asset.AssetType != AssetType.Shirt;
         }
     }
 }

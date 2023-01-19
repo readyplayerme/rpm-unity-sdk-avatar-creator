@@ -49,9 +49,9 @@ namespace Tests
             // Update Avatar
             var updateAvatarPayload = new AvatarProperties
             {
-                Assets = new Dictionary<PartnerAssetType, object>()
+                Assets = new Dictionary<AssetType, object>()
                 {
-                    { PartnerAssetType.SkinColor, 2 }
+                    { AssetType.SkinColor, 2 }
                 }
             };
             var updatedAvatar = await AvatarAPIRequests.UpdateAvatar(userStore.Token, avatarId, updateAvatarPayload);

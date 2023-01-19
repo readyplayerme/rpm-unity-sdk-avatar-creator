@@ -1,6 +1,6 @@
 ﻿namespace NativeAvatarCreator
 {
-    public enum PartnerAssetType
+    public enum AssetType
     {
         SkinColor,
         BeardStyle,

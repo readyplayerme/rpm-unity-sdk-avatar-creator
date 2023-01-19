@@ -8,7 +8,7 @@ namespace NativeAvatarCreator
     {
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(PartnerAssetType);
+            return objectType == typeof(AssetType);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

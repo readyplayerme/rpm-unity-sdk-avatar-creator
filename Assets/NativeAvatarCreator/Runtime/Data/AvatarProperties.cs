@@ -13,7 +13,7 @@ namespace NativeAvatarCreator
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string BodyType;
 
-        [JsonConverter(typeof(PartnerAssetsDictionaryConverter))]
-        public Dictionary<PartnerAssetType, object> Assets;
+        [JsonConverter(typeof(AssetTypeDictionaryConverter))]
+        public Dictionary<AssetType, object> Assets;
     }
 }

@@ -58,11 +58,11 @@ namespace AvatarCreatorExample
             DebugPanel.AddLogWithDuration("Avatar loaded", avatarLoadingTime);
         }
 
-        public async void UpdateAvatar(string assetId, PartnerAssetType assetType)
+        public async void UpdateAvatar(string assetId, AssetType assetType)
         {
             var payload = new AvatarProperties
             {
-                Assets = new Dictionary<PartnerAssetType, object>()
+                Assets = new Dictionary<AssetType, object>()
             };
 
             payload.Assets.Add(assetType, assetId);

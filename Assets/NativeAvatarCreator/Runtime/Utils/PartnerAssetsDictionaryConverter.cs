@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 
 namespace NativeAvatarCreator
 {
-    public class PartnerAssetTypeDictionaryConverter : JsonConverter<Dictionary<PartnerAssetType, object>>
+    public class AssetTypeDictionaryConverter : JsonConverter<Dictionary<AssetType, object>>
     {
-        public override void WriteJson(JsonWriter writer, Dictionary<PartnerAssetType, object> value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, Dictionary<AssetType, object> value, JsonSerializer serializer)
         {
             var newValue = new Dictionary<string, object>();
             foreach (var element in value)
@@ -19,8 +19,8 @@ namespace NativeAvatarCreator
             serializer.Serialize(writer, newValue);
         }
 
-        public override Dictionary<PartnerAssetType, object> ReadJson(JsonReader reader, Type objectType,
-            Dictionary<PartnerAssetType, object> existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override Dictionary<AssetType, object> ReadJson(JsonReader reader, Type objectType,
+            Dictionary<AssetType, object> existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }

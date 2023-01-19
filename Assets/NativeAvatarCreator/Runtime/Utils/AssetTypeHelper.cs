@@ -3,53 +3,52 @@ using System.Linq;
 
 namespace NativeAvatarCreator
 {
-
     public static class AssetTypeHelper
     {
-        public static List<PartnerAssetType> GetAssetTypeList()
+        public static List<AssetType> GetAssetTypeList()
         {
             return PartnerAssetTypeMap.Select(x => x.Value)
                 .Where(x =>
-                    x != PartnerAssetType.BeardColor &&
-                    x != PartnerAssetType.EyebrowColor &&
-                    x != PartnerAssetType.HairColor &&
-                    x != PartnerAssetType.FaceStyle)
+                    x != AssetType.BeardColor &&
+                    x != AssetType.EyebrowColor &&
+                    x != AssetType.HairColor &&
+                    x != AssetType.FaceStyle)
                 .ToList();
         }
 
-        public static readonly Dictionary<string, PartnerAssetType> PartnerAssetTypeMap = new Dictionary<string, PartnerAssetType>
+        public static readonly Dictionary<string, AssetType> PartnerAssetTypeMap = new Dictionary<string, AssetType>
         {
-            { "faceshape", PartnerAssetType.FaceShape },
-            { "eyeshape", PartnerAssetType.EyeShape },
-            { "eye", PartnerAssetType.EyeColor },
-            { "eyebrows", PartnerAssetType.EyebrowStyle },
-            { "noseshape", PartnerAssetType.NoseShape },
-            { "lipshape", PartnerAssetType.LipShape },
-            { "beard", PartnerAssetType.BeardStyle },
-            { "hair", PartnerAssetType.HairStyle },
-            { "outfit", PartnerAssetType.Outfit },
-            { "shirt", PartnerAssetType.Shirt },
-            { "glasses", PartnerAssetType.Glasses },
-            { "facemask", PartnerAssetType.FaceMask },
-            { "facewear", PartnerAssetType.Facewear },
-            { "headwear", PartnerAssetType.Headwear },
-            { "hairColor", PartnerAssetType.HairColor },
-            { "eyebrowColor", PartnerAssetType.EyebrowColor },
-            { "beardColor", PartnerAssetType.BeardColor },
-            { "faceStyle", PartnerAssetType.FaceStyle },
+            { "faceshape", AssetType.FaceShape },
+            { "eyeshape", AssetType.EyeShape },
+            { "eye", AssetType.EyeColor },
+            { "eyebrows", AssetType.EyebrowStyle },
+            { "noseshape", AssetType.NoseShape },
+            { "lipshape", AssetType.LipShape },
+            { "beard", AssetType.BeardStyle },
+            { "hair", AssetType.HairStyle },
+            { "outfit", AssetType.Outfit },
+            { "shirt", AssetType.Shirt },
+            { "glasses", AssetType.Glasses },
+            { "facemask", AssetType.FaceMask },
+            { "facewear", AssetType.Facewear },
+            { "headwear", AssetType.Headwear },
+            { "hairColor", AssetType.HairColor },
+            { "eyebrowColor", AssetType.EyebrowColor },
+            { "beardColor", AssetType.BeardColor },
+            { "faceStyle", AssetType.FaceStyle },
         };
 
-        public static bool IsFaceAsset(PartnerAssetType assetType)
+        public static bool IsFaceAsset(AssetType assetType)
         {
             switch (assetType)
             {
-                case PartnerAssetType.FaceShape:
-                case PartnerAssetType.EyeShape:
-                case PartnerAssetType.EyeColor:
-                case PartnerAssetType.EyebrowStyle:
-                case PartnerAssetType.NoseShape:
-                case PartnerAssetType.LipShape:
-                case PartnerAssetType.BeardStyle:
+                case AssetType.FaceShape:
+                case AssetType.EyeShape:
+                case AssetType.EyeColor:
+                case AssetType.EyebrowStyle:
+                case AssetType.NoseShape:
+                case AssetType.LipShape:
+                case AssetType.BeardStyle:
                     return true;
                 default:
                     return false;

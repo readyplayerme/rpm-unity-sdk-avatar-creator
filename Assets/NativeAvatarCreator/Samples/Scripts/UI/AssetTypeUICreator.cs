@@ -12,7 +12,7 @@ namespace AvatarCreatorExample
         [Serializable]
         private class AssetTypeIcon
         {
-            public PartnerAssetType assetType;
+            public AssetType assetType;
             public Sprite icon;
         }
 
@@ -32,8 +32,8 @@ namespace AvatarCreatorExample
         [SerializeField] private GameObject faceAssetPanelPrefab;
         [SerializeField] private List<AssetTypeIcon> assetTypeIcons;
 
-        public Dictionary<PartnerAssetType, Transform> AssetTypePanelsMap { get; private set; }
-        public Dictionary<PartnerAssetType, AssetTypeButton> AssetTypeButtonsMap { get; private set; }
+        public Dictionary<AssetType, Transform> AssetTypePanelsMap { get; private set; }
+        public Dictionary<AssetType, AssetTypeButton> AssetTypeButtonsMap { get; private set; }
 
         private AssetTypeButton selectedAssetTypeButton;
         private Transform selectedAssetTypePanel;
@@ -50,8 +50,8 @@ namespace AvatarCreatorExample
 
         private void AddAssetTypeButtonsAndPanels()
         {
-            AssetTypePanelsMap = new Dictionary<PartnerAssetType, Transform>();
-            AssetTypeButtonsMap = new Dictionary<PartnerAssetType, AssetTypeButton>();
+            AssetTypePanelsMap = new Dictionary<AssetType, Transform>();
+            AssetTypeButtonsMap = new Dictionary<AssetType, AssetTypeButton>();
 
             foreach (var assetType in AssetTypeHelper.GetAssetTypeList())
             {
@@ -120,7 +120,7 @@ namespace AvatarCreatorExample
             };
         }
 
-        private Transform AddAssetTypePanel(PartnerAssetType assetType, GameObject panelPrefab, Transform parent)
+        private Transform AddAssetTypePanel(AssetType assetType, GameObject panelPrefab, Transform parent)
         {
             var assetTypePanel = Instantiate(panelPrefab, parent);
             assetTypePanel.name = assetType + "Panel";
@@ -130,7 +130,7 @@ namespace AvatarCreatorExample
             return assetTypePanel.transform;
         }
 
-        private void AddAssetTypeButton(PartnerAssetType assetType, Transform parent, Action<AssetTypeButton> onClick)
+        private void AddAssetTypeButton(AssetType assetType, Transform parent, Action<AssetTypeButton> onClick)
         {
             var assetTypeButtonGameObject = Instantiate(assetTypeUI.buttonPrefab, parent);
             var assetTypeButton = assetTypeButtonGameObject.GetComponent<AssetTypeButton>();

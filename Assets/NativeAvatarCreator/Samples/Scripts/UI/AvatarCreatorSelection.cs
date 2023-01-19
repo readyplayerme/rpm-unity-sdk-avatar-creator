@@ -16,7 +16,7 @@ namespace AvatarCreatorExample
         public Action Show;
         public Action Hide;
 
-        private Dictionary<PartnerAssetType, AssetButton> selectedAssetByTypeMap;
+        private Dictionary<AssetType, AssetButton> selectedAssetByTypeMap;
 
         private void OnEnable()
         {
@@ -29,9 +29,9 @@ namespace AvatarCreatorExample
             Hide?.Invoke();
         }
 
-        public void AddAllAssetButtons(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, PartnerAssetType> onClick)
+        public void AddAllAssetButtons(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, AssetType> onClick)
         {
-            selectedAssetByTypeMap = new Dictionary<PartnerAssetType, AssetButton>();
+            selectedAssetByTypeMap = new Dictionary<AssetType, AssetButton>();
             foreach (var asset in assets)
             {
                 var parent = assetTypeUICreator.AssetTypePanelsMap[asset.Key.AssetType];
@@ -42,7 +42,7 @@ namespace AvatarCreatorExample
             {
                 var assetType = assetTypePanelMap.Key;
                 var assetTypePanel = assetTypePanelMap.Value;
-                if (assetType != PartnerAssetType.Outfit && assetType != PartnerAssetType.Shirt)
+                if (assetType != AssetType.Outfit && assetType != AssetType.Shirt)
                 {
                     AddAssetSelectionClearButton(assetTypePanel, assetType, onClick);
                 }
@@ -55,7 +55,7 @@ namespace AvatarCreatorExample
             Loading.SetActive(false);
         }
 
-        private async void AddAssetButton(string assetId, Transform parent, PartnerAssetType assetType, Action<string, PartnerAssetType> onClick,
+        private async void AddAssetButton(string assetId, Transform parent, AssetType assetType, Action<string, AssetType> onClick,
             Task<Texture> iconDownloadTask)
         {
             var assetButtonGameObject = Instantiate(assetButtonPrefab, parent.GetComponent<ScrollRect>().content);
@@ -78,7 +78,7 @@ namespace AvatarCreatorExample
             assetButton.SetIcon(await iconDownloadTask);
         }
 
-        private void AddAssetSelectionClearButton(Transform parent, PartnerAssetType assetType, Action<string, PartnerAssetType> onClick)
+        private void AddAssetSelectionClearButton(Transform parent, AssetType assetType, Action<string, AssetType> onClick)
         {
             var assetButtonGameObject = Instantiate(clearAssetSelectionButton, parent.GetComponent<ScrollRect>().content);
             assetButtonGameObject.transform.SetAsFirstSibling();

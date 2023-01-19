@@ -6,7 +6,7 @@ namespace NativeAvatarCreator
     {
         public string Id;
         [JsonConverter(typeof(AssetTypeConverter))]
-        public PartnerAssetType AssetType;
+        public AssetType AssetType;
         public string Gender;
         public string Icon;
     }
