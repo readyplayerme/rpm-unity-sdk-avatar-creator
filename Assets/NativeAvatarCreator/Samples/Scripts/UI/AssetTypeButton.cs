@@ -11,6 +11,7 @@ namespace AvatarCreatorExample
         [SerializeField] private Color selectedColor;
 
         private Color defaultColor;
+        private Action onClickAction;
 
         private void Awake()
         {
@@ -19,9 +20,15 @@ namespace AvatarCreatorExample
 
         public void AddListener(Action action)
         {
+            onClickAction = action;
             button.onClick.AddListener(action.Invoke);
         }
 
+        public void RemoveListener()
+        {
+            button.onClick.RemoveListener(onClickAction.Invoke);
+        }
+        
         public void SetIcon(Sprite sprite)
         {
             icon.sprite = sprite;

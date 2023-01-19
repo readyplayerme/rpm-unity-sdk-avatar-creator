@@ -32,7 +32,7 @@ namespace AvatarCreatorExample
         [SerializeField] private List<AssetTypeIcon> assetTypeIcons;
 
         public Dictionary<AssetType, Transform> AssetTypePanelsMap { get; private set; }
-        
+
         private Dictionary<AssetType, AssetTypeButton> assetTypeButtonsMap;
         private AssetTypeButton selectedAssetTypeButton;
         private Transform selectedAssetTypePanel;
@@ -69,7 +69,6 @@ namespace AvatarCreatorExample
                 DefaultSelection();
                 faceAssetTypePanel.SetActive(true);
             });
-
         }
 
         public void ResetUI()
@@ -86,12 +85,12 @@ namespace AvatarCreatorExample
             {
                 Destroy(assetTypeButton.Value.gameObject);
             }
+            faceAssetTypeButton.RemoveListener();
             assetTypeButtonsMap.Clear();
         }
 
         private Action<AssetTypeButton> OnAssetTypeButton(Transform assetTypePanel)
-        {
-            return assetTypeButton =>
+            => assetTypeButton =>
             {
                 selectedAssetTypeButton.SetSelect(false);
                 assetTypeButton.SetSelect(true);
@@ -103,7 +102,6 @@ namespace AvatarCreatorExample
                 assetTypePanel.gameObject.SetActive(true);
                 selectedAssetTypePanel = assetTypePanel.transform;
             };
-        }
 
         private Action<AssetTypeButton> OnFaceTypeButton(Transform assetTypePanel)
         {
