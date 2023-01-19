@@ -10,6 +10,13 @@ namespace AvatarCreatorExample
         [SerializeField] private Button button;
         [SerializeField] private Color selectedColor;
 
+        private Color defaultColor;
+
+        private void Awake()
+        {
+            defaultColor = icon.color;
+        }
+
         public void AddListener(Action action)
         {
             button.onClick.AddListener(action.Invoke);
@@ -22,7 +29,7 @@ namespace AvatarCreatorExample
 
         public void SetSelect(bool isSelected)
         {
-            icon.color = isSelected ? selectedColor : Color.white;
+            icon.color = isSelected ? selectedColor : defaultColor;
         }
     }
 }

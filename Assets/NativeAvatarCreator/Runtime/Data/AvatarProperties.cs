@@ -5,11 +5,6 @@ namespace NativeAvatarCreator
 {
     public class AvatarProperties
     {
-        public const string FULL_BODY = "fullbody";
-        public const string HALF_BODY = "halfbody";
-        public const string MALE = "male";
-        public const string FEMALE = "female";
-        
         // Required Fields
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Partner;
@@ -20,7 +15,5 @@ namespace NativeAvatarCreator
 
         [JsonConverter(typeof(PartnerAssetsDictionaryConverter))]
         public Dictionary<AssetTypeData.PartnerAssetType, object> Assets;
-
     }
-
 }

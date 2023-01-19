@@ -26,13 +26,13 @@ namespace AvatarCreatorExample
 
         private void OnMaleSelected()
         {
-            DataStore.AvatarProperties.Gender = AvatarProperties.MALE;
+            DataStore.AvatarProperties.Gender = AvatarPropertiesConstants.MALE;
             IsSelected = true;
         }
 
         private void OnFemaleSelected()
         {
-            DataStore.AvatarProperties.Gender = AvatarProperties.FEMALE;
+            DataStore.AvatarProperties.Gender = AvatarPropertiesConstants.FEMALE;
             IsSelected = true;
         }
 

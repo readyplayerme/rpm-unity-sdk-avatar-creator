@@ -33,15 +33,7 @@ namespace Tests
                 Partner = "dev-sdk",
                 Gender = "male",
                 BodyType = "fullbody",
-                Assets = new Dictionary<AssetTypeData.PartnerAssetType, object>()
-                {
-                    { AssetTypeData.PartnerAssetType.SkinColor, 5 },
-                    { AssetTypeData.PartnerAssetType.EyeColor, "9781796" },
-                    { AssetTypeData.PartnerAssetType.HairStyle, "9781796" },
-                    { AssetTypeData.PartnerAssetType.EyebrowStyle, "9781796" },
-                    { AssetTypeData.PartnerAssetType.Shirt, "9247449" },
-                    { AssetTypeData.PartnerAssetType.Outfit, "9781796" }
-                }
+                Assets = AvatarPropertiesConstants.DefaultAssets
             };
 
             foreach (AssetTypeData.PartnerAssetType assetType in Enum.GetValues(typeof(AssetTypeData.PartnerAssetType)))

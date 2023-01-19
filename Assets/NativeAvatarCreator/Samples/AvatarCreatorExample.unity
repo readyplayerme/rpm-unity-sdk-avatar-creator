@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataStore: {fileID: 13055037}
-  avatarCreatorSelection: {fileID: 78456333}
+  avatarCreatorSelection: {fileID: 78456335}
   avatarLoader: {fileID: 200487910}
 --- !u!4 &74047983
 Transform:
@@ -315,6 +315,7 @@ GameObject:
   - component: {fileID: 78456332}
   - component: {fileID: 78456334}
   - component: {fileID: 78456333}
+  - component: {fileID: 78456335}
   m_Layer: 5
   m_Name: AvatarCreator
   m_TagString: Untagged
@@ -399,6 +400,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 78456331}
   m_CullTransparentMesh: 1
+--- !u!114 &78456335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78456331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeccf23e229c41a1b0d3956b69ed4ad5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assetButtonPrefab: {fileID: 3533925521447789852, guid: 80a1b1f210f412d4c8b6bc1f7542904e, type: 3}
+  clearAssetSelectionButton: {fileID: 3533925521447789852, guid: 9ae39b2477877814bbda5f30ccd568b5, type: 3}
+  avatarCreatorSelection: {fileID: 78456333}
 --- !u!1 &123713128
 GameObject:
   m_ObjectHideFlags: 0
@@ -1052,7 +1068,7 @@ MonoBehaviour:
   - {fileID: 227468989}
   - {fileID: 27957444}
   - {fileID: 310145998}
-  - {fileID: 78456333}
+  - {fileID: 78456335}
 --- !u!1 &362778934
 GameObject:
   m_ObjectHideFlags: 0
@@ -2130,7 +2146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataStore: {fileID: 13055037}
-  avatarCreatorSelection: {fileID: 78456333}
+  avatarCreatorSelection: {fileID: 78456335}
   avatarCreator: {fileID: 74047982}
 --- !u!1 &983312784
 GameObject:

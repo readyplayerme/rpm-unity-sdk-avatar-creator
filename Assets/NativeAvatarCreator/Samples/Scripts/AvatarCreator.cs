@@ -41,30 +41,7 @@ namespace AvatarCreatorExample
         {
             var startTime = Time.time;
 
-            dataStore.AvatarProperties.Assets = new Dictionary<AssetTypeData.PartnerAssetType, object>()
-            {
-                { AssetTypeData.PartnerAssetType.SkinColor, 5 },
-                { AssetTypeData.PartnerAssetType.EyeColor, "9781796" },
-                { AssetTypeData.PartnerAssetType.HairStyle, "9781796" },
-                { AssetTypeData.PartnerAssetType.EyebrowStyle, "9781796" },
-                { AssetTypeData.PartnerAssetType.Shirt, "9247449" },
-                { AssetTypeData.PartnerAssetType.Outfit, "9781796" }
-            };
-            foreach (AssetTypeData.PartnerAssetType assetType in Enum.GetValues(typeof(AssetTypeData.PartnerAssetType)))
-            {
-                if (dataStore.AvatarProperties.Assets.ContainsKey(assetType)) continue;
-                if (assetType == AssetTypeData.PartnerAssetType.None)
-                    continue;
-
-                if (assetType.ToString().Contains("Color"))
-                {
-                    dataStore.AvatarProperties.Assets.Add(assetType, 0);
-                }
-                else
-                {
-                    dataStore.AvatarProperties.Assets.Add(assetType, null);
-                }
-            }
+            dataStore.AvatarProperties.Assets = AvatarPropertiesConstants.DefaultAssets;
 
             avatarId = await AvatarAPIRequests.Create(dataStore.User.Token, dataStore.AvatarProperties);
 
