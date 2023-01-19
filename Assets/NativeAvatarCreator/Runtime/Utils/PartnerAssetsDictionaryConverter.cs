@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace NativeAvatarCreator
 {
-    public class PartnerAssetsDictionaryConverter : JsonConverter<Dictionary<PartnerAssetType, object>>
+    public class PartnerAssetTypeDictionaryConverter : JsonConverter<Dictionary<PartnerAssetType, object>>
     {
         public override void WriteJson(JsonWriter writer, Dictionary<PartnerAssetType, object> value, JsonSerializer serializer)
         {

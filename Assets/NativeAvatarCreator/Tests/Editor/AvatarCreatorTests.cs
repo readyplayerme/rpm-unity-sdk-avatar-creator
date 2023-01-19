@@ -14,7 +14,7 @@ namespace Tests
         [Test]
         public async Task Receive_Partner_Assets()
         {
-            var userStore = await Auth.LoginAsAnonymous(DOMAIN);
+            var userStore = await AuthRequests.LoginAsAnonymous(DOMAIN);
             var avatarAssets = await PartnerAssetsRequests.Get(userStore.Token, DOMAIN);
 
             Assert.IsNotNull(avatarAssets);
@@ -24,7 +24,7 @@ namespace Tests
         [Test]
         public async Task Avatar_Create_Update_Delete()
         {
-            var userStore = await Auth.LoginAsAnonymous(DOMAIN);
+            var userStore = await AuthRequests.LoginAsAnonymous(DOMAIN);
             Debug.Log("Logged In with token: " + userStore.Token);
 
             // Create avatar

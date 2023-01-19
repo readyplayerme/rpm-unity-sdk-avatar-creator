@@ -9,7 +9,7 @@ namespace Tests
         [Test]
         public async Task Login_As_Anonymous()
         {
-            var userStore = await Auth.LoginAsAnonymous("dev-sdk");
+            var userStore = await AuthRequests.LoginAsAnonymous("dev-sdk");
 
             Assert.False(string.IsNullOrEmpty(userStore.Id));
             Assert.False(string.IsNullOrEmpty(userStore.Token));

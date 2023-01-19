@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NativeAvatarCreator
 {
-    public static class Auth
+    public static class AuthRequests
     {
         public static async Task<UserStore> LoginAsAnonymous(string domain)
         {
