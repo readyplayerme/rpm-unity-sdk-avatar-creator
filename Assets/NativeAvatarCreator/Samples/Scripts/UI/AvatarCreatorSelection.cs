@@ -13,6 +13,7 @@ namespace AvatarCreatorExample
         [SerializeField] private GameObject assetButtonPrefab;
         [SerializeField] private GameObject clearAssetSelectionButton;
         [SerializeField] private AssetTypeUICreator assetTypeUICreator;
+        [SerializeField] private Button saveButton;
 
         public Action Show;
         public Action Hide;
@@ -27,17 +28,19 @@ namespace AvatarCreatorExample
 
         private void OnDisable()
         {
+            saveButton.gameObject.SetActive(false);
             assetTypeUICreator.ResetUI();
             Hide?.Invoke();
         }
 
-        public void AddAllAssetButtons(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, AssetType> onClick)
+        public void AddAllAssetButtons(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, AssetType> onClick, Action onSave)
         {
             selectedAssetByTypeMap = new Dictionary<AssetType, AssetButton>();
             var distinctAssetType = assets.Keys.Select(x => x.AssetType).Distinct();
             assetTypeUICreator.CreateUI(AssetTypeHelper.GetAssetTypeList().Where(x => distinctAssetType.Contains(x)));
 
-            foreach (var asset in assets)
+            var orderedAssets = assets.OrderByDescending(x => x.Key.AssetType == AssetType.FaceShape);
+            foreach (var asset in orderedAssets)
             {
                 var parent = assetTypeUICreator.AssetTypePanelsMap[asset.Key.AssetType];
                 AddAssetButton(asset.Key.Id, parent, asset.Key.AssetType, onClick, asset.Value);
@@ -53,6 +56,12 @@ namespace AvatarCreatorExample
                 }
             }
 
+            saveButton.gameObject.SetActive(true);
+            saveButton.onClick.AddListener(() =>
+            {
+                IsSelected = true;
+                onSave?.Invoke();
+            });
             Loading.SetActive(false);
         }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using NativeAvatarCreator;
 using NUnit.Framework;
@@ -30,19 +29,23 @@ namespace Tests
             // Create avatar
             var createAvatarPayload = new AvatarProperties
             {
-                Partner = "dev-sdk",
-                Gender = "male",
-                BodyType = "fullbody",
+                Partner = DOMAIN,
+                Gender = AvatarPropertiesConstants.FEMALE,
+                BodyType = AvatarPropertiesConstants.FULL_BODY,
                 Assets = AvatarPropertiesConstants.DefaultAssets
             };
+            
+            Debug.Log(createAvatarPayload.ToJson());
 
-            var avatarId = await AvatarAPIRequests.Create(userStore.Token, createAvatarPayload);
+            var avatarAPIRequests = new AvatarAPIRequests(userStore.Token);
+
+            var avatarId = await avatarAPIRequests.Create(createAvatarPayload);
             Assert.IsNotNull(avatarId);
             Assert.IsNotEmpty(avatarId);
             Debug.Log("Avatar created with id: " + avatarId);
 
             // Get Preview GLB
-            var previewAvatar = await AvatarAPIRequests.GetPreviewAvatar(userStore.Token, avatarId);
+            var previewAvatar = await avatarAPIRequests.GetPreviewAvatar(avatarId);
             Assert.Greater(previewAvatar.Length, 0);
             Debug.Log("Preview avatar download completed.");
 
@@ -54,18 +57,18 @@ namespace Tests
                     { AssetType.SkinColor, 2 }
                 }
             };
-            var updatedAvatar = await AvatarAPIRequests.UpdateAvatar(userStore.Token, avatarId, updateAvatarPayload);
+            var updatedAvatar = await avatarAPIRequests.UpdateAvatar(avatarId, updateAvatarPayload);
             Assert.Greater(updatedAvatar.Length, 0);
             Debug.Log("Avatar skinColor updated, and glb downloaded.");
 
             // Save Avatar
-            var metaData = await AvatarAPIRequests.SaveAvatar(userStore.Token, avatarId);
+            var metaData = await avatarAPIRequests.SaveAvatar(avatarId);
             Assert.IsNotNull(avatarId);
             Assert.IsNotEmpty(metaData);
             Debug.Log("Avatar metadata saved to permanent storage on server.");
 
             // Delete the Avatar
-            await AvatarAPIRequests.DeleteAvatar(userStore.Token, avatarId);
+            await avatarAPIRequests.DeleteAvatar(avatarId);
             Debug.Log("Avatar deleted.");
             Assert.Pass();
         }

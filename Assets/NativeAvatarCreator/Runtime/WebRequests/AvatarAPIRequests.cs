@@ -1,16 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace NativeAvatarCreator
 {
-    public static class AvatarAPIRequests
+    public class AvatarAPIRequests
     {
-        public static async Task<string> Create(string token, AvatarProperties avatarProperties)
+        private Dictionary<string, string> header;
+
+        public AvatarAPIRequests(string token)
+        {
+            header = new Dictionary<string, string>
+            {
+                { "Content-Type", "application/json" },
+                { "Authorization", $"Bearer {token}" }
+            };
+        }
+
+        public async Task<string> Create(AvatarProperties avatarProperties)
         {
             var response = await WebRequestDispatcher.SendRequest(
                 Endpoints.AVATAR_API_V2,
-                Method.POST, GetToken(token),
+                Method.POST,
+                header,
                 avatarProperties.ToJson());
 
             var metadata = JObject.Parse(response.Text);
@@ -18,48 +31,44 @@ namespace NativeAvatarCreator
             return avatarId;
         }
 
-        public static async Task<byte[]> GetPreviewAvatar(string token, string avatarId)
+        public async Task<byte[]> GetPreviewAvatar(string avatarId)
         {
             var response = await WebRequestDispatcher.SendRequest(
                 $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb?preview=true",
                 Method.GET,
-                GetToken(token));
+                header);
             return response.Data;
         }
 
-        public static async Task<byte[]> UpdateAvatar(string token, string avatarId, AvatarProperties avatarProperties)
+        public async Task<byte[]> UpdateAvatar(string avatarId, AvatarProperties avatarProperties)
         {
+            Debug.Log(avatarProperties.ToJson());
             var response = await WebRequestDispatcher.SendRequest(
                 $"{Endpoints.AVATAR_API_V2}/{avatarId}?responseType=glb",
                 Method.PATCH,
-                GetToken(token),
+                header,
                 avatarProperties.ToJson(true));
 
             return response.Data;
         }
 
-        public static async Task<string> SaveAvatar(string token, string avatarId)
+        public async Task<string> SaveAvatar(string avatarId)
         {
             var response = await WebRequestDispatcher.SendRequest(
                 $"{Endpoints.AVATAR_API_V2}/{avatarId}",
                 Method.PUT,
-                GetToken(token));
+                header);
+
+            Debug.Log(response.Text);
             return response.Text;
         }
 
-        public static async Task DeleteAvatar(string token, string avatarId)
+        public async Task DeleteAvatar(string avatarId)
         {
             await WebRequestDispatcher.SendRequest(
                 $"{Endpoints.AVATAR_API_V1}/{avatarId}",
                 Method.DELETE,
-                GetToken(token));
+                header);
         }
-
-        private static Dictionary<string, string> GetToken(string token)
-            => new Dictionary<string, string>
-            {
-                { "Content-Type", "application/json" },
-                { "Authorization", $"Bearer {token}" }
-            };
     }
 }

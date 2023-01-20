@@ -44,12 +44,13 @@ namespace AvatarCreatorExample
 
         private async void ShowPanelAndWaitForSelection()
         {
+            panels[lastIndex].gameObject.SetActive(false);
+
             if (CurrentIndex >= panels.Length)
             {
                 return;
             }
 
-            panels[lastIndex].gameObject.SetActive(false);
             tokenSource = new CancellationTokenSource();
 
             var currentPanel = panels[CurrentIndex];
