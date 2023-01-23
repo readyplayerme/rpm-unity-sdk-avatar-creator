@@ -12,7 +12,7 @@ namespace AvatarCreatorExample
         [SerializeField] private AvatarLoader avatarLoader;
 
         private AvatarAPIRequests avatarAPIRequests;
-        
+
         private string avatarId;
         private GameObject avatar;
 
@@ -45,13 +45,13 @@ namespace AvatarCreatorExample
             avatarAPIRequests = new AvatarAPIRequests(dataStore.User.Token);
 
             dataStore.AvatarProperties.Assets = AvatarPropertiesConstants.DefaultAssets;
-            avatarId = await avatarAPIRequests.Create( dataStore.AvatarProperties);
+            avatarId = await avatarAPIRequests.Create(dataStore.AvatarProperties);
 
             var timeForCreateRequest = Time.time - startTime;
             DebugPanel.AddLogWithDuration("Avatar metadata created in temp storage", timeForCreateRequest);
             startTime = timeForCreateRequest;
 
-            var data = await avatarAPIRequests.GetPreviewAvatar( avatarId);
+            var data = await avatarAPIRequests.GetPreviewAvatar(avatarId);
             var timeForGettingPreviewAvatar = Time.time - startTime;
             DebugPanel.AddLogWithDuration("Downloaded preview avatar", timeForGettingPreviewAvatar);
             startTime = timeForGettingPreviewAvatar;
@@ -63,6 +63,8 @@ namespace AvatarCreatorExample
 
         public async void UpdateAvatar(string assetId, AssetType assetType)
         {
+            var startTime = Time.time;
+
             var payload = new AvatarProperties
             {
                 Assets = new Dictionary<AssetType, object>()
@@ -72,6 +74,7 @@ namespace AvatarCreatorExample
 
             var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload);
             avatar = await avatarLoader.LoadAvatar(avatarId, data);
+            DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
         }
 
         public async void Save()
