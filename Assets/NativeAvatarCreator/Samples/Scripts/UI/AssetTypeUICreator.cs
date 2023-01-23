@@ -29,6 +29,8 @@ namespace AvatarCreatorExample
         [SerializeField] private GameObject faceAssetTypePanel;
         [SerializeField] private GameObject faceAssetTypeParent;
         [SerializeField] private GameObject faceAssetPanelPrefab;
+        [SerializeField] private GameObject eyeColorPanel;
+        [SerializeField] private CameraZoom cameraZoom;
         [SerializeField] private List<AssetTypeIcon> assetTypeIcons;
 
         public Dictionary<AssetType, Transform> AssetTypePanelsMap { get; private set; }
@@ -44,20 +46,26 @@ namespace AvatarCreatorExample
 
             foreach (var assetType in assetTypes)
             {
+                if (assetType == AssetType.EyeColor)
+                {
+                    continue;
+                }
+                
                 if (AssetTypeHelper.IsFaceAsset(assetType))
                 {
                     var assetTypePanel = CreateAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypeUI.panelParent);
-                    CreateAssetTypeButton(assetType, faceAssetTypeParent.transform, OnFaceTypeButton(assetTypePanel));
+                    CreateAssetTypeButton(assetType, faceAssetTypeParent.transform, OnFaceTypeButton(assetType, assetTypePanel));
                 }
                 else
                 {
                     var assetTypePanel = CreateAssetTypePanel(assetType, assetTypeUI.panelPrefab, assetTypeUI.panelParent);
-                    CreateAssetTypeButton(assetType, assetTypeUI.buttonParent, OnAssetTypeButton(assetTypePanel));
+                    CreateAssetTypeButton(assetType, assetTypeUI.buttonParent, OnAssetTypeButton(assetType, assetTypePanel));
                 }
             }
 
             DefaultSelection();
-
+            AssetTypePanelsMap.Add(AssetType.EyeColor, eyeColorPanel.transform);
+            
             faceAssetTypeButton.AddListener(() =>
             {
                 if (selectedAssetTypeButton != null)
@@ -89,13 +97,22 @@ namespace AvatarCreatorExample
             assetTypeButtonsMap.Clear();
         }
 
-        private Action<AssetTypeButton> OnAssetTypeButton(Transform assetTypePanel)
+        private Action<AssetTypeButton> OnAssetTypeButton(AssetType assetType, Transform assetTypePanel)
             => assetTypeButton =>
             {
+                if (assetType == AssetType.Outfit)
+                {
+                    cameraZoom.MoveToFar();
+                }
+                else
+                {
+                    cameraZoom.MoveToNear();
+                }
+
                 selectedAssetTypeButton.SetSelect(false);
                 assetTypeButton.SetSelect(true);
                 selectedAssetTypeButton = assetTypeButton;
-
+                eyeColorPanel.SetActive(false);
                 faceAssetTypePanel.SetActive(false);
                 selectedAssetTypePanel.gameObject.SetActive(false);
                 faceAssetTypeButton.SetSelect(false);
@@ -103,10 +120,11 @@ namespace AvatarCreatorExample
                 selectedAssetTypePanel = assetTypePanel.transform;
             };
 
-        private Action<AssetTypeButton> OnFaceTypeButton(Transform assetTypePanel)
+        private Action<AssetTypeButton> OnFaceTypeButton(AssetType assetType, Transform assetTypePanel)
         {
             return assetTypeButton =>
             {
+                cameraZoom.MoveToNear();
                 faceAssetTypePanel.SetActive(true);
                 if (selectedAssetTypePanel != faceAssetTypePanel.transform)
                 {
@@ -117,6 +135,9 @@ namespace AvatarCreatorExample
                 {
                     selectedAssetTypeButton.SetSelect(false);
                 }
+
+                eyeColorPanel.SetActive(assetType == AssetType.EyeShape);
+
                 assetTypeButton.SetSelect(true);
                 selectedAssetTypeButton = assetTypeButton;
 
@@ -157,7 +178,7 @@ namespace AvatarCreatorExample
         {
             selectedAssetTypeButton = faceAssetTypeButton;
             selectedAssetTypeButton.SetSelect(true);
-            selectedAssetTypePanel = assetTypeUI.panelParent.GetChild(1);
+            selectedAssetTypePanel = assetTypeUI.panelParent.GetChild(2);
             selectedAssetTypePanel.gameObject.SetActive(true);
         }
     }

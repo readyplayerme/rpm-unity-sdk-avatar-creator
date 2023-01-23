@@ -9,5 +9,6 @@ namespace NativeAvatarCreator
         public AssetType AssetType;
         public string Gender;
         public string Icon;
+        public string Mask;
     }
 }

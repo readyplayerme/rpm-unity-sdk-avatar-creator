@@ -15,7 +15,7 @@ namespace Tests
         {
             var userStore = await AuthRequests.LoginAsAnonymous(DOMAIN);
             var avatarAssets = await PartnerAssetsRequests.Get(userStore.Token, DOMAIN);
-
+    
             Assert.IsNotNull(avatarAssets);
             Assert.Greater(avatarAssets.Length, 0);
         }
@@ -30,11 +30,15 @@ namespace Tests
             var createAvatarPayload = new AvatarProperties
             {
                 Partner = DOMAIN,
-                Gender = AvatarPropertiesConstants.FEMALE,
+                Gender = AvatarPropertiesConstants.MALE,
                 BodyType = AvatarPropertiesConstants.FULL_BODY,
-                Assets = AvatarPropertiesConstants.DefaultAssets
+                Assets = new Dictionary<AssetType, object>()
+                {
+                    { AssetType.SkinColor, 5 },
+                    { AssetType.EyeColor, "9781796" }
+                }
             };
-            
+
             Debug.Log(createAvatarPayload.ToJson());
 
             var avatarAPIRequests = new AvatarAPIRequests(userStore.Token);

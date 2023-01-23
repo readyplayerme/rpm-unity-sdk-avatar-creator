@@ -38,7 +38,16 @@ namespace AvatarCreatorExample
 
             foreach (var asset in assets)
             {
-                var iconDownloadTask = PartnerAssetsRequests.GetAssetIcon(dataStore.User.Token, asset.Icon);
+                Task<Texture> iconDownloadTask;
+                if (asset.AssetType == AssetType.EyeColor)
+                {
+                    iconDownloadTask =
+                        PartnerAssetsRequests.GetAssetIcon(dataStore.User.Token, asset.Mask);
+                }
+                else
+                {
+                    iconDownloadTask = PartnerAssetsRequests.GetAssetIcon(dataStore.User.Token, asset.Icon);
+                }
                 assetIconDownloadTasks.Add(asset, iconDownloadTask);
             }
 
@@ -59,5 +68,6 @@ namespace AvatarCreatorExample
 
             return asset.AssetType != AssetType.Shirt;
         }
+
     }
 }
