@@ -8,7 +8,7 @@ namespace AvatarCreatorExample
     {
     }
 
-    public abstract class SelectionPanel : MonoBehaviour, IPanel
+    public abstract class SelectionScreen : MonoBehaviour, IPanel
     {
         public DataStore DataStore { get; set; }
         public bool IsSelected { get; set; }

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace AvatarCreatorExample
 {
-    public class AvatarCreatorSelection : SelectionPanel
+    public class AvatarCreatorSelection : SelectionScreen
     {
         [SerializeField] private GameObject assetButtonPrefab;
         [SerializeField] private GameObject clearAssetSelectionButton;
@@ -42,17 +42,17 @@ namespace AvatarCreatorExample
             var orderedAssets = assets.OrderByDescending(x => x.Key.AssetType == AssetType.FaceShape);
             foreach (var asset in orderedAssets)
             {
-                var parent = assetTypeUICreator.AssetTypePanelsMap[asset.Key.AssetType];
-                AddAssetButton(asset.Key.Id, parent, asset.Key.AssetType, onClick, asset.Value);
+                var parent = PanelSwitcher.AssetTypePanelMap[asset.Key.AssetType];
+                AddAssetButton(asset.Key.Id, parent.transform, asset.Key.AssetType, onClick, asset.Value);
             }
 
-            foreach (var assetTypePanelMap in assetTypeUICreator.AssetTypePanelsMap)
+            foreach (var assetTypePanelMap in PanelSwitcher.AssetTypePanelMap)
             {
                 var assetType = assetTypePanelMap.Key;
                 var assetTypePanel = assetTypePanelMap.Value;
                 if (assetType != AssetType.Outfit && assetType != AssetType.Shirt)
                 {
-                    AddAssetSelectionClearButton(assetTypePanel, assetType, onClick);
+                    AddAssetSelectionClearButton(assetTypePanel.transform, assetType, onClick);
                 }
             }
 

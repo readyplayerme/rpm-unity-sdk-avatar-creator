@@ -29,43 +29,40 @@ namespace AvatarCreatorExample
         [SerializeField] private GameObject faceAssetTypePanel;
         [SerializeField] private GameObject faceAssetTypeParent;
         [SerializeField] private GameObject faceAssetPanelPrefab;
-        [SerializeField] private GameObject eyeColorPanel;
+        [SerializeField] private GameObject leftSidePanelPrefab;
         [SerializeField] private CameraZoom cameraZoom;
         [SerializeField] private List<AssetTypeIcon> assetTypeIcons;
 
-        public Dictionary<AssetType, Transform> AssetTypePanelsMap { get; private set; }
-
         private Dictionary<AssetType, AssetTypeButton> assetTypeButtonsMap;
         private AssetTypeButton selectedAssetTypeButton;
-        private Transform selectedAssetTypePanel;
 
         public void CreateUI(IEnumerable<AssetType> assetTypes)
         {
-            AssetTypePanelsMap = new Dictionary<AssetType, Transform>();
+            cameraZoom.MoveToFar();
             assetTypeButtonsMap = new Dictionary<AssetType, AssetTypeButton>();
+            PanelSwitcher.FaceTypePanel = faceAssetTypePanel;
 
             foreach (var assetType in assetTypes)
             {
                 if (assetType == AssetType.EyeColor)
                 {
-                    continue;
+                    CreateAssetTypePanel(assetType, leftSidePanelPrefab, assetTypeUI.panelParent);
                 }
-                
-                if (AssetTypeHelper.IsFaceAsset(assetType))
+                else if (AssetTypeHelper.IsFaceAsset(assetType))
                 {
-                    var assetTypePanel = CreateAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypeUI.panelParent);
-                    CreateAssetTypeButton(assetType, faceAssetTypeParent.transform, OnFaceTypeButton(assetType, assetTypePanel));
+                    CreateAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypeUI.panelParent);
+                    CreateAssetTypeButton(assetType, faceAssetTypeParent.transform, () =>
+                        PanelSwitcher.Switch(assetType));
                 }
                 else
                 {
-                    var assetTypePanel = CreateAssetTypePanel(assetType, assetTypeUI.panelPrefab, assetTypeUI.panelParent);
-                    CreateAssetTypeButton(assetType, assetTypeUI.buttonParent, OnAssetTypeButton(assetType, assetTypePanel));
+                    CreateAssetTypePanel(assetType, assetTypeUI.panelPrefab, assetTypeUI.panelParent);
+                    CreateAssetTypeButton(assetType, assetTypeUI.buttonParent, () =>
+                        PanelSwitcher.Switch(assetType));
                 }
             }
 
             DefaultSelection();
-            AssetTypePanelsMap.Add(AssetType.EyeColor, eyeColorPanel.transform);
-            
             faceAssetTypeButton.AddListener(() =>
             {
                 if (selectedAssetTypeButton != null)
@@ -73,32 +70,45 @@ namespace AvatarCreatorExample
                     selectedAssetTypeButton.SetSelect(false);
                 }
 
-                selectedAssetTypePanel.gameObject.SetActive(false);
                 DefaultSelection();
-                faceAssetTypePanel.SetActive(true);
             });
         }
 
         public void ResetUI()
         {
-            foreach (var assetTypePanel in AssetTypePanelsMap)
-            {
-                var parent = assetTypePanel.Value;
-                Destroy(parent.gameObject);
-                assetTypePanel.Value.gameObject.SetActive(false);
-            }
-            AssetTypePanelsMap.Clear();
+            PanelSwitcher.Clear();
 
             foreach (var assetTypeButton in assetTypeButtonsMap)
             {
                 Destroy(assetTypeButton.Value.gameObject);
             }
+
             faceAssetTypeButton.RemoveListener();
             assetTypeButtonsMap.Clear();
         }
 
-        private Action<AssetTypeButton> OnAssetTypeButton(AssetType assetType, Transform assetTypePanel)
-            => assetTypeButton =>
+        private void CreateAssetTypePanel(AssetType assetType, GameObject panelPrefab, Transform parent)
+        {
+            var assetTypePanel = Instantiate(panelPrefab, parent);
+            assetTypePanel.name = assetType + "Panel";
+            assetTypePanel.SetActive(false);
+
+            Debug.Log(assetType);
+            PanelSwitcher.AddPanel(assetType, assetTypePanel);
+        }
+
+        private void CreateAssetTypeButton(AssetType assetType, Transform parent, Action onClick)
+        {
+            var assetTypeButtonGameObject = Instantiate(assetTypeUI.buttonPrefab, parent);
+            var assetTypeButton = assetTypeButtonGameObject.GetComponent<AssetTypeButton>();
+            assetTypeButton.name = assetType + "Button";
+            var assetTypeIcon = assetTypeIcons.FirstOrDefault(x => x.assetType == assetType);
+            if (assetTypeIcon != null)
+            {
+                assetTypeButton.SetIcon(assetTypeIcon.icon);
+            }
+
+            assetTypeButton.AddListener(() =>
             {
                 if (assetType == AssetType.Outfit)
                 {
@@ -109,77 +119,20 @@ namespace AvatarCreatorExample
                     cameraZoom.MoveToNear();
                 }
 
+                assetTypeButton.SetSelect(true);
                 selectedAssetTypeButton.SetSelect(false);
-                assetTypeButton.SetSelect(true);
+                faceAssetTypeButton.SetSelect(AssetTypeHelper.IsFaceAsset(assetType));
                 selectedAssetTypeButton = assetTypeButton;
-                eyeColorPanel.SetActive(false);
-                faceAssetTypePanel.SetActive(false);
-                selectedAssetTypePanel.gameObject.SetActive(false);
-                faceAssetTypeButton.SetSelect(false);
-                assetTypePanel.gameObject.SetActive(true);
-                selectedAssetTypePanel = assetTypePanel.transform;
-            };
-
-        private Action<AssetTypeButton> OnFaceTypeButton(AssetType assetType, Transform assetTypePanel)
-        {
-            return assetTypeButton =>
-            {
-                cameraZoom.MoveToNear();
-                faceAssetTypePanel.SetActive(true);
-                if (selectedAssetTypePanel != faceAssetTypePanel.transform)
-                {
-                    selectedAssetTypePanel.gameObject.SetActive(false);
-                }
-
-                if (selectedAssetTypeButton != faceAssetTypeButton)
-                {
-                    selectedAssetTypeButton.SetSelect(false);
-                }
-
-                eyeColorPanel.SetActive(assetType == AssetType.EyeShape);
-
-                assetTypeButton.SetSelect(true);
-                selectedAssetTypeButton = assetTypeButton;
-
-                assetTypePanel.gameObject.SetActive(true);
-                selectedAssetTypePanel = assetTypePanel.transform;
-            };
-        }
-
-        private Transform CreateAssetTypePanel(AssetType assetType, GameObject panelPrefab, Transform parent)
-        {
-            var assetTypePanel = Instantiate(panelPrefab, parent);
-            assetTypePanel.name = assetType + "Panel";
-            assetTypePanel.SetActive(false);
-
-            AssetTypePanelsMap.Add(assetType, assetTypePanel.transform);
-            return assetTypePanel.transform;
-        }
-
-        private void CreateAssetTypeButton(AssetType assetType, Transform parent, Action<AssetTypeButton> onClick)
-        {
-            var assetTypeButtonGameObject = Instantiate(assetTypeUI.buttonPrefab, parent);
-            var assetTypeButton = assetTypeButtonGameObject.GetComponent<AssetTypeButton>();
-            assetTypeButton.name = assetType + "Button";
-            var assetTypeIcon = assetTypeIcons.FirstOrDefault(x => x.assetType == assetType);
-            if (assetTypeIcon != null)
-            {
-                assetTypeButton.SetIcon(assetTypeIcon.icon);
-            }
-            assetTypeButton.AddListener(() =>
-            {
-                onClick?.Invoke(assetTypeButton);
+                onClick?.Invoke();
             });
             assetTypeButtonsMap.Add(assetType, assetTypeButton);
         }
 
-        // Selects and enables faceShape panel.   
         private void DefaultSelection()
         {
             selectedAssetTypeButton = faceAssetTypeButton;
             selectedAssetTypeButton.SetSelect(true);
-            selectedAssetTypePanel = assetTypeUI.panelParent.GetChild(2);
-            selectedAssetTypePanel.gameObject.SetActive(true);
+            PanelSwitcher.Switch(AssetType.FaceShape);
         }
     }
 }

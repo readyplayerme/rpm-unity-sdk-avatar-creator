@@ -1,81 +1,69 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NativeAvatarCreator;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AvatarCreatorExample
 {
-    public class PanelSwitcher : MonoBehaviour
+    public static class PanelSwitcher
     {
-        [SerializeField] private Button back;
-        [SerializeField] private DataStore dataStore;
-        [SerializeField] private GameObject loading;
-        [SerializeField] private SelectionPanel[] panels;
+        public static Dictionary<AssetType, GameObject> AssetTypePanelMap { get; private set; }
 
-        private int CurrentIndex
+        public static GameObject FaceTypePanel;
+
+        private static AssetType currentAssetType;
+
+        public static void AddPanel(AssetType assetType, GameObject widget)
         {
-            get => index;
-            set
+            AssetTypePanelMap ??= new Dictionary<AssetType, GameObject>();
+            AssetTypePanelMap.Add(assetType, widget);
+        }
+
+        public static void Clear()
+        {
+            foreach (var assetTypePanels in AssetTypePanelMap)
             {
-                index = value;
-                back.gameObject.SetActive(index != 0 && enabled);
+                Object.Destroy(assetTypePanels.Value);
             }
-        }
-        private int index;
-
-        private int lastIndex;
-
-        private CancellationTokenSource tokenSource;
-
-        public void Start()
-        {
-            ShowPanelAndWaitForSelection();
+            AssetTypePanelMap.Clear();
         }
 
-        private void OnEnable()
+        public static void Switch(AssetType assetType)
         {
-            back.onClick.AddListener(Back);
-        }
-
-        private void OnDisable()
-        {
-            back.onClick.RemoveListener(Back);
-        }
-
-        private async void ShowPanelAndWaitForSelection()
-        {
-            panels[lastIndex].gameObject.SetActive(false);
-
-            if (CurrentIndex >= panels.Length)
+            if (AssetTypePanelMap.Keys.Contains(currentAssetType))
             {
-                return;
+                SetActivePanel(currentAssetType, false);
             }
 
-            tokenSource = new CancellationTokenSource();
+            SetActivePanel(AssetType.EyeColor, false);
 
-            var currentPanel = panels[CurrentIndex];
-            currentPanel.DataStore = dataStore;
-            currentPanel.IsSelected = false;
-            currentPanel.Loading = loading;
-            currentPanel.gameObject.SetActive(true);
-
-            await currentPanel.WaitForSelection(tokenSource.Token);
-            lastIndex = CurrentIndex;
-
-            if (!tokenSource.IsCancellationRequested)
+            switch (assetType)
             {
-                CurrentIndex++;
-                ShowPanelAndWaitForSelection();
+                case AssetType.FaceShape:
+                case AssetType.EyebrowStyle:
+                case AssetType.NoseShape:
+                case AssetType.LipShape:
+                case AssetType.BeardStyle:
+                    FaceTypePanel.SetActive(true);
+                    SetActivePanel(assetType, true);
+                    break;
+                case AssetType.EyeShape:
+                    FaceTypePanel.SetActive(true);
+                    SetActivePanel(assetType, true);
+                    SetActivePanel(AssetType.EyeColor, true);
+                    break;
+                default:
+                    FaceTypePanel.SetActive(false);
+                    SetActivePanel(assetType, true);
+                    break;
             }
+
+            currentAssetType = assetType;
         }
 
-        private async void Back()
+        private static void SetActivePanel(AssetType assetType, bool enable)
         {
-            tokenSource.Cancel();
-            await Task.Yield();
-
-            CurrentIndex--;
-            ShowPanelAndWaitForSelection();
+            AssetTypePanelMap[assetType].SetActive(enable);
         }
     }
 }

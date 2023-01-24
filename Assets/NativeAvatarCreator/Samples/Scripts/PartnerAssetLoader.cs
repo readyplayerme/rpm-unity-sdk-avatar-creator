@@ -38,16 +38,9 @@ namespace AvatarCreatorExample
 
             foreach (var asset in assets)
             {
-                Task<Texture> iconDownloadTask;
-                if (asset.AssetType == AssetType.EyeColor)
-                {
-                    iconDownloadTask =
-                        PartnerAssetsRequests.GetAssetIcon(dataStore.User.Token, asset.Mask);
-                }
-                else
-                {
-                    iconDownloadTask = PartnerAssetsRequests.GetAssetIcon(dataStore.User.Token, asset.Icon);
-                }
+                var iconDownloadTask = PartnerAssetsRequests.GetAssetIcon(
+                    dataStore.User.Token,
+                    asset.AssetType == AssetType.EyeColor ? asset.Mask : asset.Icon);
                 assetIconDownloadTasks.Add(asset, iconDownloadTask);
             }
 
@@ -57,10 +50,9 @@ namespace AvatarCreatorExample
 
         private bool FilterAssets(PartnerAsset asset)
         {
-            // Outfit is only for fullbody and are gender specific.
-            // Shirt is only for halfbody.
-
-            if (dataStore.AvatarProperties.BodyType != "fullbody")
+            // Outfit is only for full body and are gender specific.
+            // Shirt is only for half body.
+            if (dataStore.AvatarProperties.BodyType != AvatarPropertiesConstants.FULL_BODY)
                 return asset.AssetType != AssetType.Outfit;
 
             if (asset.AssetType == AssetType.Outfit)
@@ -68,6 +60,5 @@ namespace AvatarCreatorExample
 
             return asset.AssetType != AssetType.Shirt;
         }
-
     }
 }
