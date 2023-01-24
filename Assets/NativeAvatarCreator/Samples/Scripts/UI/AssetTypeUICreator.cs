@@ -129,9 +129,10 @@ namespace AvatarCreatorExample
 
         private void DefaultSelection()
         {
-            selectedAssetTypeButton = faceAssetTypeButton;
-            selectedAssetTypeButton.SetSelect(true);
+            faceAssetTypeButton.SetSelect(true);
+            assetTypeButtonsMap[AssetType.FaceShape].SetSelect(true);
             PanelSwitcher.Switch(AssetType.FaceShape);
+            selectedAssetTypeButton =  assetTypeButtonsMap[AssetType.FaceShape];
         }
     }
 }
