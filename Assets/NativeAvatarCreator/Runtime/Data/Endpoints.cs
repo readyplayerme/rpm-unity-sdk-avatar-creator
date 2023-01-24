@@ -2,7 +2,7 @@
 {
     public static class Endpoints
     {
-        public const string DOMAIN_URL = "https://[domain].readyplayer.me";
+        public const string DOMAIN_URL = "https://[domain].develop.readyplayer.me";
         public const string AUTH = DOMAIN_URL + "/api/users";
         public const string ASSETS = DOMAIN_URL + "/api/assets";
 
