@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using NativeAvatarCreator;
+using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 
 namespace AvatarCreatorExample
@@ -10,11 +12,19 @@ namespace AvatarCreatorExample
         [SerializeField] private DataStore dataStore;
         [SerializeField] private AvatarCreatorSelection avatarCreatorSelection;
         [SerializeField] private AvatarLoader avatarLoader;
+        [SerializeField] private AvatarConfig avatarConfig;
 
         private AvatarAPIRequests avatarAPIRequests;
 
         private string avatarId;
         private GameObject avatar;
+
+        private string avatarConfigParameters;
+
+        private void Start()
+        {
+            avatarConfigParameters = AvatarConfigProcessor.ProcessAvatarConfiguration(avatarConfig);
+        }
 
         private void OnEnable()
         {
@@ -51,7 +61,7 @@ namespace AvatarCreatorExample
             DebugPanel.AddLogWithDuration("Avatar metadata created in temp storage", timeForCreateRequest);
             startTime = timeForCreateRequest;
 
-            var data = await avatarAPIRequests.GetPreviewAvatar(avatarId);
+            var data = await avatarAPIRequests.GetPreviewAvatar(avatarId, avatarConfigParameters);
             var timeForGettingPreviewAvatar = Time.time - startTime;
             DebugPanel.AddLogWithDuration("Downloaded preview avatar", timeForGettingPreviewAvatar);
             startTime = timeForGettingPreviewAvatar;
@@ -72,7 +82,7 @@ namespace AvatarCreatorExample
 
             payload.Assets.Add(assetType, assetId);
 
-            var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload);
+            var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
             avatar = await avatarLoader.LoadAvatar(avatarId, data);
             DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
         }

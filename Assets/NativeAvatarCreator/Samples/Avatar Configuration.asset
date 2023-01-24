@@ -15,7 +15,8 @@ MonoBehaviour:
   MeshLod: 0
   Pose: 0
   TextureAtlas: 0
-  TextureSizeLimit: 512
+  TextureSizeLimit: 256
   UseHands: 0
   UseDracoCompression: 0
-  MorphTargets: []
+  MorphTargets:
+  - none

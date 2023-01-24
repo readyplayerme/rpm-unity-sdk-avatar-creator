@@ -3,7 +3,6 @@ using UnityEngine.EventSystems;
 
 namespace AvatarCreatorExample
 {
-
     public class RotateAvatar : MonoBehaviour
     {
         [SerializeField] private float speed = 50;

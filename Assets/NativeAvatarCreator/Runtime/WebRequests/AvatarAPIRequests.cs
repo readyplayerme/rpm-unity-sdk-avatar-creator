@@ -31,20 +31,19 @@ namespace NativeAvatarCreator
             return avatarId;
         }
 
-        public async Task<byte[]> GetPreviewAvatar(string avatarId)
+        public async Task<byte[]> GetPreviewAvatar(string avatarId, string parameters = default)
         {
             var response = await WebRequestDispatcher.SendRequest(
-                $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb?preview=true",
+                $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb?preview=true&" + parameters,
                 Method.GET,
                 header);
             return response.Data;
         }
 
-        public async Task<byte[]> UpdateAvatar(string avatarId, AvatarProperties avatarProperties)
+        public async Task<byte[]> UpdateAvatar(string avatarId, AvatarProperties avatarProperties, string parameters = default)
         {
-            Debug.Log(avatarProperties.ToJson());
             var response = await WebRequestDispatcher.SendRequest(
-                $"{Endpoints.AVATAR_API_V2}/{avatarId}?responseType=glb",
+                $"{Endpoints.AVATAR_API_V2}/{avatarId}?responseType=glb&" + parameters,
                 Method.PATCH,
                 header,
                 avatarProperties.ToJson(true));
@@ -59,7 +58,6 @@ namespace NativeAvatarCreator
                 Method.PUT,
                 header);
 
-            Debug.Log(response.Text);
             return response.Text;
         }
 

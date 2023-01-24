@@ -3,8 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace AvatarCreatorExample
-{
-
+{ 
     public class CameraZoom : MonoBehaviour
     {
         [SerializeField] private Transform cameraTransform;
@@ -27,7 +26,7 @@ namespace AvatarCreatorExample
 
         public void MoveToFar()
         {
-            if (lerpInProgress)
+            if (lerpInProgress) 
             {
                 ctx.Cancel();
             }
