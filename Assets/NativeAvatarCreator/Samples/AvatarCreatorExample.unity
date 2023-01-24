@@ -318,6 +318,7 @@ GameObject:
   - component: {fileID: 78456334}
   - component: {fileID: 78456333}
   - component: {fileID: 78456335}
+  - component: {fileID: 78456336}
   m_Layer: 5
   m_Name: AvatarCreatorSelection
   m_TagString: Untagged
@@ -417,10 +418,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeccf23e229c41a1b0d3956b69ed4ad5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assetButtonPrefab: {fileID: 3533925521447789852, guid: 80a1b1f210f412d4c8b6bc1f7542904e, type: 3}
-  clearAssetSelectionButton: {fileID: 3533925521447789852, guid: 9ae39b2477877814bbda5f30ccd568b5, type: 3}
+  assetButtonCreator: {fileID: 78456336}
   assetTypeUICreator: {fileID: 78456333}
   saveButton: {fileID: 854279430}
+--- !u!114 &78456336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78456331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43540c03e61f45adba034c3f7f9efa7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assetButtonPrefab: {fileID: 3533925521447789852, guid: 80a1b1f210f412d4c8b6bc1f7542904e, type: 3}
+  clearAssetSelectionButton: {fileID: 3533925521447789852, guid: 9ae39b2477877814bbda5f30ccd568b5, type: 3}
 --- !u!1 &123713128
 GameObject:
   m_ObjectHideFlags: 0
