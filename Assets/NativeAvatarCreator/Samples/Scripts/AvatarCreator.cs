@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using NativeAvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
@@ -45,13 +44,15 @@ namespace AvatarCreatorExample
 
         private void Hide()
         {
-            Destroy(avatar);
+            if (avatar != null)
+            {
+                Destroy(avatar);
+            }
         }
 
         private async Task CreateDefaultModel()
         {
             var startTime = Time.time;
-
             avatarAPIRequests = new AvatarAPIRequests(dataStore.User.Token);
 
             dataStore.AvatarProperties.Assets = AvatarPropertiesConstants.DefaultAssets;

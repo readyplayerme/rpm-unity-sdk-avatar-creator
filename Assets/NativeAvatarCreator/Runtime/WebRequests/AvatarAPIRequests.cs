@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace NativeAvatarCreator
 {
     public class AvatarAPIRequests
     {
-        private Dictionary<string, string> header;
+        private readonly Dictionary<string, string> header;
+        private readonly CancellationToken cancellationToken;
 
-        public AvatarAPIRequests(string token)
+        public AvatarAPIRequests(string token, CancellationToken cancellationToken = default)
         {
+            this.cancellationToken = cancellationToken;
             header = new Dictionary<string, string>
             {
                 { "Content-Type", "application/json" },
@@ -24,7 +26,8 @@ namespace NativeAvatarCreator
                 Endpoints.AVATAR_API_V2,
                 Method.POST,
                 header,
-                avatarProperties.ToJson());
+                avatarProperties.ToJson(),
+                token: cancellationToken);
 
             var metadata = JObject.Parse(response.Text);
             var avatarId = metadata["data"]?["id"]?.ToString();
@@ -36,7 +39,8 @@ namespace NativeAvatarCreator
             var response = await WebRequestDispatcher.SendRequest(
                 $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb?preview=true&" + parameters,
                 Method.GET,
-                header);
+                header,
+                token: cancellationToken);
             return response.Data;
         }
 
@@ -46,7 +50,8 @@ namespace NativeAvatarCreator
                 $"{Endpoints.AVATAR_API_V2}/{avatarId}?responseType=glb&" + parameters,
                 Method.PATCH,
                 header,
-                avatarProperties.ToJson(true));
+                avatarProperties.ToJson(true),
+                token: cancellationToken);
 
             return response.Data;
         }
@@ -56,7 +61,8 @@ namespace NativeAvatarCreator
             var response = await WebRequestDispatcher.SendRequest(
                 $"{Endpoints.AVATAR_API_V2}/{avatarId}",
                 Method.PUT,
-                header);
+                header,
+                token: cancellationToken);
 
             return response.Text;
         }
@@ -66,7 +72,8 @@ namespace NativeAvatarCreator
             await WebRequestDispatcher.SendRequest(
                 $"{Endpoints.AVATAR_API_V1}/{avatarId}",
                 Method.DELETE,
-                header);
+                header,
+                token: cancellationToken);
         }
     }
 }

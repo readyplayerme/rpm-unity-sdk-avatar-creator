@@ -53,6 +53,7 @@ namespace NativeAvatarCreator
 
             // var startTime = Time.realtimeSinceStartup;
             var asyncOperation = request.SendWebRequest();
+            token.Register(request.Abort);
             while (!asyncOperation.isDone && !token.IsCancellationRequested)
             {
                 await Task.Yield();
