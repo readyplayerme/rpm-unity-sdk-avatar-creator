@@ -69,6 +69,7 @@ namespace AvatarCreatorExample
             avatar = await avatarLoader.LoadAvatar(avatarId, data);
             var avatarLoadingTime = Time.time - startTime;
             DebugPanel.AddLogWithDuration("Avatar loaded", avatarLoadingTime);
+            avatarCreatorSelection.Loading.SetActive(false);
         }
 
         public async void UpdateAvatar(string assetId, AssetType assetType)

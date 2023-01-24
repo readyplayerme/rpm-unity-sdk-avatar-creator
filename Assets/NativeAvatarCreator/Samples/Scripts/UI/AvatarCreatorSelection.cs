@@ -62,7 +62,6 @@ namespace AvatarCreatorExample
                 IsSelected = true;
                 onSave?.Invoke();
             });
-            Loading.SetActive(false);
         }
 
         private async void AddAssetButton(string assetId, Transform parent, AssetType assetType, Action<string, AssetType> onClick,

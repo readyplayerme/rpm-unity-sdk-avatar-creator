@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NativeAvatarCreator;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AvatarCreatorExample
 {
@@ -27,7 +28,6 @@ namespace AvatarCreatorExample
         [SerializeField] private AssetTypeUI assetTypeUI;
         [SerializeField] private AssetTypeButton faceAssetTypeButton;
         [SerializeField] private GameObject faceAssetTypePanel;
-        [SerializeField] private GameObject faceAssetTypeParent;
         [SerializeField] private GameObject faceAssetPanelPrefab;
         [SerializeField] private GameObject leftSidePanelPrefab;
         [SerializeField] private CameraZoom cameraZoom;
@@ -51,7 +51,7 @@ namespace AvatarCreatorExample
                 else if (AssetTypeHelper.IsFaceAsset(assetType))
                 {
                     CreateAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypeUI.panelParent);
-                    CreateAssetTypeButton(assetType, faceAssetTypeParent.transform, () =>
+                    CreateAssetTypeButton(assetType, faceAssetTypePanel.GetComponent<ScrollRect>().content.transform, () =>
                         PanelSwitcher.Switch(assetType));
                 }
                 else
@@ -93,7 +93,6 @@ namespace AvatarCreatorExample
             assetTypePanel.name = assetType + "Panel";
             assetTypePanel.SetActive(false);
 
-            Debug.Log(assetType);
             PanelSwitcher.AddPanel(assetType, assetTypePanel);
         }
 

@@ -4,15 +4,10 @@ using UnityEngine;
 
 namespace AvatarCreatorExample
 {
-    public interface IPanel
-    {
-    }
-
-    public abstract class SelectionScreen : MonoBehaviour, IPanel
+    public abstract class SelectionScreen : MonoBehaviour
     {
         public DataStore DataStore { get; set; }
         public bool IsSelected { get; set; }
-
         public GameObject Loading { get; set; }
 
         public async Task WaitForSelection(CancellationToken token)
