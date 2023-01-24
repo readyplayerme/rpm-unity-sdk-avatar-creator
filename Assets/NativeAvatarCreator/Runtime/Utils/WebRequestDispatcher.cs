@@ -18,7 +18,7 @@ namespace NativeAvatarCreator
 
     public static class WebRequestDispatcher
     {
-        private const int TIMEOUT = 60;
+        private const int TIMEOUT = 240;
 
         public static async Task<Response> SendRequest(
             string url,
@@ -51,6 +51,7 @@ namespace NativeAvatarCreator
                 request.uploadHandler = new UploadHandlerRaw(bytes);
             }
 
+            // var startTime = Time.realtimeSinceStartup;
             var asyncOperation = request.SendWebRequest();
             while (!asyncOperation.isDone && !token.IsCancellationRequested)
             {
@@ -68,6 +69,11 @@ namespace NativeAvatarCreator
             {
                 texture = downloadHandlerTexture.texture;
             }
+
+            // var totalSize = int.Parse(request.GetResponseHeader("Content-Length"));
+            // var sizeInKb = totalSize / (float) 1024;
+            // var totalTime = Time.realtimeSinceStartup - startTime;
+            // Debug.Log("Download size: " + totalSize + ", time: " + totalTime + ", speed " + (sizeInKb / totalTime).ToString("F4") + "KBps");
 
             return new Response
             {
