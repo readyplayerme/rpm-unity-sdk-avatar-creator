@@ -13,14 +13,14 @@
       "hash": "76f76584a113b240a4ec11f324b17302bde9a53a"
     },
     "com.readyplayerme.avatarloader": {
-      "version": "https://github.com/readyplayerme/Unity-Avatar-Loader.git#v0.1.0",
+      "version": "https://github.com/readyplayerme/Unity-Avatar-Loader.git#v0.1.1",
       "depth": 0,
       "source": "git",
       "dependencies": {
         "com.unity.ugui": "1.0.0",
         "com.unity.nuget.newtonsoft-json": "3.0.2"
       },
-      "hash": "e87a066568068df4a69571118db17c9977a6e161"
+      "hash": "9c8a38251c66014aad3c96d8caf781a64c33f12b"
     },
     "com.readyplayerme.core": {
       "version": "https://github.com/readyplayerme/Unity-Core.git",
