@@ -7,6 +7,9 @@ namespace NativeAvatarCreator
 {
     public class AvatarAPIRequests
     {
+        private const string PREVIEW_PARAMETER = "&preview=true";
+        private const string RESPONSE_TYPE_PARAMETER = "&responseType=glb";
+
         private readonly Dictionary<string, string> header;
         private readonly CancellationToken cancellationToken;
 
@@ -37,7 +40,7 @@ namespace NativeAvatarCreator
         public async Task<byte[]> GetPreviewAvatar(string avatarId, string parameters = default)
         {
             var response = await WebRequestDispatcher.SendRequest(
-                $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb?preview=true&" + parameters,
+                $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}{PREVIEW_PARAMETER}",
                 Method.GET,
                 header,
                 token: cancellationToken);
@@ -47,7 +50,7 @@ namespace NativeAvatarCreator
         public async Task<byte[]> UpdateAvatar(string avatarId, AvatarProperties avatarProperties, string parameters = default)
         {
             var response = await WebRequestDispatcher.SendRequest(
-                $"{Endpoints.AVATAR_API_V2}/{avatarId}?responseType=glb&" + parameters,
+                $"{Endpoints.AVATAR_API_V2}/{avatarId}{parameters}{RESPONSE_TYPE_PARAMETER}",
                 Method.PATCH,
                 header,
                 avatarProperties.ToJson(true),
