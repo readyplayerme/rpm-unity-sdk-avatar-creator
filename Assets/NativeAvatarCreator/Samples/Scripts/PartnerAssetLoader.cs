@@ -40,7 +40,7 @@ namespace AvatarCreatorExample
             {
                 var iconDownloadTask = PartnerAssetsRequests.GetAssetIcon(
                     dataStore.User.Token,
-                    asset.AssetType == AssetType.EyeColor ? asset.Mask : asset.Icon);
+                    asset.AssetType == AssetType.EyeColor ? asset.Mask + "?w=256" : asset.Icon);
                 assetIconDownloadTasks.Add(asset, iconDownloadTask);
             }
 

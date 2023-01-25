@@ -418,8 +418,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeccf23e229c41a1b0d3956b69ed4ad5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assetButtonCreator: {fileID: 78456336}
   assetTypeUICreator: {fileID: 78456333}
+  assetButtonCreator: {fileID: 78456336}
   saveButton: {fileID: 854279430}
 --- !u!114 &78456336
 MonoBehaviour:

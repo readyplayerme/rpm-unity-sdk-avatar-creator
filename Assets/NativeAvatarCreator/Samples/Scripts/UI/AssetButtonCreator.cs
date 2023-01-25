@@ -29,7 +29,7 @@ namespace AvatarCreatorExample
             {
                 var assetType = assetTypePanelMap.Key;
                 var assetTypePanel = assetTypePanelMap.Value;
-                if (assetType != AssetType.Outfit && assetType != AssetType.Shirt)
+                if (assetType != AssetType.Outfit && assetType != AssetType.Shirt && assetType != AssetType.EyeColor)
                 {
                     AddAssetSelectionClearButton(assetTypePanel.transform, assetType, onClick);
                 }
@@ -56,7 +56,7 @@ namespace AvatarCreatorExample
                 assetButton.SetSelect(true);
                 onClick?.Invoke(assetId, assetType);
             });
-            assetButton.SetIcon(await iconDownloadTask);
+            assetButton.SetIcon(assetType, await iconDownloadTask);
         }
 
         private void AddAssetSelectionClearButton(Transform parent, AssetType assetType, Action<string, AssetType> onClick)
