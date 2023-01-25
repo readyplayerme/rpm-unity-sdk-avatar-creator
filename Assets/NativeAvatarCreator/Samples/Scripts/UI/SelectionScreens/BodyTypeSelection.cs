@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace AvatarCreatorExample
 {
-    public class BodyTypeSelection : SelectionScreen
+    public class BodyTypeSelection : SelectionScreenBase
     {
         [SerializeField] private Button fullBody;
         [SerializeField] private Button halfBody;

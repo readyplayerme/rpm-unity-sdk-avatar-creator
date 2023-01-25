@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace AvatarCreatorExample
 {
-    public class AuthSelection : SelectionScreen
+    public class AuthSelection : SelectionScreenBase
     {
         [SerializeField] private InputField partnerDomain;
         [SerializeField] private Button login;

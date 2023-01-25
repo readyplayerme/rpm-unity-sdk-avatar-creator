@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AvatarCreatorExample
 {
-    public abstract class SelectionScreen : MonoBehaviour
+    public abstract class SelectionScreenBase : MonoBehaviour
     {
         public DataStore DataStore { get; set; }
         public bool IsSelected { get; set; }

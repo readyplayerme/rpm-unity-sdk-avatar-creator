@@ -12,13 +12,13 @@ namespace AvatarCreatorExample
     {
         [SerializeField] private GameObject assetButtonPrefab;
         [SerializeField] private GameObject clearAssetSelectionButton;
-        
+
         private Dictionary<AssetType, AssetButton> selectedAssetByTypeMap;
 
         public void CreateUI(IEnumerable<KeyValuePair<PartnerAsset, Task<Texture>>> assets, Action<string, AssetType> onClick)
         {
             selectedAssetByTypeMap = new Dictionary<AssetType, AssetButton>();
-            
+
             foreach (var asset in assets)
             {
                 var parent = PanelSwitcher.AssetTypePanelMap[asset.Key.AssetType];
@@ -35,7 +35,7 @@ namespace AvatarCreatorExample
                 }
             }
         }
-        
+
         private async void AddAssetButton(string assetId, Transform parent, AssetType assetType, Action<string, AssetType> onClick,
             Task<Texture> iconDownloadTask)
         {

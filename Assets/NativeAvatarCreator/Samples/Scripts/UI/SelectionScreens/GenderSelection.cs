@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace AvatarCreatorExample
 {
-    public class GenderSelection : SelectionScreen
+    public class GenderSelection : SelectionScreenBase
     {
         [SerializeField] private Button male;
         [SerializeField] private Button female;

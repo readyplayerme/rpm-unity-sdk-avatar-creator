@@ -11,7 +11,7 @@ namespace AvatarCreatorExample
         [SerializeField] private Button back;
         [SerializeField] private DataStore dataStore;
         [SerializeField] private GameObject loading;
-        [FormerlySerializedAs("panels"),SerializeField] private SelectionScreen[] screens;
+        [FormerlySerializedAs("panels"),SerializeField] private SelectionScreenBase[] screens;
 
         private int CurrentIndex
         {

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace AvatarCreatorExample
 {
-    public class AvatarCreatorSelection : SelectionScreen
+    public class AvatarCreatorSelection : SelectionScreenBase
     {
         [SerializeField] private AssetTypeUICreator assetTypeUICreator;
         [SerializeField] private AssetButtonCreator assetButtonCreator;
