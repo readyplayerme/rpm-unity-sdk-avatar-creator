@@ -11,7 +11,9 @@ namespace AvatarCreatorExample
         [SerializeField] private DataStore dataStore;
         [SerializeField] private AvatarCreatorSelection avatarCreatorSelection;
         [SerializeField] private AvatarLoader avatarLoader;
-        [SerializeField] private AvatarConfig avatarConfig;
+        [SerializeField] private GameObject avatarCreatorUI;
+        [SerializeField] private AvatarConfig inCreatorConfig;
+        [SerializeField] private AvatarConfig inGameConfig;
 
         private AvatarAPIRequests avatarAPIRequests;
 
@@ -22,19 +24,25 @@ namespace AvatarCreatorExample
 
         private void Start()
         {
-            avatarConfigParameters = AvatarConfigProcessor.ProcessAvatarConfiguration(avatarConfig);
+            avatarConfigParameters = AvatarConfigProcessor.ProcessAvatarConfiguration(inCreatorConfig);
         }
 
         private void OnEnable()
         {
             avatarCreatorSelection.Show += Show;
             avatarCreatorSelection.Hide += Hide;
+
+            avatarCreatorSelection.OnClick += UpdateAvatar;
+            avatarCreatorSelection.Save += Save;
         }
 
         private void OnDisable()
         {
             avatarCreatorSelection.Show -= Show;
             avatarCreatorSelection.Hide -= Hide;
+
+            avatarCreatorSelection.OnClick -= UpdateAvatar;
+            avatarCreatorSelection.Save -= Save;
         }
 
         private async void Show()
@@ -73,7 +81,7 @@ namespace AvatarCreatorExample
             avatarCreatorSelection.Loading.SetActive(false);
         }
 
-        public async void UpdateAvatar(string assetId, AssetType assetType)
+        private async void UpdateAvatar(string assetId, AssetType assetType)
         {
             var startTime = Time.time;
 
@@ -89,9 +97,22 @@ namespace AvatarCreatorExample
             DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
         }
 
-        public async void Save()
+        private async void Save()
         {
+            avatarCreatorUI.gameObject.SetActive(false);
+            var startTime = Time.time;
             await avatarAPIRequests.SaveAvatar(avatarId);
+            DebugPanel.AddLogWithDuration("Avatar saved", Time.time - startTime);
+
+            var avatarObjectLoader = new AvatarObjectLoader();
+            avatarObjectLoader.AvatarConfig = inGameConfig;
+            avatarObjectLoader.OnCompleted += (sender, args) =>
+            {
+                AvatarAnimatorHelper.SetupAnimator(args.Metadata.BodyType, args.Avatar);
+                DebugPanel.AddLogWithDuration("Created avatar loaded", Time.time - startTime);
+            };
+
+            avatarObjectLoader.LoadAvatar($"{Endpoints.AVATAR_API_V1}/{avatarId}.glb");
         }
     }
 }

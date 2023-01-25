@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/NativeAvatarCreator/Samples/AvatarCreatorExample.unity
+    path: Assets/NativeAvatarCreator/Samples/Scenes/AvatarCreatorExample.unity
     guid: 86c1a7b565e8e154dbb4522097759eeb
   m_configObjects: {}

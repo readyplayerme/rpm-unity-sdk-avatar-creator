@@ -14,9 +14,12 @@ namespace AvatarCreatorExample
         [SerializeField] private AssetTypeUICreator assetTypeUICreator;
         [SerializeField] private AssetButtonCreator assetButtonCreator;
         [SerializeField] private Button saveButton;
-        
+
         public Action Show;
         public Action Hide;
+
+        public  Action<string, AssetType> OnClick;
+        public Action Save;
 
         private void OnEnable()
         {
@@ -31,20 +34,19 @@ namespace AvatarCreatorExample
             Hide?.Invoke();
         }
 
-        public void AddAllAssetButtons(BodyType bodyType, Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, AssetType> onClick,
-            Action onSave)
+        public void AddAllAssetButtons(BodyType bodyType, Dictionary<PartnerAsset, Task<Texture>> assets)
         {
             var distinctAssetType = assets.Keys.Select(x => x.AssetType).Distinct();
             assetTypeUICreator.CreateUI(bodyType, AssetTypeHelper.GetAssetTypeList().Where(x => distinctAssetType.Contains(x)));
 
             var orderedAssets = assets.OrderByDescending(x => x.Key.AssetType == AssetType.FaceShape);
-            assetButtonCreator.CreateUI(orderedAssets, onClick);
+            assetButtonCreator.CreateUI(orderedAssets, OnClick);
 
             saveButton.gameObject.SetActive(true);
             saveButton.onClick.AddListener(() =>
             {
                 IsSelected = true;
-                onSave?.Invoke();
+                Save?.Invoke();
             });
         }
     }

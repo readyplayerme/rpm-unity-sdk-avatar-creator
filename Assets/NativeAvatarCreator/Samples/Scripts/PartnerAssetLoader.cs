@@ -45,7 +45,7 @@ namespace AvatarCreatorExample
                 assetIconDownloadTasks.Add(asset, iconDownloadTask);
             }
 
-            avatarCreatorSelection.AddAllAssetButtons(dataStore.AvatarProperties.BodyType, assetIconDownloadTasks, avatarCreator.UpdateAvatar, avatarCreator.Save);
+            avatarCreatorSelection.AddAllAssetButtons(dataStore.AvatarProperties.BodyType, assetIconDownloadTasks);
             await Task.Yield();
         }
 

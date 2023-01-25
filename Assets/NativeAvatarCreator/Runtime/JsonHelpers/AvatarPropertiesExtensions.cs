@@ -30,7 +30,6 @@ namespace NativeAvatarCreator
                 settings.DefaultValueHandling = DefaultValueHandling.Ignore;
             }
             
-            Debug.Log(JsonConvert.SerializeObject(data, settings));
             return JsonConvert.SerializeObject(data, settings);
         }
     }
