@@ -1,4 +1,5 @@
 ﻿using NativeAvatarCreator;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 
 namespace AvatarCreatorExample
@@ -13,10 +14,12 @@ namespace AvatarCreatorExample
             authSelection.Login += Login;
         }
 
-        private async void Login(string partnerDomain)
+        private async void Login()
         {
             var startTime = Time.time;
+            var partnerDomain = CoreSettings.PartnerSubdomainSettings.Subdomain;
             dataStore.AvatarProperties.Partner = partnerDomain;
+
             dataStore.User = await AuthRequests.LoginAsAnonymous(partnerDomain);
 
             DebugPanel.AddLogWithDuration($"Logged in with userId: {dataStore.User.Id}", Time.time - startTime);

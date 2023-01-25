@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f12696b20f2e49519c1b2a403a76778b, type: 3}
   m_Name: PartnerSubdomainSettings
   m_EditorClassIdentifier: 
-  Subdomain: demo
+  Subdomain: dev-sdk

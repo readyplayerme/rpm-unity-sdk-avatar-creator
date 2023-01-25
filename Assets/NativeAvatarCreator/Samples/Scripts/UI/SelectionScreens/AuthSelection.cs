@@ -6,10 +6,9 @@ namespace AvatarCreatorExample
 {
     public class AuthSelection : SelectionScreenBase
     {
-        [SerializeField] private InputField partnerDomain;
         [SerializeField] private Button login;
 
-        public Action<string> Login;
+        public Action Login;
 
         private void OnEnable()
         {
@@ -30,7 +29,7 @@ namespace AvatarCreatorExample
         private void LoginAsAnonymous()
         {
             Loading.SetActive(true);
-            Login?.Invoke(partnerDomain.text);
+            Login?.Invoke();
         }
     }
 }
