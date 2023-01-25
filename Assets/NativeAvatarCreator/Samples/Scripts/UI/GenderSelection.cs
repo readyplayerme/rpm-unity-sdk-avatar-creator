@@ -1,4 +1,4 @@
-﻿using NativeAvatarCreator;
+﻿using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,19 +26,19 @@ namespace AvatarCreatorExample
 
         private void OnMaleSelected()
         {
-            DataStore.AvatarProperties.Gender = AvatarPropertiesConstants.MALE;
+            DataStore.AvatarProperties.Gender = OutfitGender.Masculine;
             IsSelected = true;
         }
 
         private void OnFemaleSelected()
         {
-            DataStore.AvatarProperties.Gender = AvatarPropertiesConstants.FEMALE;
+            DataStore.AvatarProperties.Gender = OutfitGender.Feminine;
             IsSelected = true;
         }
 
         private void OnGenderNotSpecifiedSelected()
         {
-            DataStore.AvatarProperties.Gender = "";
+            DataStore.AvatarProperties.Gender = OutfitGender.None;
             IsSelected = true;
         }
     }

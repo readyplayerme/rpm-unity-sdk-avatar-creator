@@ -1,4 +1,5 @@
 ﻿using NativeAvatarCreator;
+using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,13 +24,13 @@ namespace AvatarCreatorExample
 
         private void OnFullBodySelected()
         {
-            DataStore.AvatarProperties.BodyType = AvatarPropertiesConstants.FULL_BODY;
+            DataStore.AvatarProperties.BodyType = BodyType.FullBody;
             IsSelected = true;
         }
 
         private void OnHalfBodySelected()
         {
-            DataStore.AvatarProperties.BodyType = AvatarPropertiesConstants.HALF_BODY;
+            DataStore.AvatarProperties.BodyType = BodyType.HalfBody;
             IsSelected = true;
         }
     }

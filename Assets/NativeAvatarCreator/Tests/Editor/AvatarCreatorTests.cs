@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using NativeAvatarCreator;
 using NUnit.Framework;
+using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 
 namespace Tests
@@ -15,7 +16,7 @@ namespace Tests
         {
             var userStore = await AuthRequests.LoginAsAnonymous(DOMAIN);
             var avatarAssets = await PartnerAssetsRequests.Get(userStore.Token, DOMAIN);
-    
+            
             Assert.IsNotNull(avatarAssets);
             Assert.Greater(avatarAssets.Length, 0);
         }
@@ -30,8 +31,8 @@ namespace Tests
             var createAvatarPayload = new AvatarProperties
             {
                 Partner = DOMAIN,
-                Gender = AvatarPropertiesConstants.MALE,
-                BodyType = AvatarPropertiesConstants.FULL_BODY,
+                Gender = OutfitGender.Masculine,
+                BodyType = BodyType.FullBody,
                 Assets = new Dictionary<AssetType, object>()
                 {
                     { AssetType.SkinColor, 5 },

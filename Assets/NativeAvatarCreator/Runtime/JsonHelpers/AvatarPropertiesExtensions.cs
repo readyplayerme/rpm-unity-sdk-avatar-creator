@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using UnityEngine;
 
 namespace NativeAvatarCreator
 {
-    public static class Extensions
+    public static class AvatarPropertiesExtensions
     {
         public static string ToJson(this AvatarProperties avatarProperties, bool ignoreEmptyFields = false)
         {
@@ -28,7 +29,8 @@ namespace NativeAvatarCreator
                 settings.NullValueHandling = NullValueHandling.Ignore;
                 settings.DefaultValueHandling = DefaultValueHandling.Ignore;
             }
-
+            
+            Debug.Log(JsonConvert.SerializeObject(data, settings));
             return JsonConvert.SerializeObject(data, settings);
         }
     }

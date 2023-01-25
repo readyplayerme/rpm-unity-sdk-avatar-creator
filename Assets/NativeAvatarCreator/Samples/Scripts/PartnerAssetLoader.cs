@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using NativeAvatarCreator;
+using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 
 namespace AvatarCreatorExample
@@ -52,7 +53,7 @@ namespace AvatarCreatorExample
         {
             // Outfit is only for full body and are gender specific.
             // Shirt is only for half body.
-            if (dataStore.AvatarProperties.BodyType != AvatarPropertiesConstants.FULL_BODY)
+            if (dataStore.AvatarProperties.BodyType != BodyType.FullBody)
                 return asset.AssetType != AssetType.Outfit;
 
             if (asset.AssetType == AssetType.Outfit)

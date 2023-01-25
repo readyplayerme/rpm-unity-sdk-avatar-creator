@@ -1,7 +1,9 @@
 {
     "name": "ReadyPlayerMe.NativeAvatarCreator",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:69ab3f10cf42d0b42a6cd1353c374377"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

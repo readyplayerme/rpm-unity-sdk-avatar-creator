@@ -2,7 +2,8 @@
     "name": "ReadyPlayerMe.NativeAvatarCreator.Editor.Tests",
     "rootNamespace": "",
     "references": [
-        "ReadyPlayerMe.NativeAvatarCreator"
+        "ReadyPlayerMe.NativeAvatarCreator",
+        "ReadyPlayerMe.AvatarLoader"
     ],
     "includePlatforms": [
         "Editor"

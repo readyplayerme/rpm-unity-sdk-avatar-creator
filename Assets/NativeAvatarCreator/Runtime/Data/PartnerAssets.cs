@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ReadyPlayerMe.AvatarLoader;
 
 namespace NativeAvatarCreator
 {
@@ -7,7 +8,8 @@ namespace NativeAvatarCreator
         public string Id;
         [JsonConverter(typeof(AssetTypeConverter))]
         public AssetType AssetType;
-        public string Gender;
+        [JsonConverter(typeof(GenderConverter))]
+        public OutfitGender Gender;
         public string Icon;
         public string Mask;
     }
