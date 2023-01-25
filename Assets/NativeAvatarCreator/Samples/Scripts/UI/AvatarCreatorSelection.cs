@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NativeAvatarCreator;
+using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,10 +31,11 @@ namespace AvatarCreatorExample
             Hide?.Invoke();
         }
 
-        public void AddAllAssetButtons(Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, AssetType> onClick, Action onSave)
+        public void AddAllAssetButtons(BodyType bodyType, Dictionary<PartnerAsset, Task<Texture>> assets, Action<string, AssetType> onClick,
+            Action onSave)
         {
             var distinctAssetType = assets.Keys.Select(x => x.AssetType).Distinct();
-            assetTypeUICreator.CreateUI(AssetTypeHelper.GetAssetTypeList().Where(x => distinctAssetType.Contains(x)));
+            assetTypeUICreator.CreateUI(bodyType, AssetTypeHelper.GetAssetTypeList().Where(x => distinctAssetType.Contains(x)));
 
             var orderedAssets = assets.OrderByDescending(x => x.Key.AssetType == AssetType.FaceShape);
             assetButtonCreator.CreateUI(orderedAssets, onClick);

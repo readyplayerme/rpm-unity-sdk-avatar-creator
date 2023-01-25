@@ -7,12 +7,20 @@ namespace NativeAvatarCreator
 {
     public class GenderConverter : JsonConverter
     {
+        private const string MALE = "male";
+        private const string FEMALE = "female";
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(OutfitGender);
+        }
+
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var newValue = value switch
             {
-                OutfitGender.Masculine => "male",
-                OutfitGender.Feminine => "female",
+                OutfitGender.Masculine => MALE,
+                OutfitGender.Feminine => FEMALE,
                 OutfitGender.None => null,
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
             };
@@ -24,23 +32,15 @@ namespace NativeAvatarCreator
             var token = JToken.Load(reader);
             if (token.Type == JTokenType.String)
             {
-                switch (token.ToString())
+                return token.ToString() switch
                 {
-                    case "male":
-                        return OutfitGender.Masculine;
-                    case "female":
-                        return OutfitGender.Feminine;
-                    default:
-                        return OutfitGender.None;
-                }
+                    MALE => OutfitGender.Masculine,
+                    FEMALE => OutfitGender.Feminine,
+                    _ => OutfitGender.None
+                };
             }
 
-            throw new JsonSerializationException("Expected string value: " + token.Type + " " + token.ToString());
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(OutfitGender);
+            throw new JsonSerializationException("Expected string value, instead found: " + token.Type);
         }
     }
 }

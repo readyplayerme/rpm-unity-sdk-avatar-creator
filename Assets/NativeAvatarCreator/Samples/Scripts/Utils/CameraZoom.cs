@@ -1,19 +1,51 @@
 using System.Threading;
 using System.Threading.Tasks;
+using NativeAvatarCreator;
+using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 
 namespace AvatarCreatorExample
-{ 
+{
     public class CameraZoom : MonoBehaviour
     {
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform nearTransform;
+        [SerializeField] private Transform halfBodyTransform;
         [SerializeField] private Transform farTransform;
         [SerializeField] private float defaultDuration = 0.25f;
 
         private CancellationTokenSource ctx;
         private bool lerpInProgress;
 
+        private BodyType bodyType;
+        public void DefaultZoom(BodyType type)
+        {
+            bodyType = type;
+            if (bodyType == BodyType.HalfBody)
+            {
+                MoveToHalfBody();
+            }
+            else
+            {
+                MoveToFar();
+            }
+        }
+
+        public void SwitchZoomByAssetType(AssetType assetType)
+        {
+            if (bodyType != BodyType.HalfBody)
+            {
+                if (assetType == AssetType.Outfit)
+                {
+                    MoveToFar();
+                }
+                else
+                {
+                    MoveToNear();
+                }
+            }
+        }
+        
         public void MoveToNear()
         {
             if (lerpInProgress)
@@ -26,12 +58,17 @@ namespace AvatarCreatorExample
 
         public void MoveToFar()
         {
-            if (lerpInProgress) 
+            if (lerpInProgress)
             {
                 ctx.Cancel();
             }
             ctx = new CancellationTokenSource();
             Lerp(farTransform.position, defaultDuration, ctx.Token);
+        }
+
+        public void MoveToHalfBody()
+        {
+            cameraTransform.position = halfBodyTransform.transform.position;
         }
 
         private async void Lerp(Vector3 targetPosition, float duration, CancellationToken token)

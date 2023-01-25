@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NativeAvatarCreator;
+using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,10 +36,13 @@ namespace AvatarCreatorExample
 
         private Dictionary<AssetType, AssetTypeButton> assetTypeButtonsMap;
         private AssetTypeButton selectedAssetTypeButton;
+        private BodyType bodyType;
 
-        public void CreateUI(IEnumerable<AssetType> assetTypes)
+        public void CreateUI(BodyType bodyType, IEnumerable<AssetType> assetTypes)
         {
-            cameraZoom.MoveToFar();
+            this.bodyType = bodyType;
+            cameraZoom.DefaultZoom(bodyType);
+
             assetTypeButtonsMap = new Dictionary<AssetType, AssetTypeButton>();
             PanelSwitcher.FaceTypePanel = faceAssetTypePanel;
 
@@ -109,15 +113,7 @@ namespace AvatarCreatorExample
 
             assetTypeButton.AddListener(() =>
             {
-                if (assetType == AssetType.Outfit)
-                {
-                    cameraZoom.MoveToFar();
-                }
-                else
-                {
-                    cameraZoom.MoveToNear();
-                }
-
+                cameraZoom.SwitchZoomByAssetType(assetType);
                 assetTypeButton.SetSelect(true);
                 selectedAssetTypeButton.SetSelect(false);
                 faceAssetTypeButton.SetSelect(AssetTypeHelper.IsFaceAsset(assetType));
@@ -132,7 +128,7 @@ namespace AvatarCreatorExample
             faceAssetTypeButton.SetSelect(true);
             assetTypeButtonsMap[AssetType.FaceShape].SetSelect(true);
             PanelSwitcher.Switch(AssetType.FaceShape);
-            selectedAssetTypeButton =  assetTypeButtonsMap[AssetType.FaceShape];
+            selectedAssetTypeButton = assetTypeButtonsMap[AssetType.FaceShape];
         }
     }
 }
