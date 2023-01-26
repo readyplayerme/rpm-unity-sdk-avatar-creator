@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using NativeAvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using ReadyPlayerMe.Core;
 using UnityEngine;
@@ -9,6 +8,7 @@ namespace AvatarCreatorExample
     public class AvatarLoader : MonoBehaviour
     {
         [SerializeField] private DataStore dataStore;
+        [SerializeField] private RuntimeAnimatorController animator;
 
         public async Task<GameObject> LoadAvatar(string avatarId, byte[] data)
         {
@@ -42,6 +42,10 @@ namespace AvatarCreatorExample
             var avatar = (GameObject) context.Data;
             avatar.SetActive(true);
             avatar.AddComponent<RotateAvatar>();
+            if (dataStore.AvatarProperties.BodyType == BodyType.FullBody)
+            {
+                avatar.GetComponent<Animator>().runtimeAnimatorController = animator;
+            }
             return avatar;
         }
     }
