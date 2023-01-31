@@ -7,16 +7,13 @@ namespace AvatarCreatorExample
 {
     public class AvatarLoader : MonoBehaviour
     {
-        [SerializeField] private DataStore dataStore;
         [SerializeField] private RuntimeAnimatorController animator;
 
-        public async Task<GameObject> LoadAvatar(string avatarId, byte[] data)
+        public async Task<GameObject> LoadAvatar(string avatarId,BodyType bodyType, OutfitGender gender, byte[] data)
         {
             var avatarMetadata = new AvatarMetadata();
-            avatarMetadata.BodyType = dataStore.AvatarProperties.BodyType == BodyType.FullBody
-                ? BodyType.FullBody
-                : BodyType.HalfBody;
-            avatarMetadata.OutfitGender = dataStore.AvatarProperties.Gender;
+            avatarMetadata.BodyType = bodyType;
+            avatarMetadata.OutfitGender = gender;
 
             var context = new AvatarContext();
             context.Bytes = data;
@@ -42,7 +39,7 @@ namespace AvatarCreatorExample
             var avatar = (GameObject) context.Data;
             avatar.SetActive(true);
             avatar.AddComponent<RotateAvatar>();
-            if (dataStore.AvatarProperties.BodyType == BodyType.FullBody)
+            if (bodyType == BodyType.FullBody)
             {
                 avatar.GetComponent<Animator>().runtimeAnimatorController = animator;
             }

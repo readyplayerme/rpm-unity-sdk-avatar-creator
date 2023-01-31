@@ -5,7 +5,7 @@ namespace AvatarCreatorExample
 {
     public class DataStore : MonoBehaviour
     {
-        public UserStore User;
+        public UserSession User;
         public AvatarProperties AvatarProperties;
 
         public void Awake()

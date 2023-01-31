@@ -75,7 +75,7 @@ namespace AvatarCreatorExample
             DebugPanel.AddLogWithDuration("Downloaded preview avatar", timeForGettingPreviewAvatar);
             startTime = timeForGettingPreviewAvatar;
 
-            avatar = await avatarLoader.LoadAvatar(avatarId, data);
+            avatar = await avatarLoader.LoadAvatar(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
             var avatarLoadingTime = Time.time - startTime;
             DebugPanel.AddLogWithDuration("Avatar loaded", avatarLoadingTime);
             avatarCreatorSelection.Loading.SetActive(false);
@@ -93,7 +93,7 @@ namespace AvatarCreatorExample
             payload.Assets.Add(assetType, assetId);
 
             var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
-            avatar = await avatarLoader.LoadAvatar(avatarId, data);
+            avatar = await avatarLoader.LoadAvatar(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
             DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
         }
 

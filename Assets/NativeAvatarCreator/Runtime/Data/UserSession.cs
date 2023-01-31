@@ -1,6 +1,6 @@
 ﻿namespace NativeAvatarCreator
 {
-    public struct UserStore
+    public struct UserSession
     {
         public string Token;
         public string Id;

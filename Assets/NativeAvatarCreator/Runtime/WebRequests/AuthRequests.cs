@@ -8,7 +8,7 @@ namespace NativeAvatarCreator
 {
     public static class AuthRequests
     {
-        public static async Task<UserStore> LoginAsAnonymous(string domain)
+        public static async Task<UserSession> LoginAsAnonymous(string domain)
         {
             var url = Endpoints.AUTH.Replace("[domain]", domain);
             var headers = new Dictionary<string, string>
@@ -31,7 +31,7 @@ namespace NativeAvatarCreator
                 throw new Exception("No data received");
             }
 
-            return JsonConvert.DeserializeObject<UserStore>(data!.ToString());
+            return JsonConvert.DeserializeObject<UserSession>(data!.ToString());
         }
     }
 }
