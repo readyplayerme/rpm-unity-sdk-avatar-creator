@@ -1,6 +1,6 @@
-# Ready Player Me Unity Native Avatar Creator
+# Ready Player Me Unity Avatar Creator
 
-**Ready Player Me Native Avatar Creator** is an extension to www.readyplayer.me avatar platform, which helps you create avatars natively.
+**Ready Player Me Avatar Creator** is an extension to www.readyplayer.me avatar platform, which helps you create avatars natively.
 
 ## Quick Start
 
@@ -30,10 +30,18 @@
 
 **5.** Click add and wait for the import process to finish.
 
-After the process is complete you project will have imported these packages:
+After the process is complete you project will have imported the package:
 
+![image](https://user-images.githubusercontent.com/1121080/216085330-d09e1578-5192-4900-8dd5-27264acec484.png)
 
+**6.** Next import samples, you will have samples folder with AvatarCreatorExample scene.
 
-![package-import-complete](https://user-images.githubusercontent.com/7085672/206432761-dc078cc7-23b0-4d83-a638-46db19faabd6.png)
+![image](https://user-images.githubusercontent.com/1121080/216086222-a5165359-e660-45fa-895a-b7fed7dd70d6.png)
+
+**7.** Currently sample's UI is build for 1920x1080 so it is suggested to use this resolution
+![image](https://user-images.githubusercontent.com/1121080/216086844-b94b0d6e-808c-48dd-9cd1-ca7b394fa4fd.png)
+
+**8.** Run and test
+![image](https://user-images.githubusercontent.com/1121080/216086593-df4a9e24-25c1-42d6-8b7f-4946352fdebb.png)
 
 
