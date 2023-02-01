@@ -21,5 +21,12 @@
     "name": "Ready Player Me",
     "email": "info@readyplayer.me",
     "url": "https://readyplayer.me"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "AvatarCreatorExample",
+      "description": "Create an avatar.",
+      "path": "Samples"
+    }
+  ]
 }
