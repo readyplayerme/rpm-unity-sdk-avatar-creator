@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using NativeAvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
@@ -15,6 +16,11 @@ namespace AvatarCreatorExample
 
         private CancellationTokenSource ctx;
         private BodyType bodyType;
+
+        private void OnDestroy()
+        {
+            ctx?.Cancel();
+        }
 
         public void DefaultZoom(BodyType type)
         {

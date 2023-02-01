@@ -5,10 +5,8 @@ using UnityEngine;
 
 namespace AvatarCreatorExample
 {
-    public class AvatarLoader : MonoBehaviour
+    public class AvatarLoader
     {
-        [SerializeField] private RuntimeAnimatorController animator;
-
         public async Task<GameObject> LoadAvatar(string avatarId,BodyType bodyType, OutfitGender gender, byte[] data)
         {
             var avatarMetadata = new AvatarMetadata();
@@ -38,11 +36,6 @@ namespace AvatarCreatorExample
 
             var avatar = (GameObject) context.Data;
             avatar.SetActive(true);
-            avatar.AddComponent<RotateAvatar>();
-            if (bodyType == BodyType.FullBody)
-            {
-                avatar.GetComponent<Animator>().runtimeAnimatorController = animator;
-            }
             return avatar;
         }
     }

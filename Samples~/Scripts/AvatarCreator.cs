@@ -10,13 +10,14 @@ namespace AvatarCreatorExample
     {
         [SerializeField] private DataStore dataStore;
         [SerializeField] private AvatarCreatorSelection avatarCreatorSelection;
-        [SerializeField] private AvatarLoader avatarLoader;
         [SerializeField] private GameObject avatarCreatorUI;
         [SerializeField] private AvatarConfig inCreatorConfig;
         [SerializeField] private AvatarConfig inGameConfig;
+        [SerializeField] private RuntimeAnimatorController animator;
 
         private AvatarAPIRequests avatarAPIRequests;
 
+        private AvatarLoader avatarLoader;
         private string avatarId;
         private GameObject avatar;
 
@@ -25,6 +26,7 @@ namespace AvatarCreatorExample
         private void Start()
         {
             avatarConfigParameters = AvatarConfigProcessor.ProcessAvatarConfiguration(inCreatorConfig);
+            avatarLoader = new AvatarLoader();
         }
 
         private void OnEnable()
@@ -76,6 +78,8 @@ namespace AvatarCreatorExample
             startTime = timeForGettingPreviewAvatar;
 
             avatar = await avatarLoader.LoadAvatar(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
+            ProcessAvatar();
+            
             var avatarLoadingTime = Time.time - startTime;
             DebugPanel.AddLogWithDuration("Avatar loaded", avatarLoadingTime);
             avatarCreatorSelection.Loading.SetActive(false);
@@ -94,6 +98,8 @@ namespace AvatarCreatorExample
 
             var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
             avatar = await avatarLoader.LoadAvatar(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
+            ProcessAvatar();
+            
             DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
         }
 
@@ -113,6 +119,16 @@ namespace AvatarCreatorExample
             };
 
             avatarObjectLoader.LoadAvatar($"{Endpoints.AVATAR_API_V1}/{avatarId}.glb");
+        }
+
+        private void ProcessAvatar()
+        {
+            avatar.GetComponent<Animator>().runtimeAnimatorController = animator;
+            avatar.AddComponent<RotateAvatar>();
+            if (dataStore.AvatarProperties.BodyType == BodyType.FullBody)
+            {
+                avatar.GetComponent<Animator>().runtimeAnimatorController = animator;
+            }
         }
     }
 }
