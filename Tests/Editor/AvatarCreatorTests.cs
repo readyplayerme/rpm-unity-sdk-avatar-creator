@@ -9,14 +9,14 @@ namespace Tests
 {
     public class AvatarCreatorTests
     {
-        private const string DOMAIN = "dev-sdk";
+        private const string DOMAIN = "demo";
 
         [Test]
         public async Task Receive_Partner_Assets()
         {
             var userStore = await AuthRequests.LoginAsAnonymous(DOMAIN);
             var avatarAssets = await PartnerAssetsRequests.Get(userStore.Token, DOMAIN);
-            
+
             Assert.IsNotNull(avatarAssets);
             Assert.Greater(avatarAssets.Length, 0);
         }
@@ -33,11 +33,7 @@ namespace Tests
                 Partner = DOMAIN,
                 Gender = OutfitGender.Masculine,
                 BodyType = BodyType.FullBody,
-                Assets = new Dictionary<AssetType, object>()
-                {
-                    { AssetType.SkinColor, 5 },
-                    { AssetType.EyeColor, "9781796" }
-                }
+                Assets = AvatarPropertiesConstants.DefaultAssets
             };
 
             Debug.Log(createAvatarPayload.ToJson());

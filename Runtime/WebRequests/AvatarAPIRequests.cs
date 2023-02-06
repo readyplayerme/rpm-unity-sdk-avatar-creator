@@ -7,8 +7,8 @@ namespace AvatarCreator
 {
     public class AvatarAPIRequests
     {
-        private const string PREVIEW_PARAMETER = "&preview=true";
-        private const string RESPONSE_TYPE_PARAMETER = "&responseType=glb";
+        private const string PREVIEW_PARAMETER = "preview=true";
+        private const string RESPONSE_TYPE_PARAMETER = "responseType=glb";
 
         private readonly Dictionary<string, string> header;
         private readonly CancellationToken cancellationToken;
@@ -37,20 +37,28 @@ namespace AvatarCreator
             return avatarId;
         }
 
-        public async Task<byte[]> GetPreviewAvatar(string avatarId, string parameters = default)
+        public async Task<byte[]> GetPreviewAvatar(string avatarId, string parameters = null)
         {
+            var url = string.IsNullOrEmpty(parameters)
+                ? $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb?{PREVIEW_PARAMETER}"
+                : $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}&{PREVIEW_PARAMETER}";
+
             var response = await WebRequestDispatcher.SendRequest(
-                $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}{PREVIEW_PARAMETER}",
+                url,
                 Method.GET,
                 header,
                 token: cancellationToken);
             return response.Data;
         }
 
-        public async Task<byte[]> UpdateAvatar(string avatarId, AvatarProperties avatarProperties, string parameters = default)
+        public async Task<byte[]> UpdateAvatar(string avatarId, AvatarProperties avatarProperties, string parameters = null)
         {
+            var url = string.IsNullOrEmpty(parameters)
+                ? $"{Endpoints.AVATAR_API_V2}/{avatarId}?{RESPONSE_TYPE_PARAMETER}"
+                : $"{Endpoints.AVATAR_API_V2}/{avatarId}{parameters}&{RESPONSE_TYPE_PARAMETER}";
+
             var response = await WebRequestDispatcher.SendRequest(
-                $"{Endpoints.AVATAR_API_V2}/{avatarId}{parameters}{RESPONSE_TYPE_PARAMETER}",
+                url,
                 Method.PATCH,
                 header,
                 avatarProperties.ToJson(true),
