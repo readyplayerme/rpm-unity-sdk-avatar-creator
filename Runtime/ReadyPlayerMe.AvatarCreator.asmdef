@@ -1,5 +1,5 @@
 {
-    "name": "ReadyPlayerMe.NativeAvatarCreator",
+    "name": "ReadyPlayerMe.AvatarCreator",
     "rootNamespace": "",
     "references": [
         "GUID:69ab3f10cf42d0b42a6cd1353c374377",

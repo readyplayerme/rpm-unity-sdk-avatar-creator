@@ -1,14 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace NativeAvatarCreator
+namespace AvatarCreator
 {
     public static class AvatarPropertiesConstants
     {
-        public const string FULL_BODY = "fullbody";
-        public const string HALF_BODY = "halfbody";
-        public const string MALE = "male";
-        public const string FEMALE = "female";
-
         public static readonly Dictionary<AssetType, object> DefaultAssets =
             new Dictionary<AssetType, object>
             {

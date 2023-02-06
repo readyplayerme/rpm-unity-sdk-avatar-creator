@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using NativeAvatarCreator;
+using AvatarCreator;
 using NUnit.Framework;
 
 namespace Tests

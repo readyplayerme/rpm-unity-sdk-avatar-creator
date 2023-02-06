@@ -1,22 +1,23 @@
-﻿using NativeAvatarCreator;
+﻿using AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AvatarCreatorExample
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private AvatarCreator avatarCreator;
+        [SerializeField] private AvatarCreatorManager avatarCreatorManager;
         [SerializeField] private AvatarConfig inGameConfig;
 
         private void OnEnable()
         {
-            avatarCreator.Saved += OnAvatarSaved;
+            avatarCreatorManager.Saved += OnAvatarSaved;
         }
 
         private void OnDisable()
         {
-            avatarCreator.Saved -= OnAvatarSaved;
+            avatarCreatorManager.Saved -= OnAvatarSaved;
         }
 
         private void OnAvatarSaved(string avatarId)

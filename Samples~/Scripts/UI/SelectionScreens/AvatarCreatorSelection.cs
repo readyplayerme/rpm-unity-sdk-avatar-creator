@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NativeAvatarCreator;
+using AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;

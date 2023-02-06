@@ -1,4 +1,4 @@
-﻿using NativeAvatarCreator;
+﻿using AvatarCreator;
 using UnityEngine;
 
 namespace AvatarCreatorExample

@@ -1167,7 +1167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8b65010da704948980bd54994cefd5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  avatarCreator: {fileID: 74047982}
+  avatarCreatorManager: {fileID: 74047982}
   inGameConfig: {fileID: 11400000, guid: 496e2d2d242b10e4cba4b50e899cac3d, type: 2}
 --- !u!1 &438083875
 GameObject:
@@ -2267,7 +2267,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataStore: {fileID: 13055037}
   avatarCreatorSelection: {fileID: 78456335}
-  avatarCreator: {fileID: 74047982}
 --- !u!1 &983312784
 GameObject:
   m_ObjectHideFlags: 0
@@ -3238,8 +3237,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bf7271d0d8f4c9689856dd9c397c141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  authSelection: {fileID: 227468989}
   dataStore: {fileID: 13055037}
+  authSelection: {fileID: 227468989}
 --- !u!4 &1460193384
 Transform:
   m_ObjectHideFlags: 0

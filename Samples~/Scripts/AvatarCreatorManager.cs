@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NativeAvatarCreator;
+using AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 
 namespace AvatarCreatorExample
 {
-    public class AvatarCreator : MonoBehaviour
+    public class AvatarCreatorManager : MonoBehaviour
     {
         [SerializeField] private DataStore dataStore;
         [SerializeField] private AvatarCreatorSelection avatarCreatorSelection;
@@ -80,7 +80,7 @@ namespace AvatarCreatorExample
 
             avatar = await avatarLoader.LoadAvatar(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
             ProcessAvatar();
-            
+
             var avatarLoadingTime = Time.time - startTime;
             DebugPanel.AddLogWithDuration("Avatar loaded", avatarLoadingTime);
             avatarCreatorSelection.Loading.SetActive(false);
@@ -100,7 +100,7 @@ namespace AvatarCreatorExample
             var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
             avatar = await avatarLoader.LoadAvatar(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
             ProcessAvatar();
-            
+
             DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
         }
 

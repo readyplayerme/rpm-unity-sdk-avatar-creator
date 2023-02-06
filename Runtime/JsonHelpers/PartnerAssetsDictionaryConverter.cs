@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace NativeAvatarCreator
+namespace AvatarCreator
 {
     public class AssetTypeDictionaryConverter : JsonConverter<Dictionary<AssetType, object>>
     {

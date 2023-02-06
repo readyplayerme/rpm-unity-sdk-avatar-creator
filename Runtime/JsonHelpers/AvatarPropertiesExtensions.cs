@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using UnityEngine;
 
-namespace NativeAvatarCreator
+namespace AvatarCreator
 {
     public static class AvatarPropertiesExtensions
     {

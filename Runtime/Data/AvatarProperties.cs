@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using ReadyPlayerMe.AvatarLoader;
 
-namespace NativeAvatarCreator
+namespace AvatarCreator
 {
     public class AvatarProperties
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NativeAvatarCreator;
+using AvatarCreator;
 using UnityEngine;
 
 namespace AvatarCreatorExample

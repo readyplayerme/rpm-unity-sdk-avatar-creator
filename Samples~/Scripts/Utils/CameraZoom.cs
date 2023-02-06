@@ -1,6 +1,6 @@
 using System;
 using System.Threading;
-using NativeAvatarCreator;
+using AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 

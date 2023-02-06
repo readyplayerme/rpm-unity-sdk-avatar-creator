@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NativeAvatarCreator;
+using AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 
@@ -11,7 +11,6 @@ namespace AvatarCreatorExample
     {
         [SerializeField] private DataStore dataStore;
         [SerializeField] private AvatarCreatorSelection avatarCreatorSelection;
-        [SerializeField] private AvatarCreator avatarCreator;
 
         private void OnEnable()
         {

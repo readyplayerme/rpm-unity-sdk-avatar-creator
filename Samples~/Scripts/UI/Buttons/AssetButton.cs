@@ -1,5 +1,5 @@
 using System;
-using NativeAvatarCreator;
+using AvatarCreator;
 using UnityEngine;
 using UnityEngine.UI;
 

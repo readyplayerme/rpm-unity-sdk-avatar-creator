@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace NativeAvatarCreator
+namespace AvatarCreator
 {
     public struct Response
     {

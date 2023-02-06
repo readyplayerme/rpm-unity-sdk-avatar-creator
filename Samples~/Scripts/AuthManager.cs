@@ -1,4 +1,4 @@
-﻿using NativeAvatarCreator;
+﻿using AvatarCreator;
 using ReadyPlayerMe.Core;
 using UnityEngine;
 
@@ -6,8 +6,8 @@ namespace AvatarCreatorExample
 {
     public class AuthManager : MonoBehaviour
     {
-        [SerializeField] private AuthSelection authSelection;
         [SerializeField] private DataStore dataStore;
+        [SerializeField] private AuthSelection authSelection;
 
         public void OnEnable()
         {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace NativeAvatarCreator
+namespace AvatarCreator
 {
     public static class AssetTypeHelper
     {

@@ -1,4 +1,4 @@
-﻿namespace NativeAvatarCreator
+﻿namespace AvatarCreator
 {
     public struct UserSession
     {

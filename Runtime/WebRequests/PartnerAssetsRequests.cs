@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace NativeAvatarCreator
+namespace AvatarCreator
 {
     public static class PartnerAssetsRequests
     {
