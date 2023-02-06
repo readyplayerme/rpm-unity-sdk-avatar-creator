@@ -1,6 +1,6 @@
-# Welcome to the Ready Player Me Unity Native Avatar Creator contributing guide
+# Welcome to the Ready Player Me Unity Avatar Creator contributing guide
 
-Thank you for investing your time in contributing to our project! Any contribution you make will be reflected on [https://github.com/readyplayerme/Unity-Native-Avatar-Creator](https://github.com/readyplayerme/Unity-Native-Avatar-Creator) :sparkles:. 
+Thank you for investing your time in contributing to our project! Any contribution you make will be reflected on [https://github.com/readyplayerme/rpm-unity-avatar-creator](https://github.com/readyplayerme/rpm-unity-avatar-creator) :sparkles:. 
 
 Read our [Code of Conduct](./CODE_OF_CONDUCT.md) to keep our community approachable and respectable.
 
@@ -23,12 +23,12 @@ To get an overview of the project, read the [README](README.md). Here are some r
 
 #### **Did you find a bug?**
 
-* **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/readyplayerme/Unity-Native-Avatar-Creator/issues).
+* **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/readyplayerme/rpm-unity-avatar-creator/issues).
 
-* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/readyplayerme/Unity-Native-Avatar-Creator/issues/new). Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
+* If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/readyplayerme/rpm-unity-avatar-creator/issues/new). Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
 
 * If possible, use the relevant bug report templates to create the issue. Simply copy the content of the appropriate template into a .rb file, make the necessary changes to demonstrate the issue, and **paste the content into the issue description**:
-  * [**Generic template** for other issues](https://github.com/readyplayerme/Unity-Native-Avatar-Creator/blob/develop/.github/pull_request_template.md)
+  * [**Generic template** for other issues](https://github.com/readyplayerme/rpm-unity-avatar-creator/blob/develop/.github/pull_request_template.md)
 
 * If you would like to contact us directly to report an issue or for general support requests contact our Ready Player Me Support email [support@readyplayer.me](mailto:support@readyplayer.me).
 
@@ -38,7 +38,7 @@ To get an overview of the project, read the [README](README.md). Here are some r
 
 * Ensure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable.
 
-* Before submitting, please read the [Contributing to Ready Player Me Unity SDK](#) guide to know more about our coding conventions and best practices.
+* Before submitting, please read the [Contributing to Ready Player Me Unity Avatar Creator](#) guide to know more about our coding conventions and best practices.
 
 #### **Did you fix whitespace, format code, or make a purely cosmetic patch?**
 

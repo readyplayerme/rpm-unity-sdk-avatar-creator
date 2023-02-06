@@ -47,3 +47,5 @@
 
 1. Authentication - user login and registration.
 2. Avatar creation through camera image.
+3. Skin color.
+4. Avatar presets.
