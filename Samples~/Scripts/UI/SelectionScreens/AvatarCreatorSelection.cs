@@ -18,13 +18,14 @@ namespace AvatarCreatorExample
         public Action Show;
         public Action Hide;
 
-        public  Action<string, AssetType> OnClick;
+        public Action<string, AssetType> OnClick;
         public Action Save;
 
         private void OnEnable()
         {
             Loading.SetActive(true);
             Show?.Invoke();
+            saveButton.onClick.AddListener(OnSave);
         }
 
         private void OnDisable()
@@ -32,6 +33,7 @@ namespace AvatarCreatorExample
             saveButton.gameObject.SetActive(false);
             assetTypeUICreator.ResetUI();
             Hide?.Invoke();
+            saveButton.onClick.RemoveListener(OnSave);
         }
 
         public void AddAllAssetButtons(BodyType bodyType, Dictionary<PartnerAsset, Task<Texture>> assets)
@@ -43,11 +45,12 @@ namespace AvatarCreatorExample
             assetButtonCreator.CreateUI(orderedAssets, OnClick);
 
             saveButton.gameObject.SetActive(true);
-            saveButton.onClick.AddListener(() =>
-            {
-                IsSelected = true;
-                Save?.Invoke();
-            });
+        }
+
+        private void OnSave()
+        {
+            IsSelected = true;
+            Save?.Invoke();
         }
     }
 }

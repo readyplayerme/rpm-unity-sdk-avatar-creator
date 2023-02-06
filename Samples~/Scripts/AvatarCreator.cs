@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using NativeAvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
@@ -12,11 +13,11 @@ namespace AvatarCreatorExample
         [SerializeField] private AvatarCreatorSelection avatarCreatorSelection;
         [SerializeField] private GameObject avatarCreatorUI;
         [SerializeField] private AvatarConfig inCreatorConfig;
-        [SerializeField] private AvatarConfig inGameConfig;
         [SerializeField] private RuntimeAnimatorController animator;
 
-        private AvatarAPIRequests avatarAPIRequests;
+        public event Action<string> Saved;
 
+        private AvatarAPIRequests avatarAPIRequests;
         private AvatarLoader avatarLoader;
         private string avatarId;
         private GameObject avatar;
@@ -109,16 +110,7 @@ namespace AvatarCreatorExample
             var startTime = Time.time;
             await avatarAPIRequests.SaveAvatar(avatarId);
             DebugPanel.AddLogWithDuration("Avatar saved", Time.time - startTime);
-
-            var avatarObjectLoader = new AvatarObjectLoader();
-            avatarObjectLoader.AvatarConfig = inGameConfig;
-            avatarObjectLoader.OnCompleted += (sender, args) =>
-            {
-                AvatarAnimatorHelper.SetupAnimator(args.Metadata.BodyType, args.Avatar);
-                DebugPanel.AddLogWithDuration("Created avatar loaded", Time.time - startTime);
-            };
-
-            avatarObjectLoader.LoadAvatar($"{Endpoints.AVATAR_API_V1}/{avatarId}.glb");
+            Saved?.Invoke(avatarId);
         }
 
         private void ProcessAvatar()
