@@ -1,4 +1,4 @@
-# Ready Player Me Unity Avatar Creator
+# Ready Player Me Unity SDK Avatar Creator
 
 **Ready Player Me Avatar Creator** is an extension to www.readyplayer.me avatar platform, which helps you create avatars natively.
 
@@ -26,7 +26,7 @@
 
 **4.** Paste in this url
 
-`https://github.com/readyplayerme/rpm-unity-avatar-creator.git`
+`https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator.git`
 
 ![paste-git-url](https://user-images.githubusercontent.com/7085672/206432731-f9e0d161-7843-4d6e-8851-47b1f3bfb3bc.png)
 

@@ -1,4 +1,4 @@
-# Ready Player Me Unity Avatar Creator Technical Support
+# Ready Player Me Unity SDK Avatar Creator Technical Support
 
 Please visit the online documentation and join our public `discord` community.
 
