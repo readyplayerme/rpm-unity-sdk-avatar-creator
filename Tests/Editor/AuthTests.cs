@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
-using AvatarCreator;
 using NUnit.Framework;
 
-namespace Tests
+namespace ReadyPlayerMe.AvatarCreator.Tests
 {
     public class AuthTests
     {

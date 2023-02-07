@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AvatarCreator;
 using NUnit.Framework;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 
-namespace Tests
+namespace ReadyPlayerMe.AvatarCreator.Tests
 {
     public class AvatarCreatorTests
     {
@@ -35,8 +34,6 @@ namespace Tests
                 BodyType = BodyType.FullBody,
                 Assets = AvatarPropertiesConstants.DefaultAssets
             };
-
-            Debug.Log(createAvatarPayload.ToJson());
 
             var avatarAPIRequests = new AvatarAPIRequests(userStore.Token);
 
@@ -72,6 +69,38 @@ namespace Tests
             await avatarAPIRequests.DeleteAvatar(avatarId);
             Debug.Log("Avatar deleted.");
             Assert.Pass();
+        }
+
+        [Test]
+        public async Task Avatar_Create_And_Load()
+        {
+            var userStore = await AuthRequests.LoginAsAnonymous(DOMAIN);
+            Debug.Log("Logged In with token: " + userStore.Token);
+
+            // Create avatar
+            var createAvatarPayload = new AvatarProperties
+            {
+                Partner = DOMAIN,
+                Gender = OutfitGender.Masculine,
+                BodyType = BodyType.FullBody,
+                Assets = AvatarPropertiesConstants.DefaultAssets
+            };
+
+            var avatarAPIRequests = new AvatarAPIRequests(userStore.Token);
+
+            var avatarId = await avatarAPIRequests.Create(createAvatarPayload);
+            Assert.IsNotNull(avatarId);
+            Assert.IsNotEmpty(avatarId);
+            Debug.Log("Avatar created with id: " + avatarId);
+
+            // Get Preview GLB
+            var previewAvatar = await avatarAPIRequests.GetPreviewAvatar(avatarId);
+            Assert.Greater(previewAvatar.Length, 0);
+            Debug.Log("Preview avatar download completed.");
+
+            var avatarLoader = new InCreatorAvatarLoader();
+            var avatar = await avatarLoader.Load(avatarId, createAvatarPayload.BodyType, createAvatarPayload.Gender, previewAvatar);
+            Assert.IsNotNull(avatar);
         }
     }
 }
