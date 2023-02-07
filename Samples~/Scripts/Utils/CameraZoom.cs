@@ -1,10 +1,9 @@
-using System;
 using System.Threading;
-using AvatarCreator;
+using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public class CameraZoom : MonoBehaviour
     {

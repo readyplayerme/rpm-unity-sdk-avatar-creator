@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public abstract class SelectionScreenBase : MonoBehaviour
     {

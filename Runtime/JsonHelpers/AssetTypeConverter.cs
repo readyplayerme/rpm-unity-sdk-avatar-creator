@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace AvatarCreator
+namespace ReadyPlayerMe.AvatarCreator
 {
     public class AssetTypeConverter : JsonConverter
     {

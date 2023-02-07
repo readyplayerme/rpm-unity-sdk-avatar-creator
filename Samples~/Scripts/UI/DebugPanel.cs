@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public class DebugPanel : MonoBehaviour
     {

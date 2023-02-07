@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public class RotateAvatar : MonoBehaviour
     {

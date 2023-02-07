@@ -1,4 +1,4 @@
-﻿namespace AvatarCreator
+﻿namespace ReadyPlayerMe.AvatarCreator
 {
     public enum AssetType
     {

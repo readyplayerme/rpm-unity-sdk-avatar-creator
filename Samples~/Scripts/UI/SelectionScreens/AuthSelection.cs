@@ -1,8 +1,9 @@
 using System;
+using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public class AuthSelection : SelectionScreenBase
     {

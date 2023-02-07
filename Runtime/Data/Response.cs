@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace AvatarCreator
+namespace ReadyPlayerMe.AvatarCreator
 {
     public struct Response
     {

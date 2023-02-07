@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace AvatarCreator
+namespace ReadyPlayerMe.AvatarCreator
 {
     public static class AvatarPropertiesExtensions
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AvatarCreator;
+using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public class AvatarCreatorManager : MonoBehaviour
     {
@@ -18,7 +18,7 @@ namespace AvatarCreatorExample
         public event Action<string> Saved;
 
         private AvatarAPIRequests avatarAPIRequests;
-        private AvatarLoader avatarLoader;
+        private InCreatorAvatarLoader inCreatorAvatarLoader;
         private string avatarId;
         private GameObject avatar;
 
@@ -27,7 +27,7 @@ namespace AvatarCreatorExample
         private void Start()
         {
             avatarConfigParameters = AvatarConfigProcessor.ProcessAvatarConfiguration(inCreatorConfig);
-            avatarLoader = new AvatarLoader();
+            inCreatorAvatarLoader = new InCreatorAvatarLoader();
         }
 
         private void OnEnable()
@@ -78,7 +78,7 @@ namespace AvatarCreatorExample
             DebugPanel.AddLogWithDuration("Downloaded preview avatar", timeForGettingPreviewAvatar);
             startTime = timeForGettingPreviewAvatar;
 
-            avatar = await avatarLoader.LoadAvatar(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
+            avatar = await inCreatorAvatarLoader.Load(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
             ProcessAvatar();
 
             var avatarLoadingTime = Time.time - startTime;
@@ -98,7 +98,7 @@ namespace AvatarCreatorExample
             payload.Assets.Add(assetType, assetId);
 
             var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
-            avatar = await avatarLoader.LoadAvatar(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
+            avatar = await inCreatorAvatarLoader.Load(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
             ProcessAvatar();
 
             DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);

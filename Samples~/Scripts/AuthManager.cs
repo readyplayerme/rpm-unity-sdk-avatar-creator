@@ -1,8 +1,8 @@
-﻿using AvatarCreator;
+﻿using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.Core;
 using UnityEngine;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public class AuthManager : MonoBehaviour
     {

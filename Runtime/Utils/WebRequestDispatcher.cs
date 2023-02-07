@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace AvatarCreator
+namespace ReadyPlayerMe.AvatarCreator
 {
     public enum Method
     {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace AvatarCreator
+namespace ReadyPlayerMe.AvatarCreator
 {
     public static class AuthRequests
     {

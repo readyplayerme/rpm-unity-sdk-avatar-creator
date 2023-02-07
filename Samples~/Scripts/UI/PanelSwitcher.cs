@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AvatarCreator;
+using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public static class PanelSwitcher
     {

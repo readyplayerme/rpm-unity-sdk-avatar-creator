@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReadyPlayerMe.AvatarLoader;
 
-namespace AvatarCreator
+namespace ReadyPlayerMe.AvatarCreator
 {
     public class GenderConverter : JsonConverter
     {

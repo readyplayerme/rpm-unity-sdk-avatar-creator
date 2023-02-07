@@ -3,11 +3,11 @@ using ReadyPlayerMe.AvatarLoader;
 using ReadyPlayerMe.Core;
 using UnityEngine;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe.AvatarCreator
 {
-    public class AvatarLoader
+    public class InCreatorAvatarLoader
     {
-        public async Task<GameObject> LoadAvatar(string avatarId,BodyType bodyType, OutfitGender gender, byte[] data)
+        public async Task<GameObject> Load(string avatarId,BodyType bodyType, OutfitGender gender, byte[] data)
         {
             var avatarMetadata = new AvatarMetadata();
             avatarMetadata.BodyType = bodyType;

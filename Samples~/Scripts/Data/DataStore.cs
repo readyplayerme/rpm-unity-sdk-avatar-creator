@@ -1,7 +1,7 @@
-﻿using AvatarCreator;
+﻿using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public class DataStore : MonoBehaviour
     {

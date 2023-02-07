@@ -1,8 +1,9 @@
-﻿using ReadyPlayerMe.AvatarLoader;
+﻿using ReadyPlayerMe.AvatarCreator;
+using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public class GenderSelection : SelectionScreenBase
     {

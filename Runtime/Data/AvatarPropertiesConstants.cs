@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AvatarCreator
+namespace ReadyPlayerMe.AvatarCreator
 {
     public static class AvatarPropertiesConstants
     {

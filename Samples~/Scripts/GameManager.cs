@@ -1,9 +1,8 @@
-﻿using AvatarCreator;
+﻿using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public class GameManager : MonoBehaviour
     {

@@ -1,17 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public class ScreenSwitcher : MonoBehaviour
     {
         [SerializeField] private Button back;
         [SerializeField] private DataStore dataStore;
         [SerializeField] private GameObject loading;
-        [FormerlySerializedAs("panels"),SerializeField] private SelectionScreenBase[] screens;
+        [SerializeField] private SelectionScreenBase[] screens;
 
         private int CurrentIndex
         {

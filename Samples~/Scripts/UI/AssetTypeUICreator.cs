@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AvatarCreator;
+using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AvatarCreatorExample
+namespace ReadyPlayerMe
 {
     public class AssetTypeUICreator : MonoBehaviour
     {

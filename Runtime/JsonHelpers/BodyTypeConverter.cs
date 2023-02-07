@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using ReadyPlayerMe.AvatarLoader;
 
-namespace AvatarCreator
+namespace ReadyPlayerMe.AvatarCreator
 {
     public class BodyTypeConverter : JsonConverter<BodyType>
     {
