@@ -32,7 +32,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
                 Partner = DOMAIN,
                 Gender = OutfitGender.Masculine,
                 BodyType = BodyType.FullBody,
-                Assets = AvatarPropertiesConstants.DefaultAssets
+                Assets = AvatarPropertiesConstants.MaleDefaultAssets
             };
 
             var avatarAPIRequests = new AvatarAPIRequests(userStore.Token);
@@ -83,7 +83,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
                 Partner = DOMAIN,
                 Gender = OutfitGender.Masculine,
                 BodyType = BodyType.FullBody,
-                Assets = AvatarPropertiesConstants.DefaultAssets
+                Assets = AvatarPropertiesConstants.MaleDefaultAssets
             };
 
             var avatarAPIRequests = new AvatarAPIRequests(userStore.Token);

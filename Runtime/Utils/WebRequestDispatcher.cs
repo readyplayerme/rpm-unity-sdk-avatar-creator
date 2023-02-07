@@ -51,7 +51,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 request.uploadHandler = new UploadHandlerRaw(bytes);
             }
 
-            // var startTime = Time.realtimeSinceStartup;
+            var startTime = Time.realtimeSinceStartup;
             var asyncOperation = request.SendWebRequest();
             token.Register(request.Abort);
             while (!asyncOperation.isDone && !token.IsCancellationRequested)
@@ -71,16 +71,17 @@ namespace ReadyPlayerMe.AvatarCreator
                 texture = downloadHandlerTexture.texture;
             }
 
-            // var totalSize = int.Parse(request.GetResponseHeader("Content-Length"));
-            // var sizeInKb = totalSize / (float) 1024;
-            // var totalTime = Time.realtimeSinceStartup - startTime;
-            // Debug.Log("Download size: " + totalSize + ", time: " + totalTime + ", speed " + (sizeInKb / totalTime).ToString("F4") + "KBps");
+            var contentLength = request.GetResponseHeader("Content-Length");
+            var responseSize = !string.IsNullOrEmpty(contentLength) ? int.Parse(contentLength) : 0;
+            var requestDuration = Time.realtimeSinceStartup - startTime;
 
             return new Response
             {
                 Text = request.downloadHandler.text,
                 Data = request.downloadHandler.data,
-                Texture = texture
+                Texture = texture,
+                Size = responseSize,
+                Duration = requestDuration
             };
         }
     }

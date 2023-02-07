@@ -89,7 +89,6 @@ namespace ReadyPlayerMe
 
             faceAssetTypeButton.RemoveListener();
             assetTypeButtonsMap.Clear();
-            cameraZoom.DefaultZoom(bodyType);
         }
 
         private void CreateAssetTypePanel(AssetType assetType, GameObject panelPrefab, Transform parent)
