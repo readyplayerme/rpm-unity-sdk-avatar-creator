@@ -66,7 +66,7 @@ namespace ReadyPlayerMe
             var startTime = Time.time;
             avatarAPIRequests = new AvatarAPIRequests(dataStore.User.Token);
 
-            dataStore.AvatarProperties.Assets = AvatarPropertiesConstants.DefaultAssets;
+            dataStore.AvatarProperties.Assets = dataStore.AvatarProperties.Gender == OutfitGender.Feminine ? AvatarPropertiesConstants.FemaleDefaultAssets : AvatarPropertiesConstants.MaleDefaultAssets;
             avatarId = await avatarAPIRequests.Create(dataStore.AvatarProperties);
 
             var timeForCreateRequest = Time.time - startTime;
