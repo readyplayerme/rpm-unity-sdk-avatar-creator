@@ -17,7 +17,7 @@ namespace ReadyPlayerMe
         private async void Login()
         {
             var startTime = Time.time;
-            var partnerDomain = CoreSettings.PartnerSubdomainSettings.Subdomain;
+            var partnerDomain = CoreSettingsHandler.CoreSettings.Subdomain;
             dataStore.AvatarProperties.Partner = partnerDomain;
 
             dataStore.User = await AuthRequests.LoginAsAnonymous(partnerDomain);
