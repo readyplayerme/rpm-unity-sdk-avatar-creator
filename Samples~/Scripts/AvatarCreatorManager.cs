@@ -17,18 +17,8 @@ namespace ReadyPlayerMe
 
         public event Action<string> Saved;
 
-        private AvatarAPIRequests avatarAPIRequests;
-        private InCreatorAvatarLoader inCreatorAvatarLoader;
-        private string avatarId;
         private GameObject avatar;
-
-        private string avatarConfigParameters;
-
-        private void Start()
-        {
-            avatarConfigParameters = AvatarConfigProcessor.ProcessAvatarConfiguration(inCreatorConfig);
-            inCreatorAvatarLoader = new InCreatorAvatarLoader();
-        }
+        private AvatarManager avatarManager;
 
         private void OnEnable()
         {
@@ -63,26 +53,18 @@ namespace ReadyPlayerMe
 
         private async Task CreateDefaultModel()
         {
+            avatarManager = new AvatarManager(dataStore.User.Token, inCreatorConfig);
+
             var startTime = Time.time;
-            avatarAPIRequests = new AvatarAPIRequests(dataStore.User.Token);
-
-            dataStore.AvatarProperties.Assets = dataStore.AvatarProperties.Gender == OutfitGender.Feminine ? AvatarPropertiesConstants.FemaleDefaultAssets : AvatarPropertiesConstants.MaleDefaultAssets;
-            avatarId = await avatarAPIRequests.Create(dataStore.AvatarProperties);
-
-            var timeForCreateRequest = Time.time - startTime;
-            DebugPanel.AddLogWithDuration("Avatar metadata created in temp storage", timeForCreateRequest);
-            startTime = timeForCreateRequest;
-
-            var data = await avatarAPIRequests.GetPreviewAvatar(avatarId, avatarConfigParameters);
-            var timeForGettingPreviewAvatar = Time.time - startTime;
-            DebugPanel.AddLogWithDuration("Downloaded preview avatar", timeForGettingPreviewAvatar);
-            startTime = timeForGettingPreviewAvatar;
-
-            avatar = await inCreatorAvatarLoader.Load(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
-            ProcessAvatar();
+            dataStore.AvatarProperties.Assets = dataStore.AvatarProperties.Gender == OutfitGender.Feminine
+                ? AvatarPropertiesConstants.FemaleDefaultAssets
+                : AvatarPropertiesConstants.MaleDefaultAssets;
+            avatar = await avatarManager.Create(dataStore.AvatarProperties);
 
             var avatarLoadingTime = Time.time - startTime;
             DebugPanel.AddLogWithDuration("Avatar loaded", avatarLoadingTime);
+
+            ProcessAvatar();
             avatarCreatorSelection.Loading.SetActive(false);
         }
 
@@ -97,10 +79,8 @@ namespace ReadyPlayerMe
 
             payload.Assets.Add(assetType, assetId);
 
-            var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
-            avatar = await inCreatorAvatarLoader.Load(avatarId, dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, data);
+            avatar = await avatarManager.Update(dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, assetId, assetType);
             ProcessAvatar();
-
             DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
         }
 
@@ -108,7 +88,7 @@ namespace ReadyPlayerMe
         {
             avatarCreatorUI.gameObject.SetActive(false);
             var startTime = Time.time;
-            await avatarAPIRequests.SaveAvatar(avatarId);
+            var avatarId =await avatarManager.Save();
             DebugPanel.AddLogWithDuration("Avatar saved", Time.time - startTime);
             Saved?.Invoke(avatarId);
         }
