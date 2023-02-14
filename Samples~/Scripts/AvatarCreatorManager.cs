@@ -38,9 +38,10 @@ namespace ReadyPlayerMe
             avatarCreatorSelection.Save -= Save;
         }
 
-        private async void Show()
+        private void Show()
         {
-            await CreateDefaultModel();
+            LoadAssets();
+            CreateDefaultModel();
         }
 
         private void Hide()
@@ -51,7 +52,21 @@ namespace ReadyPlayerMe
             }
         }
 
-        private async Task CreateDefaultModel()
+        private async void LoadAssets()
+        {
+            var startTime = Time.time;
+            var assetIconDownloadTasks = await PartnerAssetsManager.GetAllAssets(
+                dataStore.User.Token,
+                dataStore.AvatarProperties.Partner,
+                dataStore.AvatarProperties.BodyType,
+                dataStore.AvatarProperties.Gender
+            );
+            
+            DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
+            avatarCreatorSelection.AddAllAssetButtons(dataStore.AvatarProperties.BodyType, assetIconDownloadTasks);
+        }
+
+        private async void CreateDefaultModel()
         {
             avatarManager = new AvatarManager(dataStore.User.Token, inCreatorConfig);
 

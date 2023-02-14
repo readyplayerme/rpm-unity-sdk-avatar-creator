@@ -39,6 +39,7 @@ namespace ReadyPlayerMe
             Task<Texture> iconDownloadTask)
         {
             var assetButtonGameObject = Instantiate(assetButtonPrefab, parent.GetComponent<ScrollRect>().content);
+            assetButtonGameObject.name = "Asset-" + assetId;
             var assetButton = assetButtonGameObject.GetComponent<AssetButton>();
             assetButton.AddListener(() =>
             {
