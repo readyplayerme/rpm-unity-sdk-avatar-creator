@@ -88,14 +88,17 @@ namespace ReadyPlayerMe
         {
             avatarCreatorUI.gameObject.SetActive(false);
             var startTime = Time.time;
-            var avatarId =await avatarManager.Save();
+            var avatarId = await avatarManager.Save();
             DebugPanel.AddLogWithDuration("Avatar saved", Time.time - startTime);
             Saved?.Invoke(avatarId);
         }
 
         private void ProcessAvatar()
         {
-            avatar.GetComponent<Animator>().runtimeAnimatorController = animator;
+            if (dataStore.AvatarProperties.BodyType == BodyType.FullBody)
+            {
+                avatar.GetComponent<Animator>().runtimeAnimatorController = animator;
+            }
             avatar.AddComponent<RotateAvatar>();
             if (dataStore.AvatarProperties.BodyType == BodyType.FullBody)
             {
