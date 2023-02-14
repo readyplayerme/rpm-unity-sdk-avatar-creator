@@ -7,10 +7,10 @@
 ### Requirements
 - Unity Version 2020.3 or higher
 - [Git](https://git-scm.com) needs to be installed to fetch the Unity package. [Download here](https://git-scm.com/downloads)
-- Ready Player Me Core
-- Ready Player Me Avatar Loader
-- Ready Player Me WebView
-- glTFast
+- Ready Player Me Core - develop branch
+- Ready Player Me Avatar Loader - develop branch
+- Ready Player Me WebView - develop branch
+- glTFast - v5.0.0
 
 ## Importing Package
 
@@ -47,5 +47,6 @@
 
 1. Authentication - user login and registration.
 2. Avatar creation through camera image.
-3. Skin color.
+3. Skin and hair color.
 4. Avatar presets.
+5. Caching.
