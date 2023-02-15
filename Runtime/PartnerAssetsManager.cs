@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
+    /// <summary>
+    /// For downloading and filtering all partner assets.
+    /// </summary>
     public static class PartnerAssetsManager
     {
         public static async Task<Dictionary<PartnerAsset, Task<Texture>>> GetAllAssets(string token, string partner, BodyType bodyType, OutfitGender gender)

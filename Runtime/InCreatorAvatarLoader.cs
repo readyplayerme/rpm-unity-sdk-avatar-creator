@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
+    /// <summary>
+    /// Avatar loader for importing and processing downloaded avatar through Avatar API endpoints.
+    /// </summary>
     public class InCreatorAvatarLoader
     {
         public async Task<GameObject> Load(string avatarId,BodyType bodyType, OutfitGender gender, byte[] data)

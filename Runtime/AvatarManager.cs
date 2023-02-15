@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
+    /// <summary>
+    /// It is responsible for creating a new avatar, updating and deleting an avatar.
+    /// </summary>
     public class AvatarManager
     {
         private readonly AvatarAPIRequests avatarAPIRequests;
@@ -13,6 +16,8 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private string avatarId;
         
+        /// <param name="token">Authentication token</param>
+        /// <param name="avatarConfig">Config for downloading preview avatar</param>
         public AvatarManager(string token, AvatarConfig avatarConfig)
         {
             avatarConfigParameters = AvatarConfigProcessor.ProcessAvatarConfiguration(avatarConfig);
