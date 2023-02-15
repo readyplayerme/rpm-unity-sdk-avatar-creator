@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 
 namespace ReadyPlayerMe
@@ -14,6 +14,7 @@ namespace ReadyPlayerMe
         [SerializeField] private GameObject avatarCreatorUI;
         [SerializeField] private AvatarConfig inCreatorConfig;
         [SerializeField] private RuntimeAnimatorController animator;
+        [SerializeField] private AuthSelection authSelection;
 
         public event Action<string> Saved;
 
@@ -22,6 +23,8 @@ namespace ReadyPlayerMe
 
         private void OnEnable()
         {
+            authSelection.Login += Login;
+
             avatarCreatorSelection.Show += Show;
             avatarCreatorSelection.Hide += Hide;
 
@@ -31,11 +34,25 @@ namespace ReadyPlayerMe
 
         private void OnDisable()
         {
+            authSelection.Login -= Login;
+
             avatarCreatorSelection.Show -= Show;
             avatarCreatorSelection.Hide -= Hide;
 
             avatarCreatorSelection.OnClick -= UpdateAvatar;
             avatarCreatorSelection.Save -= Save;
+        }
+
+        private async void Login()
+        {
+            var startTime = Time.time;
+            var partnerDomain = CoreSettingsHandler.CoreSettings.Subdomain;
+            dataStore.AvatarProperties.Partner = partnerDomain;
+
+            dataStore.User = await AuthRequests.LoginAsAnonymous(partnerDomain);
+
+            DebugPanel.AddLogWithDuration($"Logged in with userId: {dataStore.User.Id}", Time.time - startTime);
+            authSelection.SetSelected();
         }
 
         private void Show()
@@ -61,7 +78,7 @@ namespace ReadyPlayerMe
                 dataStore.AvatarProperties.BodyType,
                 dataStore.AvatarProperties.Gender
             );
-            
+
             DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
             avatarCreatorSelection.AddAllAssetButtons(dataStore.AvatarProperties.BodyType, assetIconDownloadTasks);
         }

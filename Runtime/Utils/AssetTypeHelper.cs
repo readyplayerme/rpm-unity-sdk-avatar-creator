@@ -5,7 +5,7 @@ namespace ReadyPlayerMe.AvatarCreator
 {
     public static class AssetTypeHelper
     {
-        public static List<AssetType> GetAssetTypeList()
+        public static IEnumerable<AssetType> GetAssetTypeList()
         {
             return PartnerAssetTypeMap.Select(x => x.Value)
                 .Where(x =>

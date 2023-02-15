@@ -4,7 +4,7 @@ using ReadyPlayerMe.AvatarLoader;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
-    public class AvatarProperties
+    public struct AvatarProperties
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Partner;
