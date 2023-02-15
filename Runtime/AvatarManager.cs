@@ -10,29 +10,40 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public class AvatarManager
     {
+        private readonly BodyType bodyType;
+        private readonly OutfitGender gender;
         private readonly AvatarAPIRequests avatarAPIRequests;
         private readonly string avatarConfigParameters;
         private readonly InCreatorAvatarLoader inCreatorAvatarLoader;
 
         private string avatarId;
-        
+
         /// <param name="token">Authentication token</param>
+        /// <param name="bodyType">Body type of avatar</param>
+        /// <param name="gender">Gender of avatar</param>
         /// <param name="avatarConfig">Config for downloading preview avatar</param>
-        public AvatarManager(string token, AvatarConfig avatarConfig)
+        public AvatarManager(string token, BodyType bodyType, OutfitGender gender, AvatarConfig avatarConfig = null)
         {
-            avatarConfigParameters = AvatarConfigProcessor.ProcessAvatarConfiguration(avatarConfig);
+            this.bodyType = bodyType;
+            this.gender = gender;
+
+            if (avatarConfig != null)
+            {
+                avatarConfigParameters = AvatarConfigProcessor.ProcessAvatarConfiguration(avatarConfig);
+            }
+
             inCreatorAvatarLoader = new InCreatorAvatarLoader();
             avatarAPIRequests = new AvatarAPIRequests(token);
         }
 
         public async Task<GameObject> Create(AvatarProperties avatarProperties)
         {
-            avatarId = await avatarAPIRequests.Create(avatarProperties);
+            avatarId = await avatarAPIRequests.CreateNewAvatar(avatarProperties);
             var data = await avatarAPIRequests.GetPreviewAvatar(avatarId, avatarConfigParameters);
-            return await inCreatorAvatarLoader.Load(avatarId, avatarProperties.BodyType, avatarProperties.Gender, data);
+            return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
         }
 
-        public async Task<GameObject> Update(BodyType bodyType, OutfitGender gender, string assetId, AssetType assetType)
+        public async Task<GameObject> Update(string assetId, AssetType assetType)
         {
             var payload = new AvatarProperties
             {
@@ -49,6 +60,11 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             await avatarAPIRequests.SaveAvatar(avatarId);
             return avatarId;
+        }
+
+        public async Task Delete()
+        {
+            await avatarAPIRequests.DeleteAvatar(avatarId);
         }
     }
 }

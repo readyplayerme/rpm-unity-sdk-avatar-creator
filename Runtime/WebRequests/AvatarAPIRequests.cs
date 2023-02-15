@@ -23,7 +23,7 @@ namespace ReadyPlayerMe.AvatarCreator
             };
         }
 
-        public async Task<string> Create(AvatarProperties avatarProperties)
+        public async Task<string> CreateNewAvatar(AvatarProperties avatarProperties)
         {
             var response = await WebRequestDispatcher.SendRequest(
                 Endpoints.AVATAR_API_V2,

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NUnit.Framework;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
@@ -35,7 +34,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
             Debug.Log("Logged In with token: " + userStore.Token);
 
             // Create avatar
-            var createAvatarPayload = new AvatarProperties
+            var avatarProperties = new AvatarProperties
             {
                 Partner = DOMAIN,
                 Gender = OutfitGender.Masculine,
@@ -43,38 +42,23 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
                 Assets = AvatarPropertiesConstants.MaleDefaultAssets
             };
 
-            var avatarAPIRequests = new AvatarAPIRequests(userStore.Token);
+            var avatarManager = new AvatarManager(userStore.Token, avatarProperties.BodyType, avatarProperties.Gender);
+            var avatar = await avatarManager.Create(avatarProperties);
 
-            var avatarId = await avatarAPIRequests.Create(createAvatarPayload);
-            Assert.IsNotNull(avatarId);
-            Assert.IsNotEmpty(avatarId);
-            Debug.Log("Avatar created with id: " + avatarId);
+            Assert.IsNotNull(avatar);
+            Debug.Log("Avatar created with id: " + avatar.name);
 
-            // Get Preview GLB
-            var previewAvatar = await avatarAPIRequests.GetPreviewAvatar(avatarId);
-            Assert.Greater(previewAvatar.Length, 0);
-            Debug.Log("Preview avatar download completed.");
-
-            // Update Avatar
-            var updateAvatarPayload = new AvatarProperties
-            {
-                Assets = new Dictionary<AssetType, object>()
-                {
-                    { AssetType.SkinColor, 2 }
-                }
-            };
-            var updatedAvatar = await avatarAPIRequests.UpdateAvatar(avatarId, updateAvatarPayload);
-            Assert.Greater(updatedAvatar.Length, 0);
-            Debug.Log("Avatar skinColor updated, and glb downloaded.");
+            var updatedAvatar = await avatarManager.Update(2.ToString(), AssetType.SkinColor);
+            Assert.IsNotNull(updatedAvatar);
+            Debug.Log("Avatar skinColor updated");
 
             // Save Avatar
-            var metaData = await avatarAPIRequests.SaveAvatar(avatarId);
+            var avatarId = await avatarManager.Save();
             Assert.IsNotNull(avatarId);
-            Assert.IsNotEmpty(metaData);
             Debug.Log("Avatar metadata saved to permanent storage on server.");
 
             // Delete the Avatar
-            await avatarAPIRequests.DeleteAvatar(avatarId);
+            await avatarManager.Delete();
             Debug.Log("Avatar deleted.");
             Assert.Pass();
         }
@@ -96,7 +80,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
 
             var avatarAPIRequests = new AvatarAPIRequests(userStore.Token);
 
-            var avatarId = await avatarAPIRequests.Create(createAvatarPayload);
+            var avatarId = await avatarAPIRequests.CreateNewAvatar(createAvatarPayload);
             Assert.IsNotNull(avatarId);
             Assert.IsNotEmpty(avatarId);
             Debug.Log("Avatar created with id: " + avatarId);
