@@ -49,7 +49,8 @@ namespace ReadyPlayerMe
             var partnerDomain = CoreSettingsHandler.CoreSettings.Subdomain;
             dataStore.AvatarProperties.Partner = partnerDomain;
 
-            dataStore.User = await AuthRequests.LoginAsAnonymous(partnerDomain);
+            var authManager = new AuthManager(partnerDomain);
+            dataStore.User = await authManager.Login();
 
             DebugPanel.AddLogWithDuration($"Logged in with userId: {dataStore.User.Id}", Time.time - startTime);
             authSelection.SetSelected();

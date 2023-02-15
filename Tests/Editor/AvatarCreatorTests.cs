@@ -10,20 +10,28 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
     {
         private const string DOMAIN = "demo";
 
+        private AuthManager authManager;
+
+        [SetUp]
+        public void Setup()
+        {
+            authManager = new AuthManager(DOMAIN);
+        }
+
         [Test]
         public async Task Receive_Partner_Assets()
         {
-            var userStore = await AuthRequests.LoginAsAnonymous(DOMAIN);
-            var avatarAssets = await PartnerAssetsRequests.Get(userStore.Token, DOMAIN);
+            var userStore = await authManager.Login();
+            var avatarAssets = await PartnerAssetsManager.GetAllAssets(userStore.Token, DOMAIN, BodyType.FullBody, OutfitGender.Masculine);
 
             Assert.IsNotNull(avatarAssets);
-            Assert.Greater(avatarAssets.Length, 0);
+            Assert.Greater(avatarAssets.Count, 0);
         }
 
         [Test]
         public async Task Avatar_Create_Update_Delete()
         {
-            var userStore = await AuthRequests.LoginAsAnonymous(DOMAIN);
+            var userStore = await authManager.Login();
             Debug.Log("Logged In with token: " + userStore.Token);
 
             // Create avatar
@@ -74,7 +82,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
         [Test]
         public async Task Avatar_Create_And_Load()
         {
-            var userStore = await AuthRequests.LoginAsAnonymous(DOMAIN);
+            var userStore = await authManager.Login();
             Debug.Log("Logged In with token: " + userStore.Token);
 
             // Create avatar
