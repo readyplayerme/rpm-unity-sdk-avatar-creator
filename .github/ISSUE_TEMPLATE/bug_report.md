@@ -36,6 +36,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
+ - Ready Player Me Avatar Creator version
  - Ready Player Me Core version
  - Ready Player Me Avatar Loader version
  - Ready Player Me WebView version
