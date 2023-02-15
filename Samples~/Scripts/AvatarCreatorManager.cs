@@ -86,12 +86,17 @@ namespace ReadyPlayerMe
 
         private async void CreateDefaultModel()
         {
-            avatarManager = new AvatarManager(dataStore.User.Token, inCreatorConfig);
-
             var startTime = Time.time;
             dataStore.AvatarProperties.Assets = dataStore.AvatarProperties.Gender == OutfitGender.Feminine
                 ? AvatarPropertiesConstants.FemaleDefaultAssets
                 : AvatarPropertiesConstants.MaleDefaultAssets;
+
+            avatarManager = new AvatarManager(
+                dataStore.User.Token,
+                dataStore.AvatarProperties.BodyType,
+                dataStore.AvatarProperties.Gender,
+                inCreatorConfig);
+
             avatar = await avatarManager.Create(dataStore.AvatarProperties);
 
             var avatarLoadingTime = Time.time - startTime;
@@ -112,7 +117,7 @@ namespace ReadyPlayerMe
 
             payload.Assets.Add(assetType, assetId);
 
-            avatar = await avatarManager.Update(dataStore.AvatarProperties.BodyType, dataStore.AvatarProperties.Gender, assetId, assetType);
+            avatar = await avatarManager.Update(assetId, assetType);
             ProcessAvatar();
             DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
         }

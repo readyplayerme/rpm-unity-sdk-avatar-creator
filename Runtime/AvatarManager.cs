@@ -43,6 +43,12 @@ namespace ReadyPlayerMe.AvatarCreator
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
         }
 
+        /// <summary>
+        /// Update an asset of the avatar.
+        /// </summary>
+        /// <param name="assetId"></param>
+        /// <param name="assetType"></param>
+        /// <returns></returns>
         public async Task<GameObject> Update(string assetId, AssetType assetType)
         {
             var payload = new AvatarProperties
@@ -56,12 +62,17 @@ namespace ReadyPlayerMe.AvatarCreator
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
         }
 
+        /// <summary>
+        /// Saves the avatar from temp to permanent storage. 
+        /// </summary>
         public async Task<string> Save()
         {
-            await avatarAPIRequests.SaveAvatar(avatarId);
-            return avatarId;
+            return await avatarAPIRequests.SaveAvatar(avatarId);
         }
 
+        /// <summary>
+        /// This will delete the avatar completely even from database. 
+        /// </summary>
         public async Task Delete()
         {
             await avatarAPIRequests.DeleteAvatar(avatarId);
