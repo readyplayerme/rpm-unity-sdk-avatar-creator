@@ -7,9 +7,9 @@
 ### Requirements
 - Unity Version 2020.3 or higher
 - [Git](https://git-scm.com) needs to be installed to fetch the Unity package. [Download here](https://git-scm.com/downloads)
-- Ready Player Me Core - develop branch
-- Ready Player Me Avatar Loader - develop branch
-- Ready Player Me WebView - develop branch
+- Ready Player Me Core - v0.1.1
+- Ready Player Me Avatar Loader - v0.1.1
+- Ready Player Me WebView - v0.1.0
 - glTFast - v5.0.0
 
 ## Importing Package
