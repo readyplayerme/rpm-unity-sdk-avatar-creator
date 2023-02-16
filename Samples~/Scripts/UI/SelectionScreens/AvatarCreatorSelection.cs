@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
@@ -44,7 +42,7 @@ namespace ReadyPlayerMe
             saveButton.gameObject.SetActive(true);
         }
 
-        public void SetIcons(Dictionary<string,Texture> assetIcons)
+        public void SetAssetIcons(Dictionary<string, Texture> assetIcons)
         {
             assetButtonCreator.SetAssetIcons(assetIcons);
         }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using ReadyPlayerMe.Core;
@@ -86,7 +84,7 @@ namespace ReadyPlayerMe
             DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
             avatarCreatorSelection.CreateUI(dataStore.AvatarProperties.BodyType, assetIconDownloadTasks);
 
-            partnerAssetManager.DownloadAssetsIcon(avatarCreatorSelection.SetIcons);
+            partnerAssetManager.DownloadAssetsIcon(avatarCreatorSelection.SetAssetIcons);
         }
 
         private async void CreateDefaultModel()

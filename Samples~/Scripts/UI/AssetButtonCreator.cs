@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
 using UnityEngine.UI;
@@ -45,7 +44,7 @@ namespace ReadyPlayerMe
             }
         }
 
-        private async void AddAssetButton(string assetId, Transform parent, AssetType assetType, Action<string, AssetType> onClick)
+        private void AddAssetButton(string assetId, Transform parent, AssetType assetType, Action<string, AssetType> onClick)
         {
             var assetButtonGameObject = Instantiate(assetButtonPrefab, parent.GetComponent<ScrollRect>().content);
             assetButtonGameObject.name = "Asset-" + assetId;
