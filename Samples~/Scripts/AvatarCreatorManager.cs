@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using ReadyPlayerMe.Core;
+using ReadyPlayerMe.Core.Data;
 using UnityEngine;
 
 namespace ReadyPlayerMe
@@ -46,7 +47,7 @@ namespace ReadyPlayerMe
         private async void Login()
         {
             var startTime = Time.time;
-            var partnerDomain = CoreSettingsHandler.CoreSettings.Subdomain;
+            var partnerDomain = CoreSettings.PartnerSubdomainSettings.Subdomain;
             dataStore.AvatarProperties.Partner = partnerDomain;
 
             var authManager = new AuthManager(partnerDomain);
