@@ -67,7 +67,8 @@ namespace ReadyPlayerMe.AvatarCreator
         /// </summary>
         public async Task<string> Save()
         {
-            return await avatarAPIRequests.SaveAvatar(avatarId);
+            await avatarAPIRequests.SaveAvatar(avatarId);
+            return avatarId;
         }
 
         /// <summary>
