@@ -36,11 +36,9 @@ namespace ReadyPlayerMe
 
         private Dictionary<AssetType, AssetTypeButton> assetTypeButtonsMap;
         private AssetTypeButton selectedAssetTypeButton;
-        private BodyType bodyType;
 
         public void CreateUI(BodyType bodyType, IEnumerable<AssetType> assetTypes)
         {
-            this.bodyType = bodyType;
             cameraZoom.DefaultZoom(bodyType);
 
             assetTypeButtonsMap = new Dictionary<AssetType, AssetTypeButton>();

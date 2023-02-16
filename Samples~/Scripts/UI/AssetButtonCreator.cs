@@ -13,15 +13,17 @@ namespace ReadyPlayerMe
         [SerializeField] private GameObject clearAssetSelectionButton;
 
         private Dictionary<AssetType, AssetButton> selectedAssetByTypeMap;
+        private Dictionary<string, AssetButton> assetMap;
 
-        public void CreateUI(IEnumerable<KeyValuePair<PartnerAsset, Task<Texture>>> assets, Action<string, AssetType> onClick)
+        public void CreateUI(IEnumerable<KeyValuePair<string, AssetType>> assets, Action<string, AssetType> onClick)
         {
             selectedAssetByTypeMap = new Dictionary<AssetType, AssetButton>();
-
+            assetMap = new Dictionary<string, AssetButton>();
+            
             foreach (var asset in assets)
             {
-                var parent = PanelSwitcher.AssetTypePanelMap[asset.Key.AssetType];
-                AddAssetButton(asset.Key.Id, parent.transform, asset.Key.AssetType, onClick, asset.Value);
+                var parent = PanelSwitcher.AssetTypePanelMap[asset.Value];
+                AddAssetButton(asset.Key, parent.transform, asset.Value, onClick);
             }
 
             foreach (var assetTypePanelMap in PanelSwitcher.AssetTypePanelMap)
@@ -35,8 +37,15 @@ namespace ReadyPlayerMe
             }
         }
 
-        private async void AddAssetButton(string assetId, Transform parent, AssetType assetType, Action<string, AssetType> onClick,
-            Task<Texture> iconDownloadTask)
+        public void SetAssetIcons(Dictionary<string, Texture> assetIcons)
+        {
+            foreach (var asset in assetIcons)
+            {
+                assetMap[asset.Key].SetIcon(asset.Value);
+            }
+        }
+
+        private async void AddAssetButton(string assetId, Transform parent, AssetType assetType, Action<string, AssetType> onClick)
         {
             var assetButtonGameObject = Instantiate(assetButtonPrefab, parent.GetComponent<ScrollRect>().content);
             assetButtonGameObject.name = "Asset-" + assetId;
@@ -56,7 +65,12 @@ namespace ReadyPlayerMe
                 assetButton.SetSelect(true);
                 onClick?.Invoke(assetId, assetType);
             });
-            assetButton.SetIcon(assetType, await iconDownloadTask);
+            if (assetType == AssetType.EyeColor)
+            {
+                assetButton.SetEyeColorConfig(assetType);
+            }
+            
+            assetMap.Add(assetId, assetButton);
         }
 
         private void AddAssetSelectionClearButton(Transform parent, AssetType assetType, Action<string, AssetType> onClick)

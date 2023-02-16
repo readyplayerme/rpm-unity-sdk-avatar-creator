@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using ReadyPlayerMe.Core;
@@ -73,15 +75,18 @@ namespace ReadyPlayerMe
         private async void LoadAssets()
         {
             var startTime = Time.time;
-            var assetIconDownloadTasks = await PartnerAssetsManager.GetAllAssets(
+
+            var partnerAssetManager = new PartnerAssetsManager(
                 dataStore.User.Token,
                 dataStore.AvatarProperties.Partner,
                 dataStore.AvatarProperties.BodyType,
-                dataStore.AvatarProperties.Gender
-            );
+                dataStore.AvatarProperties.Gender);
+            var assetIconDownloadTasks = await partnerAssetManager.GetAllAssets();
 
             DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
-            avatarCreatorSelection.AddAllAssetButtons(dataStore.AvatarProperties.BodyType, assetIconDownloadTasks);
+            avatarCreatorSelection.CreateUI(dataStore.AvatarProperties.BodyType, assetIconDownloadTasks);
+
+            partnerAssetManager.DownloadAssetsIcon(avatarCreatorSelection.SetIcons);
         }
 
         private async void CreateDefaultModel()
@@ -138,10 +143,6 @@ namespace ReadyPlayerMe
                 avatar.GetComponent<Animator>().runtimeAnimatorController = animator;
             }
             avatar.AddComponent<RotateAvatar>();
-            if (dataStore.AvatarProperties.BodyType == BodyType.FullBody)
-            {
-                avatar.GetComponent<Animator>().runtimeAnimatorController = animator;
-            }
         }
     }
 }

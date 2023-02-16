@@ -21,7 +21,8 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
         public async Task Receive_Partner_Assets()
         {
             var userStore = await authManager.Login();
-            var avatarAssets = await PartnerAssetsManager.GetAllAssets(userStore.Token, DOMAIN, BodyType.FullBody, OutfitGender.Masculine);
+            var partnerAssetManager = new PartnerAssetsManager(userStore.Token, DOMAIN, BodyType.FullBody, OutfitGender.Masculine);
+            var avatarAssets = await partnerAssetManager.GetAllAssets();
 
             Assert.IsNotNull(avatarAssets);
             Assert.Greater(avatarAssets.Count, 0);

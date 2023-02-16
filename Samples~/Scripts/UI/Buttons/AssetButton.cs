@@ -17,17 +17,18 @@ namespace ReadyPlayerMe
             button.onClick.AddListener(action.Invoke);
         }
 
-        public void SetIcon(AssetType assetType, Texture texture)
+        public void SetEyeColorConfig(AssetType assetType)
+        {
+            mask.GetComponent<Image>().color = Color.white;
+            mask.GetComponent<Mask>().enabled = true;
+            icon.rectTransform.localPosition = Vector3.zero;
+            icon.rectTransform.sizeDelta = new Vector2(210, 210);
+        }
+
+        public void SetIcon(Texture texture)
         {
             icon.texture = texture;
             icon.enabled = true;
-            if (assetType == AssetType.EyeColor)
-            {
-                mask.GetComponent<Image>().color = Color.white;
-                mask.GetComponent<Mask>().enabled = true;
-                icon.rectTransform.localPosition = Vector3.zero;
-                icon.rectTransform.sizeDelta = new Vector2(210, 210);
-            }
         }
 
         public void SetSelect(bool isSelected)

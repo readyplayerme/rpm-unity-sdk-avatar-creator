@@ -36,15 +36,17 @@ namespace ReadyPlayerMe
             saveButton.onClick.RemoveListener(OnSave);
         }
 
-        public void AddAllAssetButtons(BodyType bodyType, Dictionary<PartnerAsset, Task<Texture>> assets)
+        public void CreateUI(BodyType bodyType, Dictionary<string, AssetType> assets)
         {
-            var distinctAssetType = assets.Keys.Select(x => x.AssetType).Distinct();
-            assetTypeUICreator.CreateUI(bodyType, AssetTypeHelper.GetAssetTypeList().Where(x => distinctAssetType.Contains(x)));
-
-            var orderedAssets = assets.OrderByDescending(x => x.Key.AssetType == AssetType.FaceShape);
-            assetButtonCreator.CreateUI(orderedAssets, OnClick);
+            assetTypeUICreator.CreateUI(bodyType, AssetTypeHelper.GetAssetTypeList(bodyType));
+            assetButtonCreator.CreateUI(assets, OnClick);
 
             saveButton.gameObject.SetActive(true);
+        }
+
+        public void SetIcons(Dictionary<string,Texture> assetIcons)
+        {
+            assetButtonCreator.SetAssetIcons(assetIcons);
         }
 
         private void OnSave()

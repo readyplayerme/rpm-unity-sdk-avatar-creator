@@ -1,21 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ReadyPlayerMe.AvatarLoader;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
     public static class AssetTypeHelper
     {
-        public static IEnumerable<AssetType> GetAssetTypeList()
+        public static IEnumerable<AssetType> GetAssetTypeList(BodyType bodyType)
         {
-            return PartnerAssetTypeMap.Select(x => x.Value)
-                .Where(x =>
-                    x != AssetType.BeardColor &&
-                    x != AssetType.EyebrowColor &&
-                    x != AssetType.HairColor &&
-                    x != AssetType.FaceStyle)
+            return PartnerAssetTypeMap
+                .Select(a => a.Value)
+                .Where(assetType => IsCorrectAssetType(assetType, bodyType))
                 .ToList();
         }
-
+        
         public static readonly Dictionary<string, AssetType> PartnerAssetTypeMap = new Dictionary<string, AssetType>
         {
             { "faceshape", AssetType.FaceShape },
@@ -53,6 +51,24 @@ namespace ReadyPlayerMe.AvatarCreator
                 default:
                     return false;
             }
+        }
+        
+        private static bool IsCorrectAssetType(AssetType assetType, BodyType bodyType)
+        {
+            if (assetType == AssetType.BeardColor ||
+                assetType == AssetType.EyebrowColor ||
+                assetType == AssetType.HairColor ||
+                assetType == AssetType.FaceStyle)
+            {
+                return false;
+            }
+
+            // Filter asset type based on body type.
+            if (bodyType == BodyType.FullBody)
+            {
+                return assetType != AssetType.Shirt;
+            }
+            return assetType != AssetType.Outfit;
         }
     }
 }
