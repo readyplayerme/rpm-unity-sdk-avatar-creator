@@ -30,7 +30,7 @@ namespace ReadyPlayerMe.AvatarCreator
         public async Task<Dictionary<string, AssetType>> GetAllAssets()
         {
             assets = await PartnerAssetsRequests.Get(token, partner);
-            assets = assets.Where(asset => FilterAssets(asset, bodyType, gender)).ToArray();
+            assets = assets.Where(FilterAssets).ToArray();
             return assets.ToDictionary(asset => asset.Id, asset => asset.AssetType);
         }
 
@@ -66,7 +66,7 @@ namespace ReadyPlayerMe.AvatarCreator
             return assetIconMap.ToDictionary(a => a.Key, a => a.Value.Result);
         }
 
-        private bool FilterAssets(PartnerAsset asset, BodyType bodyType, OutfitGender gender)
+        private bool FilterAssets(PartnerAsset asset)
         {
             // Outfit is only for full body and Shirt is only for half body.
             // Both outfit and shirt are gender specific.

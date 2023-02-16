@@ -1,5 +1,4 @@
 using System;
-using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,13 +10,14 @@ namespace ReadyPlayerMe
         [SerializeField] private GameObject selected;
         [SerializeField] private Button button;
         [SerializeField] private GameObject mask;
-
+        [SerializeField] private GameObject loading;
+        
         public void AddListener(Action action)
         {
             button.onClick.AddListener(action.Invoke);
         }
 
-        public void SetEyeColorConfig(AssetType assetType)
+        public void SetEyeColorConfig()
         {
             mask.GetComponent<Image>().color = Color.white;
             mask.GetComponent<Mask>().enabled = true;
@@ -29,6 +29,7 @@ namespace ReadyPlayerMe
         {
             icon.texture = texture;
             icon.enabled = true;
+            loading.SetActive(false);
         }
 
         public void SetSelect(bool isSelected)

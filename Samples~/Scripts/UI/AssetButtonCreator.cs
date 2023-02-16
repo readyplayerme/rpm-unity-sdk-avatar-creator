@@ -66,7 +66,7 @@ namespace ReadyPlayerMe
             });
             if (assetType == AssetType.EyeColor)
             {
-                assetButton.SetEyeColorConfig(assetType);
+                assetButton.SetEyeColorConfig();
             }
             
             assetMap.Add(assetId, assetButton);
