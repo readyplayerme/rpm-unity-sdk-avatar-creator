@@ -7,10 +7,10 @@
 ### Requirements
 - Unity Version 2020.3 or higher
 - [Git](https://git-scm.com) needs to be installed to fetch the Unity package. [Download here](https://git-scm.com/downloads)
-- Ready Player Me Core - v0.1.1
-- Ready Player Me Avatar Loader - v0.1.1
-- Ready Player Me WebView - v0.1.0
-- glTFast - v5.0.0
+- [Ready Player Me Core](https://github.com/readyplayerme/rpm-unity-sdk-core) - v1.0.0
+- [Ready Player Me Avatar Loader](https://github.com/readyplayerme/rpm-unity-sdk-avatar-loader) - v1.0.0
+- [Ready Player Me WebView](https://github.com/readyplayerme/rpm-unity-sdk-webview) - v1.0.0
+- [glTFast](https://github.com/atteneder/glTFast) - v5.0.0
 
 ## Importing Package
 
@@ -26,7 +26,7 @@
 
 **4.** Paste in this url
 
-`https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator.git`
+`https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator.git#v0.1.2`
 
 ![paste-git-url](https://user-images.githubusercontent.com/7085672/206432731-f9e0d161-7843-4d6e-8851-47b1f3bfb3bc.png)
 
