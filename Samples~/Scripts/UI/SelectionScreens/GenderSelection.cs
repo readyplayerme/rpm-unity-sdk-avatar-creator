@@ -1,15 +1,16 @@
-﻿using ReadyPlayerMe.AvatarCreator;
-using ReadyPlayerMe.AvatarLoader;
+﻿using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace ReadyPlayerMe
 {
-    public class GenderSelection : SelectionScreenBase
+    public class GenderSelection : State
     {
         [SerializeField] private Button male;
         [SerializeField] private Button female;
         [SerializeField] private Button dontSpecify;
+
+        public override StateType StateType => StateType.GenderSelection;
 
         private void OnEnable()
         {
@@ -27,20 +28,23 @@ namespace ReadyPlayerMe
 
         private void OnMaleSelected()
         {
-            DataStore.AvatarProperties.Gender = OutfitGender.Masculine;
-            IsSelected = true;
+            NextState(OutfitGender.Masculine);
         }
 
         private void OnFemaleSelected()
         {
-            DataStore.AvatarProperties.Gender = OutfitGender.Feminine;
-            IsSelected = true;
+            NextState(OutfitGender.Feminine);
         }
 
         private void OnGenderNotSpecifiedSelected()
         {
-            DataStore.AvatarProperties.Gender = OutfitGender.None;
-            IsSelected = true;
+            NextState(OutfitGender.None);
+        }
+
+        private void NextState(OutfitGender gender)
+        {
+            DataStore.AvatarProperties.Gender = gender;
+            StateMachine.SetState(StateType.Editor);
         }
     }
 }

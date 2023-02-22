@@ -9,7 +9,7 @@ namespace ReadyPlayerMe
 
         private float lastPosX;
         private bool rotate;
-
+        
         private void Update()
         {
             if (EventSystem.current.IsPointerOverGameObject() && !rotate)

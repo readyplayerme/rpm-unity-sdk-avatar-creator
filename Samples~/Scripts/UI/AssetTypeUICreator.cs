@@ -31,15 +31,24 @@ namespace ReadyPlayerMe
         [SerializeField] private GameObject faceAssetTypePanel;
         [SerializeField] private GameObject faceAssetPanelPrefab;
         [SerializeField] private GameObject leftSidePanelPrefab;
-        [SerializeField] private CameraZoom cameraZoom;
         [SerializeField] private List<AssetTypeIcon> assetTypeIcons;
 
         private Dictionary<AssetType, AssetTypeButton> assetTypeButtonsMap;
         private AssetTypeButton selectedAssetTypeButton;
 
+        private CameraZoom cameraZoom;
+        private BodyType bodyType;
+
+        private void Awake()
+        {
+            cameraZoom = FindObjectOfType<CameraZoom>();
+        }
+
+
         public void CreateUI(BodyType bodyType, IEnumerable<AssetType> assetTypes)
         {
-            cameraZoom.DefaultZoom(bodyType);
+            this.bodyType = bodyType;
+            DefaultZoom();
 
             assetTypeButtonsMap = new Dictionary<AssetType, AssetTypeButton>();
             PanelSwitcher.FaceTypePanel = faceAssetTypePanel;
@@ -79,6 +88,7 @@ namespace ReadyPlayerMe
         public void ResetUI()
         {
             PanelSwitcher.Clear();
+            DefaultZoom();
 
             foreach (var assetTypeButton in assetTypeButtonsMap)
             {
@@ -111,7 +121,7 @@ namespace ReadyPlayerMe
 
             assetTypeButton.AddListener(() =>
             {
-                cameraZoom.SwitchZoomByAssetType(assetType);
+                SwitchZoomByAssetType(assetType);
                 assetTypeButton.SetSelect(true);
                 selectedAssetTypeButton.SetSelect(false);
                 faceAssetTypeButton.SetSelect(AssetTypeHelper.IsFaceAsset(assetType));
@@ -127,6 +137,33 @@ namespace ReadyPlayerMe
             assetTypeButtonsMap[AssetType.FaceShape].SetSelect(true);
             PanelSwitcher.Switch(AssetType.FaceShape);
             selectedAssetTypeButton = assetTypeButtonsMap[AssetType.FaceShape];
+        }
+
+        private void DefaultZoom()
+        {
+            if (bodyType == BodyType.HalfBody)
+            {
+                cameraZoom.MoveToHalfBody();
+            }
+            else
+            {
+                cameraZoom.MoveToFar();
+            }
+        }
+
+        private void SwitchZoomByAssetType(AssetType assetType)
+        {
+            if (bodyType != BodyType.HalfBody)
+            {
+                if (assetType == AssetType.Outfit)
+                {
+                    cameraZoom.MoveToFar();
+                }
+                else
+                {
+                    cameraZoom.MoveToNear();
+                }
+            }
         }
     }
 }

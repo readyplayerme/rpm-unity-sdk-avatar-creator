@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using ReadyPlayerMe.AvatarLoader;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
+    [Serializable]
     public struct AvatarProperties
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

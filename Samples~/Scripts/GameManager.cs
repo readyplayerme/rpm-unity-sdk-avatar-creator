@@ -6,17 +6,17 @@ namespace ReadyPlayerMe
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private AvatarCreatorManager avatarCreatorManager;
+        [SerializeField] private AvatarCreatorStateMachine  avatarCreatorStateMachine;
         [SerializeField] private AvatarConfig inGameConfig;
 
         private void OnEnable()
         {
-            avatarCreatorManager.Saved += OnAvatarSaved;
+            avatarCreatorStateMachine.AvatarSaved += OnAvatarSaved;
         }
 
         private void OnDisable()
         {
-            avatarCreatorManager.Saved -= OnAvatarSaved;
+            avatarCreatorStateMachine.AvatarSaved -= OnAvatarSaved;
         }
 
         private void OnAvatarSaved(string avatarId)

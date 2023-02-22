@@ -1,6 +1,4 @@
 using System.Threading;
-using ReadyPlayerMe.AvatarCreator;
-using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 
 namespace ReadyPlayerMe
@@ -14,56 +12,27 @@ namespace ReadyPlayerMe
         [SerializeField] private float defaultDuration = 0.25f;
 
         private CancellationTokenSource ctx;
-        private BodyType bodyType;
 
         private void OnDestroy()
         {
             ctx?.Cancel();
         }
 
-        public void DefaultZoom(BodyType type)
-        {
-            bodyType = type;
-            if (bodyType == BodyType.HalfBody)
-            {
-                MoveToHalfBody();
-            }
-            else
-            {
-                MoveToFar();
-            }
-        }
-
-        public void SwitchZoomByAssetType(AssetType assetType)
-        {
-            if (bodyType != BodyType.HalfBody)
-            {
-                if (assetType == AssetType.Outfit)
-                {
-                    MoveToFar();
-                }
-                else
-                {
-                    MoveToNear();
-                }
-            }
-        }
-
-        private void MoveToNear()
+        public void MoveToNear()
         {
             ctx?.Cancel();
             ctx = new CancellationTokenSource();
             _ = cameraTransform.LerpPosition(nearTransform.position, defaultDuration, ctx.Token);
         }
 
-        private void MoveToFar()
+        public void MoveToFar()
         {
             ctx?.Cancel();
             ctx = new CancellationTokenSource();
             _ = cameraTransform.LerpPosition(farTransform.position, defaultDuration, ctx.Token);
         }
 
-        private void MoveToHalfBody()
+        public void MoveToHalfBody()
         {
             cameraTransform.position = halfBodyTransform.transform.position;
         }

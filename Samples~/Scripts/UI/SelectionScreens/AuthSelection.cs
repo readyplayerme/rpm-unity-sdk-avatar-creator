@@ -1,15 +1,15 @@
-using System;
 using ReadyPlayerMe.AvatarCreator;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using Task = System.Threading.Tasks.Task;
 
 namespace ReadyPlayerMe
 {
-    public class AuthSelection : SelectionScreenBase
+    public class AuthSelection : State
     {
         [SerializeField] private Button login;
-
-        public Action Login;
+        public override StateType StateType => StateType.Login;
 
         private void OnEnable()
         {
@@ -21,16 +21,24 @@ namespace ReadyPlayerMe
             login.onClick.RemoveListener(LoginAsAnonymous);
         }
 
-        public void SetSelected()
-        {
-            IsSelected = true;
-            Loading.SetActive(false);
-        }
-
-        private void LoginAsAnonymous()
+        private async void LoginAsAnonymous()
         {
             Loading.SetActive(true);
-            Login?.Invoke();
+            await Login();
+            Loading.SetActive(false);
+            StateMachine.SetState(StateType.BodyTypeSelection);
+        }
+
+        private async Task Login()
+        {
+            var startTime = Time.time;
+            var partnerDomain = CoreSettingsHandler.CoreSettings.Subdomain;
+            DataStore.AvatarProperties.Partner = partnerDomain;
+
+            var authManager = new AuthManager(partnerDomain);
+            DataStore.User = await authManager.Login();
+
+            DebugPanel.AddLogWithDuration($"Logged in with userId: {DataStore.User.Id}", Time.time - startTime);
         }
     }
 }
