@@ -10,11 +10,18 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
         private const string DOMAIN = "demo";
 
         private AuthManager authManager;
+        private GameObject avatar;
 
         [SetUp]
         public void Setup()
         {
             authManager = new AuthManager(DOMAIN);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Object.DestroyImmediate(avatar);
         }
 
         [Test]
@@ -44,13 +51,13 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
             };
 
             var avatarManager = new AvatarManager(userStore.Token, avatarProperties.BodyType, avatarProperties.Gender);
-            var avatar = await avatarManager.Create(avatarProperties);
+            avatar = await avatarManager.Create(avatarProperties);
 
             Assert.IsNotNull(avatar);
             Debug.Log("Avatar created with id: " + avatar.name);
 
-            var updatedAvatar = await avatarManager.Update(2.ToString(), AssetType.SkinColor);
-            Assert.IsNotNull(updatedAvatar);
+            avatar = await avatarManager.Update(2.ToString(), AssetType.SkinColor);
+            Assert.IsNotNull(avatar);
             Debug.Log("Avatar skinColor updated");
 
             // Save Avatar
