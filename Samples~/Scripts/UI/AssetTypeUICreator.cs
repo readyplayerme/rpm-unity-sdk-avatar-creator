@@ -9,6 +9,7 @@ using UnityEngine.UI;
 namespace ReadyPlayerMe
 {
     public class AssetTypeUICreator : MonoBehaviour
+    public class AssetTypeUICreator : MonoBehaviour
     {
         [Serializable]
         private class AssetTypeIcon

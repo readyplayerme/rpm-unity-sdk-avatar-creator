@@ -67,10 +67,17 @@ namespace ReadyPlayerMe
                 DataStore.AvatarProperties.BodyType,
                 DataStore.AvatarProperties.Gender);
             var assetIconDownloadTasks = await partnerAssetManager.GetAllAssets();
-
+            
             DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
             CreateUI(DataStore.AvatarProperties.BodyType, assetIconDownloadTasks);
             partnerAssetManager.DownloadAssetsIcon(assetButtonCreator.SetAssetIcons);
+        }
+
+        private async void LoadColors()
+        {
+            var avatarAPIRequests = new AvatarAPIRequests(DataStore.User.Token);
+            var colors = await avatarAPIRequests.GetAllAvatarColors(DataStore.AvatarId);
+            Debug.Log($"skin = {colors[0].hexColors.Length} eyebrow = {colors[1].hexColors.Length}");
         }
 
         private async void CreateDefaultModel()

@@ -39,6 +39,8 @@ namespace ReadyPlayerMe.AvatarCreator
         public async Task<GameObject> Create(AvatarProperties avatarProperties)
         {
             avatarId = await avatarAPIRequests.CreateNewAvatar(avatarProperties);
+            // var colors = await avatarAPIRequests.GetAllAvatarColors(avatarId);
+            // Debug.Log($"skin = {colors[0].hexColors.Length} eyebrow = {colors[1].hexColors.Length}");
             var data = await avatarAPIRequests.GetPreviewAvatar(avatarId, avatarConfigParameters);
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
         }
