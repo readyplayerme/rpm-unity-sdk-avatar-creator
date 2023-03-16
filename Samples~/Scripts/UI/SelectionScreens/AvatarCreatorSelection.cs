@@ -77,8 +77,10 @@ namespace ReadyPlayerMe
 
         private async Task<ColorPalette[]> LoadColors()
         {
+            var startTime = Time.time;
             var avatarAPIRequests = new AvatarAPIRequests(DataStore.User.Token);
-            return await avatarAPIRequests.GetAllAvatarColors(avatar.name);
+            DebugPanel.AddLogWithDuration("All colors loaded", Time.time - startTime);
+            return await avatarAPIRequests.GetAllAvatarColors(avatar.name); // avatar.name is same as draft avatar ID
         }
 
         private async void CreateDefaultModel()
@@ -95,10 +97,8 @@ namespace ReadyPlayerMe
                 inCreatorConfig);
 
             avatar = await avatarManager.Create(DataStore.AvatarProperties);
+            DebugPanel.AddLogWithDuration("Avatar loaded", Time.time - startTime);
             assetButtonCreator.CreateColorUI(await LoadColors(), UpdateAvatarColor);
-            var avatarLoadingTime = Time.time - startTime;
-            DebugPanel.AddLogWithDuration("Avatar loaded", avatarLoadingTime);
-
             ProcessAvatar();
             Loading.SetActive(false);
         }
