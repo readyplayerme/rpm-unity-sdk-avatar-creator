@@ -46,8 +46,14 @@ namespace ReadyPlayerMe
                 var assetIndex = 0;
                 foreach (var color in colorPalette.hexColors)
                 {
-                    var button = AddColorButton(assetIndex++, parent.transform, colorPalette.assetType, onClick);
+                    var button = AddColorButton(assetIndex, parent.transform, colorPalette.assetType, onClick);
                     button.SetColor(color);
+                    // By default first color is applied on initial draft
+                    if (assetIndex == 0)
+                    {
+                        button.SetSelect(true);
+                    }
+                    assetIndex++;
                 }
             }
         }
@@ -96,18 +102,7 @@ namespace ReadyPlayerMe
             var assetButton = assetButtonGameObject.GetComponent<AssetButton>();
             assetButton.AddListener(() =>
             {
-                if (selectedAssetByTypeMap.ContainsKey(assetType))
-                {
-                    selectedAssetByTypeMap[assetType].SetSelect(false);
-                    selectedAssetByTypeMap[assetType] = assetButton;
-                }
-                else
-                {
-                    selectedAssetByTypeMap.Add(assetType, assetButton);
-                }
-
-                assetButton.SetSelect(true);
-                onClick?.Invoke(assetId, assetType);
+                SelectButton(assetId, assetType, onClick, assetButton);
             });
             if (assetType == AssetType.EyeColor)
             {
@@ -117,19 +112,34 @@ namespace ReadyPlayerMe
             assetMap.Add(assetId, assetButton);
         }
 
+        private void SelectButton(string assetId, AssetType assetType, Action<string, AssetType> onClick, AssetButton assetButton)
+        {
+            if (selectedAssetByTypeMap.ContainsKey(assetType))
+            {
+                selectedAssetByTypeMap[assetType].SetSelect(false);
+                selectedAssetByTypeMap[assetType] = assetButton;
+            }
+            else
+            {
+                selectedAssetByTypeMap.Add(assetType, assetButton);
+            }
+
+            assetButton.SetSelect(true);
+            onClick?.Invoke(assetId, assetType);
+        }
+
         private void AddAssetSelectionClearButton(Transform parent, AssetType assetType, Action<string, AssetType> onClick)
         {
             var assetButtonGameObject = Instantiate(clearAssetSelectionButton, parent.GetComponent<ScrollRect>().content);
             assetButtonGameObject.transform.SetAsFirstSibling();
-            assetButtonGameObject.GetComponent<Button>().onClick.AddListener(() =>
+            var assetButton = assetButtonGameObject.GetComponent<AssetButton>();
+            assetButton.AddListener(() =>
             {
-                if (selectedAssetByTypeMap.ContainsKey(assetType))
-                {
-                    selectedAssetByTypeMap[assetType].SetSelect(false);
-                }
-
-                onClick?.Invoke(string.Empty, assetType);
+                SelectButton(string.Empty, assetType, onClick, assetButton);
             });
+            // Clear is selected initially by default
+            assetButton.SetSelect(true);
         }
+
     }
 }

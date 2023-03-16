@@ -31,44 +31,7 @@ namespace ReadyPlayerMe
             AssetTypePanelMap.Clear();
         }
 
-        public static void SwitchOLD(AssetType assetType)
-        {
-            if (AssetTypePanelMap.Keys.Contains(currentAssetType))
-            {
-                SetActivePanel(currentAssetType, false);
-            }
-
-            SetActivePanel(AssetType.EyeColor, false);
-            SetActivePanel(AssetType.SkinColor, false);
-            SetActivePanel(AssetType.BeardColor, false);
-            SetActivePanel(AssetType.HairColor, false);
-            SetActivePanel(AssetType.EyebrowColor, false);
-
-            switch (assetType)
-            {
-                case AssetType.FaceShape:
-                case AssetType.EyebrowStyle:
-                case AssetType.NoseShape:
-                case AssetType.LipShape:
-                case AssetType.BeardStyle:
-                    FaceTypePanel.SetActive(true);
-                    SetActivePanel(assetType, true);
-                    break;
-                case AssetType.EyeShape:
-                    FaceTypePanel.SetActive(true);
-                    SetActivePanel(assetType, true);
-                    SetActivePanel(AssetType.EyeColor, true);
-                    break;
-                default:
-                    FaceTypePanel.SetActive(false);
-                    SetActivePanel(assetType, true);
-                    break;
-            }
-
-            currentAssetType = assetType;
-        }
-        
-                public static void Switch(AssetType assetType)
+        public static void Switch(AssetType assetType)
         {
             if (AssetTypePanelMap.Keys.Contains(currentAssetType))
             {
