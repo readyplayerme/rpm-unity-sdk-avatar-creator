@@ -6,11 +6,12 @@ namespace ReadyPlayerMe.AvatarCreator
 {
     public static class AssetTypeHelper
     {
+        private static readonly string ColorTag = "Color";
         public static IEnumerable<AssetType> GetAssetTypeList(BodyType bodyType)
         {
             return PartnerAssetTypeMap
                 .Select(a => a.Value)
-                .Where(assetType => IsCorrectAssetType(assetType, bodyType))
+                .Where(assetType => assetType.IsCorrectAssetType(bodyType))
                 .ToList();
         }
         
@@ -36,7 +37,7 @@ namespace ReadyPlayerMe.AvatarCreator
             { "faceStyle", AssetType.FaceStyle },
         };
 
-        public static bool IsFaceAsset(AssetType assetType)
+        public static bool IsFaceAsset(this AssetType assetType)
         {
             switch (assetType)
             {
@@ -53,12 +54,9 @@ namespace ReadyPlayerMe.AvatarCreator
             }
         }
         
-        private static bool IsCorrectAssetType(AssetType assetType, BodyType bodyType)
+        private static bool IsCorrectAssetType(this AssetType assetType, BodyType bodyType)
         {
-            if (assetType == AssetType.BeardColor ||
-                assetType == AssetType.EyebrowColor ||
-                assetType == AssetType.HairColor ||
-                assetType == AssetType.FaceStyle)
+            if (assetType == AssetType.FaceStyle)
             {
                 return false;
             }
@@ -69,6 +67,11 @@ namespace ReadyPlayerMe.AvatarCreator
                 return assetType != AssetType.Shirt;
             }
             return assetType != AssetType.Outfit;
+        }
+
+        public static bool IsColorAsset(this AssetType assetType)
+        {
+            return assetType.ToString().Contains(ColorTag);
         }
     }
 }

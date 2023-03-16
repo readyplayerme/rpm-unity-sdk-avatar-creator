@@ -2,67 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
-    [Serializable]
-    public enum PartnerAssetColor
-    {
-        SkinColor,
-        HairColor,
-        BeardColor,
-        EyebrowColor
-    }
-    
-    [Serializable]
-    public struct ColorResponse
-    {
-        public string[] skin;
-        public string[] eyebrow;
-        public string[] beard;
-        public string[] hair;
-    }
-
-    [Serializable]
-    public struct ColorPalette
-    {
-        public PartnerAssetColor partnerAssetColor;
-        public Color[] hexColors;
-
-        public ColorPalette(string name, string[] colorHex)
-        {
-            hexColors = new Color[colorHex.Length];
-            for (int i = 0; i < colorHex.Length; i++)
-            {
-                var trimmedHex = colorHex[i].Trim('#');
-                ColorUtility.TryParseHtmlString(trimmedHex, out hexColors[i]);
-            }
-
-            switch (name)
-            {
-                case "skin": 
-                    partnerAssetColor = PartnerAssetColor.SkinColor;
-                    break;
-                case "eyebrow": 
-                    partnerAssetColor = PartnerAssetColor.EyebrowColor;
-                    break;
-                case "beard": 
-                    partnerAssetColor = PartnerAssetColor.BeardColor;
-                    break;
-                case "hair":
-                    partnerAssetColor = PartnerAssetColor.HairColor;
-                    break;
-                default:
-                    break;
-            }
-            partnerAssetColor = PartnerAssetColor.SkinColor;
-        }
-        
-    }
-    
     public class AvatarAPIRequests
     {
         private const string PREVIEW_PARAMETER = "preview=true";
@@ -93,22 +36,8 @@ namespace ReadyPlayerMe.AvatarCreator
                 Method.GET,
                 header,
                 token: cancellationToken);
-            
-            var metadata = JObject.Parse(response.Text);
-            Debug.Log($"data =  {metadata}");
-            ColorResponse colorResponse = ((JObject)metadata["data"]).ToObject<ColorResponse>();
-            var colorPalettes = new ColorPalette[4];
-            colorPalettes[0] = new ColorPalette("skin", colorResponse.skin);
-            colorPalettes[1] = new ColorPalette("eyebrow", colorResponse.eyebrow);
-            colorPalettes[2] = new ColorPalette("beard", colorResponse.beard);
-            colorPalettes[3] = new ColorPalette("hair", colorResponse.hair);
-            Debug.Log($"COLORS RETRIEVED {response.Text}");
-            foreach (var skin in colorResponse.skin)
-            {
-                Debug.Log($"{skin}");
-            }
-            
-            return colorPalettes;
+
+            return ColorResponseHandler.GetColorsFromResponse(response.Text);
         }
 
         public async Task<string> CreateNewAvatar(AvatarProperties avatarProperties)

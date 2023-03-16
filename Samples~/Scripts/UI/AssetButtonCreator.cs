@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
 using UnityEngine.UI;
+using ColorPalette = ReadyPlayerMe.AvatarCreator.ColorPalette;
 
 namespace ReadyPlayerMe
 {
@@ -10,6 +11,7 @@ namespace ReadyPlayerMe
     {
         [SerializeField] private GameObject assetButtonPrefab;
         [SerializeField] private GameObject clearAssetSelectionButton;
+        [SerializeField] private GameObject colorAssetButtonPrefab;
 
         private Dictionary<AssetType, AssetButton> selectedAssetByTypeMap;
         private Dictionary<string, AssetButton> assetMap;
@@ -29,9 +31,23 @@ namespace ReadyPlayerMe
             {
                 var assetType = assetTypePanelMap.Key;
                 var assetTypePanel = assetTypePanelMap.Value;
-                if (assetType != AssetType.Outfit && assetType != AssetType.Shirt && assetType != AssetType.EyeColor)
+                if (assetType != AssetType.Outfit && assetType != AssetType.Shirt && !assetType.IsColorAsset())
                 {
                     AddAssetSelectionClearButton(assetTypePanel.transform, assetType, onClick);
+                }
+            }
+        }
+        
+        public void CreateColorUI(ColorPalette[] colorPalettes, Action<AssetType, int> onClick)
+        {
+            foreach (var colorPalette in colorPalettes)
+            {
+                var parent = PanelSwitcher.AssetTypePanelMap[colorPalette.assetType];
+                var assetIndex = 0;
+                foreach (var color in colorPalette.hexColors)
+                {
+                    var button = AddColorButton(assetIndex++, parent.transform, colorPalette.assetType, onClick);
+                    button.SetColor(color);
                 }
             }
         }
@@ -40,12 +56,41 @@ namespace ReadyPlayerMe
         {
             foreach (var asset in assetIcons)
             {
-                assetMap[asset.Key].SetIcon(asset.Value);
+                if (assetMap.ContainsKey(asset.Key))
+                {
+                    assetMap[asset.Key].SetIcon(asset.Value);
+                }
             }
+        }
+        
+        private AssetButton AddColorButton(int index, Transform parent, AssetType assetType, Action<AssetType, int> onClick)
+        {
+            var assetButtonGameObject = Instantiate(colorAssetButtonPrefab, parent.GetComponent<ScrollRect>().content);
+            assetButtonGameObject.name = $"{assetType}_{index}";
+            var assetButton = assetButtonGameObject.GetComponent<AssetButton>();
+            assetButton.AddListener(() =>
+            {
+                if (selectedAssetByTypeMap.ContainsKey(assetType))
+                {
+                    selectedAssetByTypeMap[assetType].SetSelect(false);
+                    selectedAssetByTypeMap[assetType] = assetButton;
+                }
+                else
+                {
+                    selectedAssetByTypeMap.Add(assetType, assetButton);
+                }
+
+                assetButton.SetSelect(true);
+                onClick?.Invoke(assetType, index);
+            });
+            assetMap.Add($"{assetType}_{index}", assetButton);
+            return assetButton;
         }
 
         private void AddAssetButton(string assetId, Transform parent, AssetType assetType, Action<string, AssetType> onClick)
         {
+            if (assetMap.ContainsKey(assetId)) return;
+            
             var assetButtonGameObject = Instantiate(assetButtonPrefab, parent.GetComponent<ScrollRect>().content);
             assetButtonGameObject.name = "Asset-" + assetId;
             var assetButton = assetButtonGameObject.GetComponent<AssetButton>();

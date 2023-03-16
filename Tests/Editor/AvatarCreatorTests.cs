@@ -56,7 +56,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
             Assert.IsNotNull(avatar);
             Debug.Log("Avatar created with id: " + avatar.name);
 
-            avatar = await avatarManager.Update(2.ToString(), AssetType.SkinColor);
+            avatar = await avatarManager.UpdateAsset(AssetType.SkinColor, 2.ToString());
             Assert.IsNotNull(avatar);
             Debug.Log("Avatar skinColor updated");
 

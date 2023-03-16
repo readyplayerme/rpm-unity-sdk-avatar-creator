@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -73,11 +75,10 @@ namespace ReadyPlayerMe
             partnerAssetManager.DownloadAssetsIcon(assetButtonCreator.SetAssetIcons);
         }
 
-        private async void LoadColors()
+        private async Task<ColorPalette[]> LoadColors()
         {
             var avatarAPIRequests = new AvatarAPIRequests(DataStore.User.Token);
-            var colors = await avatarAPIRequests.GetAllAvatarColors(DataStore.AvatarId);
-            Debug.Log($"skin = {colors[0].hexColors.Length} eyebrow = {colors[1].hexColors.Length}");
+            return await avatarAPIRequests.GetAllAvatarColors(avatar.name);
         }
 
         private async void CreateDefaultModel()
@@ -94,13 +95,29 @@ namespace ReadyPlayerMe
                 inCreatorConfig);
 
             avatar = await avatarManager.Create(DataStore.AvatarProperties);
-
+            assetButtonCreator.CreateColorUI(await LoadColors(), UpdateAvatarColor);
             var avatarLoadingTime = Time.time - startTime;
             DebugPanel.AddLogWithDuration("Avatar loaded", avatarLoadingTime);
 
             ProcessAvatar();
             Loading.SetActive(false);
         }
+        
+        private async void UpdateAvatarColor(AssetType assetType, int assetIndex)
+        {
+            var startTime = Time.time;
+
+            var payload = new AvatarProperties
+            {
+                Assets = new Dictionary<AssetType, object>()
+            };
+
+            payload.Assets.Add(assetType, assetIndex);
+            lastRotation = avatar.transform.rotation = lastRotation;
+            avatar = await avatarManager.UpdateAsset(assetType, assetIndex);
+            ProcessAvatar();
+            DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
+        } 
 
         private async void UpdateAvatar(string assetId, AssetType assetType)
         {
@@ -113,7 +130,7 @@ namespace ReadyPlayerMe
 
             payload.Assets.Add(assetType, assetId);
             lastRotation = avatar.transform.rotation = lastRotation;
-            avatar = await avatarManager.Update(assetId, assetType);
+            avatar = await avatarManager.UpdateAsset(assetType, assetId);
             ProcessAvatar();
             DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
         }

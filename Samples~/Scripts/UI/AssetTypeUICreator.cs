@@ -52,14 +52,14 @@ namespace ReadyPlayerMe
 
             assetTypeButtonsMap = new Dictionary<AssetType, AssetTypeButton>();
             PanelSwitcher.FaceTypePanel = faceAssetTypePanel;
-
+            CreateAssetTypePanel(AssetType.SkinColor, leftSidePanelPrefab, assetTypeUI.panelParent);
             foreach (var assetType in assetTypes)
             {
-                if (assetType == AssetType.EyeColor)
+                if (assetType.IsColorAsset())
                 {
                     CreateAssetTypePanel(assetType, leftSidePanelPrefab, assetTypeUI.panelParent);
                 }
-                else if (AssetTypeHelper.IsFaceAsset(assetType))
+                else if (assetType.IsFaceAsset())
                 {
                     CreateAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypeUI.panelParent);
                     CreateAssetTypeButton(assetType, faceAssetTypePanel.GetComponent<ScrollRect>().content.transform, () =>

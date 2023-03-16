@@ -39,8 +39,6 @@ namespace ReadyPlayerMe.AvatarCreator
         public async Task<GameObject> Create(AvatarProperties avatarProperties)
         {
             avatarId = await avatarAPIRequests.CreateNewAvatar(avatarProperties);
-            // var colors = await avatarAPIRequests.GetAllAvatarColors(avatarId);
-            // Debug.Log($"skin = {colors[0].hexColors.Length} eyebrow = {colors[1].hexColors.Length}");
             var data = await avatarAPIRequests.GetPreviewAvatar(avatarId, avatarConfigParameters);
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
         }
@@ -51,14 +49,14 @@ namespace ReadyPlayerMe.AvatarCreator
         /// <param name="assetId"></param>
         /// <param name="assetType"></param>
         /// <returns></returns>
-        public async Task<GameObject> Update(string assetId, AssetType assetType)
+        public async Task<GameObject> UpdateAsset(AssetType assetType, object assetId)
         {
             var payload = new AvatarProperties
             {
                 Assets = new Dictionary<AssetType, object>()
             };
 
-            payload.Assets.Add(assetType, assetId);
+            payload.Assets.Add(assetType, assetId);   
 
             var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);

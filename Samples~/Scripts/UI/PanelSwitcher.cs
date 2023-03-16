@@ -16,7 +16,10 @@ namespace ReadyPlayerMe
         public static void AddPanel(AssetType assetType, GameObject widget)
         {
             AssetTypePanelMap ??= new Dictionary<AssetType, GameObject>();
-            AssetTypePanelMap.Add(assetType, widget);
+            if(!AssetTypePanelMap.ContainsKey(assetType))
+            {
+                AssetTypePanelMap.Add(assetType, widget);
+            }
         }
 
         public static void Clear()
@@ -28,7 +31,7 @@ namespace ReadyPlayerMe
             AssetTypePanelMap.Clear();
         }
 
-        public static void Switch(AssetType assetType)
+        public static void SwitchOLD(AssetType assetType)
         {
             if (AssetTypePanelMap.Keys.Contains(currentAssetType))
             {
@@ -36,6 +39,10 @@ namespace ReadyPlayerMe
             }
 
             SetActivePanel(AssetType.EyeColor, false);
+            SetActivePanel(AssetType.SkinColor, false);
+            SetActivePanel(AssetType.BeardColor, false);
+            SetActivePanel(AssetType.HairColor, false);
+            SetActivePanel(AssetType.EyebrowColor, false);
 
             switch (assetType)
             {
@@ -60,10 +67,67 @@ namespace ReadyPlayerMe
 
             currentAssetType = assetType;
         }
+        
+                public static void Switch(AssetType assetType)
+        {
+            if (AssetTypePanelMap.Keys.Contains(currentAssetType))
+            {
+                SetActivePanel(currentAssetType, false);
+            }
+
+            SetActivePanel(AssetType.EyeColor, false);
+            SetActivePanel(AssetType.SkinColor, false);
+            SetActivePanel(AssetType.BeardColor, false);
+            SetActivePanel(AssetType.HairColor, false);
+            SetActivePanel(AssetType.EyebrowColor, false);
+
+            switch (assetType)
+            {
+                case AssetType.FaceShape:
+                    FaceTypePanel.SetActive(true);
+                    SetActivePanel(assetType, true);
+                    SetActivePanel(AssetType.SkinColor, true);
+                    break;
+                case AssetType.EyebrowStyle:
+                    FaceTypePanel.SetActive(true);
+                    SetActivePanel(assetType, true);
+                    SetActivePanel(AssetType.EyebrowColor, true);
+                    break;
+                case AssetType.BeardStyle:
+                    FaceTypePanel.SetActive(true);
+                    SetActivePanel(assetType, true);
+                    SetActivePanel(AssetType.BeardColor, true);
+                    break;
+                case AssetType.HairStyle:
+                    FaceTypePanel.SetActive(false);
+                    SetActivePanel(assetType, true);
+                    SetActivePanel(AssetType.HairColor, true);
+                    break;
+                case AssetType.NoseShape:
+                case AssetType.LipShape:
+                    FaceTypePanel.SetActive(true);
+                    SetActivePanel(assetType, true);
+                    break;
+                case AssetType.EyeShape:
+                    FaceTypePanel.SetActive(true);
+                    SetActivePanel(assetType, true);
+                    SetActivePanel(AssetType.EyeColor, true);
+                    break;
+                default:
+                    FaceTypePanel.SetActive(false);
+                    SetActivePanel(assetType, true);
+                    break;
+            }
+
+            currentAssetType = assetType;
+        }
 
         private static void SetActivePanel(AssetType assetType, bool enable)
         {
-            AssetTypePanelMap[assetType].SetActive(enable);
+            if (AssetTypePanelMap.ContainsKey(assetType))
+            {
+                AssetTypePanelMap[assetType].SetActive(enable); 
+            }
         }
     }
 }

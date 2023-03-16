@@ -17,6 +17,17 @@ namespace ReadyPlayerMe
             button.onClick.AddListener(action.Invoke);
         }
 
+        public void SetColor(string colorHex)
+        {
+            ColorUtility.TryParseHtmlString(colorHex, out Color color);
+            mask.GetComponent<Image>().color = color;
+            icon.color = color;
+            mask.GetComponent<Mask>().enabled = true;
+            icon.rectTransform.localPosition = Vector3.zero;
+            icon.rectTransform.sizeDelta = new Vector2(210, 210);
+            
+        }
+
         public void SetEyeColorConfig()
         {
             mask.GetComponent<Image>().color = Color.white;
