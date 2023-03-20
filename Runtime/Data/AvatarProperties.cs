@@ -10,13 +10,18 @@ namespace ReadyPlayerMe.AvatarCreator
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Partner;
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(GenderConverter))]
         public OutfitGender Gender;
+
         [JsonConverter(typeof(BodyTypeConverter))]
         public BodyType BodyType;
 
         [JsonConverter(typeof(AssetTypeDictionaryConverter))]
         public Dictionary<AssetType, object> Assets;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Base64Image;
     }
 }

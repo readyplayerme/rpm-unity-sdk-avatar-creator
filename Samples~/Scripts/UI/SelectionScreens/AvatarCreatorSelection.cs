@@ -33,7 +33,7 @@ namespace ReadyPlayerMe
         private void OnDisable()
         {
             saveButton.onClick.RemoveListener(OnSave);
-            
+
             if (avatar != null)
             {
                 Destroy(avatar);
@@ -85,9 +85,17 @@ namespace ReadyPlayerMe
         private async void CreateDefaultModel()
         {
             var startTime = Time.time;
-            DataStore.AvatarProperties.Assets = DataStore.AvatarProperties.Gender == OutfitGender.Feminine
-                ? AvatarPropertiesConstants.FemaleDefaultAssets
-                : AvatarPropertiesConstants.MaleDefaultAssets;
+            if (string.IsNullOrEmpty(DataStore.AvatarProperties.Base64Image))
+            {
+                DataStore.AvatarProperties.Assets = DataStore.AvatarProperties.Gender == OutfitGender.Feminine
+                    ? AvatarPropertiesConstants.FemaleDefaultAssets
+                    : AvatarPropertiesConstants.MaleDefaultAssets;
+            }
+            else
+            {
+                DataStore.AvatarProperties.Assets = new Dictionary<AssetType, object>();
+            }
+
 
             avatarManager = new AvatarManager(
                 DataStore.User.Token,
