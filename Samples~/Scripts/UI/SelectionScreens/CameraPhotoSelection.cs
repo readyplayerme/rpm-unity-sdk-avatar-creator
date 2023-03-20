@@ -33,6 +33,7 @@ namespace ReadyPlayerMe
                 return;
             }
 
+            rawImage.color = Color.white;
             foreach (var device in devices)
             {
                 if (device.name.Contains("OBS"))
@@ -57,7 +58,7 @@ namespace ReadyPlayerMe
 
         private void OnFileButton()
         {
-            throw new NotImplementedException();
+            // Will not be implemented
         }
 
         private void OnCameraButton()

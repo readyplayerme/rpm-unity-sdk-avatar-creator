@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,12 +32,12 @@ namespace ReadyPlayerMe
         
         private void OnFileButton()
         {
-            FileBrowser.Open();
+            // Will not be implemented
         }
 
         private void OnContinueButton()
         {
-            StateMachine.SetState(StateType.Editor);
+            StateMachine.SetState(NextState);
         }
     }
 }
