@@ -12,7 +12,7 @@ namespace ReadyPlayerMe
         [SerializeField] private GameObject mask;
         [SerializeField] private GameObject loading;
         
-        private readonly Vector2 DefaultSize = new Vector2(210, 210);
+        private readonly Vector2 DefaultEyeSize = new Vector2(210, 210);
         public void AddListener(Action action)
         {
             button.onClick.AddListener(action.Invoke);
@@ -20,18 +20,15 @@ namespace ReadyPlayerMe
 
         public void SetColor(string colorHex)
         {
-            EnableMask();
             ColorUtility.TryParseHtmlString(colorHex, out Color color);
             icon.color = color;
-            icon.rectTransform.localPosition = Vector3.zero;
-            SetDefaultIconSize();
         }
 
         public void SetEyeColorConfig()
         {
             EnableMask();
             icon.rectTransform.localPosition = Vector3.zero;
-            SetDefaultIconSize();
+            icon.rectTransform.sizeDelta = DefaultEyeSize;
         }
 
         public void SetIcon(Texture texture)
@@ -44,11 +41,6 @@ namespace ReadyPlayerMe
         public void SetSelect(bool isSelected)
         {
             selected.SetActive(isSelected);
-        }
-
-        private void SetDefaultIconSize()
-        {
-            icon.rectTransform.sizeDelta = DefaultSize;
         }
 
         private void EnableMask()
