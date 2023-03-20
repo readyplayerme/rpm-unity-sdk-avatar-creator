@@ -36,7 +36,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             return key switch
             {
-                SKIN_KEY => AssetType.EyebrowColor,
+                EYEBROW_KEY => AssetType.EyebrowColor,
                 BEARD_KEY => AssetType.BeardColor,
                 HAIR_KEY => AssetType.HairColor,
                 _ => AssetType.SkinColor
