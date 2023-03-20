@@ -29,7 +29,6 @@ namespace ReadyPlayerMe
 
         public void SetEyeColorConfig()
         {
-            mask.GetComponent<Image>().color = Color.white;
             EnableMask();
             icon.rectTransform.localPosition = Vector3.zero;
             SetDefaultIconSize();
@@ -55,6 +54,7 @@ namespace ReadyPlayerMe
         private void EnableMask()
         {
             mask.GetComponent<Mask>().enabled = true;
+            mask.GetComponent<Image>().color = Color.white;
         }
     }
 }

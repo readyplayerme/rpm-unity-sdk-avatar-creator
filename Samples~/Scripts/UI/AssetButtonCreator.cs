@@ -40,7 +40,7 @@ namespace ReadyPlayerMe
 
         private bool TypeRequiresClearButton(AssetType assetType)
         {
-            return assetType != AssetType.Outfit && assetType != AssetType.Shirt && !assetType.IsColorAsset();
+            return assetType != AssetType.Outfit && assetType != AssetType.Shirt && assetType != AssetType.EyebrowStyle && !assetType.IsColorAsset();
         }
         
         public void CreateColorUI(ColorPalette[] colorPalettes, Action<AssetType, int> onClick)
@@ -142,8 +142,28 @@ namespace ReadyPlayerMe
             {
                 SelectButton(string.Empty, assetType, onClick, assetButton);
             });
-            // Clear is selected initially by default
-            assetButton.SetSelect(true);
+            if (IsClearByDefault(assetType))
+            {
+                SelectButton(string.Empty, assetType, onClick, assetButton);
+            }
+        }
+
+        private bool IsClearByDefault(AssetType assetType)
+        {
+            switch (assetType)
+            {
+                case AssetType.FaceMask:
+                case AssetType.Facewear:
+                case AssetType.Headwear:
+                case AssetType.FaceStyle:
+                case AssetType.EyeShape: 
+                case AssetType.FaceShape:
+                case AssetType.LipShape:
+                case AssetType.NoseShape:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
     }
