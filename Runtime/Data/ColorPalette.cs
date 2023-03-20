@@ -15,22 +15,7 @@ namespace ReadyPlayerMe.AvatarCreator
             {
                 hexColors[i] = colorHex[i];
             }
-            assetType = AssetType.SkinColor;
-            switch (name)
-            {
-                case "skin":
-                    assetType = AssetType.SkinColor;
-                    break;
-                case "eyebrow":
-                    assetType = AssetType.EyebrowColor;
-                    break;
-                case "beard":
-                    assetType = AssetType.BeardColor;
-                    break;
-                case "hair":
-                    assetType = AssetType.HairColor;
-                    break;
-            }
+            assetType = ColorResponseHandler.KeyToAssetType(name);
         }
     }
 }

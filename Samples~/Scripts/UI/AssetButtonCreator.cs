@@ -31,11 +31,16 @@ namespace ReadyPlayerMe
             {
                 var assetType = assetTypePanelMap.Key;
                 var assetTypePanel = assetTypePanelMap.Value;
-                if (assetType != AssetType.Outfit && assetType != AssetType.Shirt && !assetType.IsColorAsset())
+                if (TypeRequiresClearButton(assetType))
                 {
                     AddAssetSelectionClearButton(assetTypePanel.transform, assetType, onClick);
                 }
             }
+        }
+
+        private bool TypeRequiresClearButton(AssetType assetType)
+        {
+            return assetType != AssetType.Outfit && assetType != AssetType.Shirt && !assetType.IsColorAsset();
         }
         
         public void CreateColorUI(ColorPalette[] colorPalettes, Action<AssetType, int> onClick)

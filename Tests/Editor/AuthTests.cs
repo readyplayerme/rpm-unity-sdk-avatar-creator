@@ -6,11 +6,12 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
     public class AuthTests
     {
         private AuthManager authManager;
+        private const string DEV_SDK_DOMAIN = "dev-sdk";
 
         [SetUp]
         public void Setup()
         {
-            authManager = new AuthManager("dev-sdk");
+            authManager = new AuthManager(DEV_SDK_DOMAIN);
         }
         
         [Test]

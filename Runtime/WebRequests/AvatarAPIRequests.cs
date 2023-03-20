@@ -9,13 +9,13 @@ namespace ReadyPlayerMe.AvatarCreator
     {
         private const string PREVIEW_PARAMETER = "preview=true";
         private const string RESPONSE_TYPE_PARAMETER = "responseType=glb";
-        private const string COLOURS_PARAMETERS = "colors?type=skin,beard,hair,eyebrow";
+        private const string COLOR_PARAMETERS = "colors?type=skin,beard,hair,eyebrow";
         private readonly Dictionary<string, string> header;
         private readonly CancellationToken cancellationToken;
         
         public static string GetColorEndpoint(string avatarId)
         {
-            return $"{Endpoints.AVATAR_API_V2}/{avatarId}/{COLOURS_PARAMETERS}";
+            return $"{Endpoints.AVATAR_API_V2}/{avatarId}/{COLOR_PARAMETERS}";
         }
 
         public AvatarAPIRequests(string token, CancellationToken cancellationToken = default)
