@@ -24,6 +24,11 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             var responseData = JObject.Parse(response);
             ColorResponse colorResponse = ((JObject) responseData["data"])!.ToObject<ColorResponse>();
+            return ResponseToColorPalettes(colorResponse);
+        }
+
+        private static ColorPalette[] ResponseToColorPalettes(ColorResponse colorResponse)
+        {
             var colorPalettes = new ColorPalette[4];
             colorPalettes[0] = new ColorPalette(SKIN_KEY, colorResponse.skin);
             colorPalettes[1] = new ColorPalette(EYEBROW_KEY, colorResponse.eyebrow);
