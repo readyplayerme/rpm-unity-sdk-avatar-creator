@@ -53,10 +53,12 @@ namespace ReadyPlayerMe
                 {
                     var button = AddColorButton(assetIndex, parent.transform, colorPalette.assetType, onClick);
                     button.SetColor(color);
+                    
                     // By default first color is applied on initial draft
                     if (assetIndex == 0)
                     {
                         button.SetSelect(true);
+                        UpdateSelectedAssetTypeMap(colorPalette.assetType, button);
                     }
                     assetIndex++;
                 }
@@ -87,7 +89,6 @@ namespace ReadyPlayerMe
                 onClick?.Invoke(assetType, index);
             });
             assetMap.Add(buttonName, assetButton);
-            UpdateSelectedAssetTypeMap(assetType, assetButton);
             return assetButton;
         }
 
@@ -100,7 +101,8 @@ namespace ReadyPlayerMe
             var assetButton = assetButtonGameObject.GetComponent<AssetButton>();
             assetButton.AddListener(() =>
             {
-                SelectButton(assetId, assetType, onClick, assetButton);
+                SelectButton(assetType, assetButton);
+                onClick?.Invoke(assetId, assetType);
             });
             if (assetType == AssetType.EyeColor)
             {
@@ -110,11 +112,10 @@ namespace ReadyPlayerMe
             assetMap.Add(assetId, assetButton);
         }
 
-        private void SelectButton(string assetId, AssetType assetType, Action<string, AssetType> onClick, AssetButton assetButton)
+        private void SelectButton(AssetType assetType, AssetButton assetButton)
         {
             UpdateSelectedAssetTypeMap(assetType, assetButton);
             assetButton.SetSelect(true);
-            onClick?.Invoke(assetId, assetType);
         }
 
         private void UpdateSelectedAssetTypeMap(AssetType assetType, AssetButton assetButton)
@@ -137,11 +138,12 @@ namespace ReadyPlayerMe
             var assetButton = assetButtonGameObject.GetComponent<AssetButton>();
             assetButton.AddListener(() =>
             {
-                SelectButton(string.Empty, assetType, onClick, assetButton);
+                SelectButton(assetType, assetButton);
+                onClick?.Invoke(string.Empty, assetType);
             });
             if (IsClearByDefault(assetType))
             {
-                SelectButton(string.Empty, assetType, onClick, assetButton);
+                SelectButton(assetType, assetButton);
             }
         }
 
