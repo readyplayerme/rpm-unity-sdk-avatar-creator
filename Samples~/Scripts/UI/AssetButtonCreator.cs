@@ -77,24 +77,17 @@ namespace ReadyPlayerMe
         private AssetButton AddColorButton(int index, Transform parent, AssetType assetType, Action<AssetType, int> onClick)
         {
             var assetButtonGameObject = Instantiate(colorAssetButtonPrefab, parent.GetComponent<ScrollRect>().content);
-            assetButtonGameObject.name = $"{assetType}_{index}";
+            var buttonName = $"{assetType}_{index}";
+            assetButtonGameObject.name = buttonName;
             var assetButton = assetButtonGameObject.GetComponent<AssetButton>();
             assetButton.AddListener(() =>
             {
-                if (selectedAssetByTypeMap.ContainsKey(assetType))
-                {
-                    selectedAssetByTypeMap[assetType].SetSelect(false);
-                    selectedAssetByTypeMap[assetType] = assetButton;
-                }
-                else
-                {
-                    selectedAssetByTypeMap.Add(assetType, assetButton);
-                }
-
+                UpdateSelectedAssetTypeMap(assetType, assetButton);
                 assetButton.SetSelect(true);
                 onClick?.Invoke(assetType, index);
             });
-            assetMap.Add($"{assetType}_{index}", assetButton);
+            assetMap.Add(buttonName, assetButton);
+            UpdateSelectedAssetTypeMap(assetType, assetButton);
             return assetButton;
         }
 
@@ -119,6 +112,13 @@ namespace ReadyPlayerMe
 
         private void SelectButton(string assetId, AssetType assetType, Action<string, AssetType> onClick, AssetButton assetButton)
         {
+            UpdateSelectedAssetTypeMap(assetType, assetButton);
+            assetButton.SetSelect(true);
+            onClick?.Invoke(assetId, assetType);
+        }
+
+        private void UpdateSelectedAssetTypeMap(AssetType assetType, AssetButton assetButton)
+        {
             if (selectedAssetByTypeMap.ContainsKey(assetType))
             {
                 selectedAssetByTypeMap[assetType].SetSelect(false);
@@ -128,9 +128,6 @@ namespace ReadyPlayerMe
             {
                 selectedAssetByTypeMap.Add(assetType, assetButton);
             }
-
-            assetButton.SetSelect(true);
-            onClick?.Invoke(assetId, assetType);
         }
 
         private void AddAssetSelectionClearButton(Transform parent, AssetType assetType, Action<string, AssetType> onClick)
