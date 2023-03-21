@@ -11,6 +11,8 @@ namespace ReadyPlayerMe
         [SerializeField] private Button dontSpecify;
 
         public override StateType StateType => StateType.GenderSelection;
+        public override StateType NextState => StateType.SelfieSelection;
+
 
         private void OnEnable()
         {
@@ -28,23 +30,23 @@ namespace ReadyPlayerMe
 
         private void OnMaleSelected()
         {
-            NextState(OutfitGender.Masculine);
+            SetNextState(OutfitGender.Masculine);
         }
 
         private void OnFemaleSelected()
         {
-            NextState(OutfitGender.Feminine);
+            SetNextState(OutfitGender.Feminine);
         }
 
         private void OnGenderNotSpecifiedSelected()
         {
-            NextState(OutfitGender.None);
+            SetNextState(OutfitGender.None);
         }
 
-        private void NextState(OutfitGender gender)
+        private void SetNextState(OutfitGender gender)
         {
             DataStore.AvatarProperties.Gender = gender;
-            StateMachine.SetState(StateType.SelfieSelection);
+            StateMachine.SetState(NextState);
         }
     }
 }

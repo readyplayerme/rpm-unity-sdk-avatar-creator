@@ -10,6 +10,8 @@ namespace ReadyPlayerMe
         [SerializeField] private Button continueButton;
 
         public override StateType StateType => StateType.SelfieSelection;
+        public override StateType NextState => StateType.Editor;
+
 
         private void OnEnable()
         {

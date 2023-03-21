@@ -11,6 +11,8 @@ namespace ReadyPlayerMe
         [SerializeField] private Button fileButton;
         
         public override StateType StateType => StateType.CameraPhoto;
+        public override StateType NextState => StateType.Editor;
+
         private WebCamTexture camTexture;
         
         private void OnEnable()

@@ -21,6 +21,7 @@ namespace ReadyPlayerMe
         protected GameObject Loading;
 
         public abstract StateType StateType { get; }
+        public abstract StateType NextState { get; }
 
         public void Initialize(StateMachine stateMachine, DataStore dataStore, GameObject loading)
         {

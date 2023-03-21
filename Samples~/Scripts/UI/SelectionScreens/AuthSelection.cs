@@ -10,6 +10,7 @@ namespace ReadyPlayerMe
     {
         [SerializeField] private Button login;
         public override StateType StateType => StateType.Login;
+        public override StateType NextState => StateType.BodyTypeSelection;
 
         private void OnEnable()
         {
@@ -26,7 +27,7 @@ namespace ReadyPlayerMe
             Loading.SetActive(true);
             await Login();
             Loading.SetActive(false);
-            StateMachine.SetState(StateType.BodyTypeSelection);
+            StateMachine.SetState(NextState);
         }
 
         private async Task Login()

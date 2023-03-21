@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,8 @@ namespace ReadyPlayerMe
         [SerializeField] private DataStore dataStore;
         [SerializeField] private Button button;
         [SerializeField] private GameObject loading;
+        [SerializeField] private OutfitGender defaultGender;
+        [SerializeField] private BodyType defaultBodyType;
 
         public Action<string> AvatarSaved;
 
@@ -34,6 +37,9 @@ namespace ReadyPlayerMe
 
         protected override void Initialize(List<State> states)
         {
+            dataStore.AvatarProperties.BodyType = defaultBodyType;
+            dataStore.AvatarProperties.Gender = defaultGender;
+
             foreach (var state in states)
             {
                 state.Initialize(this, dataStore, loading);

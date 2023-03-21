@@ -9,6 +9,8 @@ namespace ReadyPlayerMe
         [SerializeField] private Button fullBody;
         [SerializeField] private Button halfBody;
         public override StateType StateType => StateType.BodyTypeSelection;
+        public override StateType NextState => StateType.GenderSelection;
+
 
         private void OnEnable()
         {
@@ -25,13 +27,13 @@ namespace ReadyPlayerMe
         private void OnFullBodySelected()
         {
             DataStore.AvatarProperties.BodyType = BodyType.FullBody;
-            StateMachine.SetState(StateType.GenderSelection);
+            StateMachine.SetState(NextState);
         }
 
         private void OnHalfBodySelected()
         {
             DataStore.AvatarProperties.BodyType = BodyType.HalfBody;
-            StateMachine.SetState(StateType.GenderSelection);
+            StateMachine.SetState(NextState);
         }
     }
 }
