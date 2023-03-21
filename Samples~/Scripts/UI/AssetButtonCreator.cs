@@ -29,19 +29,14 @@ namespace ReadyPlayerMe
             foreach (var assetTypePanelMap in PanelSwitcher.AssetTypePanelMap)
             {
                 var assetType = assetTypePanelMap.Key;
-                var assetTypePanel = assetTypePanelMap.Value;
-                if (TypeRequiresClearButton(assetType))
+                if (assetType.IsOptionalAsset())
                 {
+                    var assetTypePanel = assetTypePanelMap.Value;
                     AddAssetSelectionClearButton(assetTypePanel.transform, assetType, onClick);
                 }
             }
         }
 
-        private bool TypeRequiresClearButton(AssetType assetType)
-        {
-            return assetType != AssetType.Outfit && assetType != AssetType.Shirt && assetType != AssetType.EyebrowStyle && !assetType.IsColorAsset();
-        }
-        
         public void CreateColorUI(ColorPalette[] colorPalettes, Action<AssetType, int> onClick)
         {
             foreach (var colorPalette in colorPalettes)

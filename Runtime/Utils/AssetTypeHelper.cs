@@ -11,7 +11,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             return PartnerAssetTypeMap
                 .Select(a => a.Value)
-                .Where(assetType => assetType.IsCorrectAssetType(bodyType))
+                .Where(assetType => assetType.IsCompatibleAssetType(bodyType))
                 .ToList();
         }
         
@@ -54,7 +54,7 @@ namespace ReadyPlayerMe.AvatarCreator
             }
         }
         
-        private static bool IsCorrectAssetType(this AssetType assetType, BodyType bodyType)
+        private static bool IsCompatibleAssetType(this AssetType assetType, BodyType bodyType)
         {
             if (assetType == AssetType.FaceStyle)
             {
@@ -68,10 +68,35 @@ namespace ReadyPlayerMe.AvatarCreator
             }
             return assetType != AssetType.Outfit;
         }
-
+        
+        public static bool IsOptionalAsset(this AssetType assetType)
+        {
+            switch (assetType)
+            {
+                case AssetType.Outfit:
+                case AssetType.Shirt:
+                case AssetType.EyebrowStyle:
+                    return false;
+                default:
+                    return !assetType.IsColorAsset();
+            }
+        }
+        
         public static bool IsColorAsset(this AssetType assetType)
         {
-            return assetType.ToString().Contains(COLOR_TAG);
+            switch (assetType)
+            {
+                case AssetType.EyeColor:
+                case AssetType.BeardColor:
+                case AssetType.EyebrowColor:
+                case AssetType.HairColor:
+                case AssetType.SkinColor:
+                    return true;
+                default:
+                    return false;
+            }
         }
+
+
     }
 }
