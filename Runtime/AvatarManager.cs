@@ -56,7 +56,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 Assets = new Dictionary<AssetType, object>()
             };
 
-            payload.Assets.Add(assetType, assetId);   
+            payload.Assets.Add(assetType, assetId);
 
             var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);

@@ -6,7 +6,7 @@ namespace ReadyPlayerMe.AvatarCreator
 {
     public static class AssetTypeHelper
     {
-        private static readonly string ColorTag = "Color";
+        private const string COLOR_TAG = "Color";
         public static IEnumerable<AssetType> GetAssetTypeList(BodyType bodyType)
         {
             return PartnerAssetTypeMap
@@ -71,7 +71,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public static bool IsColorAsset(this AssetType assetType)
         {
-            return assetType.ToString().Contains(ColorTag);
+            return assetType.ToString().Contains(COLOR_TAG);
         }
     }
 }

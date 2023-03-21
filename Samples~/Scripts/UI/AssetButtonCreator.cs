@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
 using UnityEngine.UI;
-using ColorPalette = ReadyPlayerMe.AvatarCreator.ColorPalette;
 
 namespace ReadyPlayerMe
 {

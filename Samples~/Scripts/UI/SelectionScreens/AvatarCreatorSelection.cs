@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 

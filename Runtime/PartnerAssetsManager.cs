@@ -12,13 +12,15 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public class PartnerAssetsManager
     {
+        private const string EYE_MASK_SIZE_PARAM = "?w=256";
+        
         private readonly string token;
         private readonly string partner;
         private readonly BodyType bodyType;
         private readonly OutfitGender gender;
 
         private PartnerAsset[] assets;
-        private const string EYE_MASK_SIZE_PARAM = "?w=256";
+
         public PartnerAssetsManager(string token, string partner, BodyType bodyType, OutfitGender gender)
         {
             this.token = token;
