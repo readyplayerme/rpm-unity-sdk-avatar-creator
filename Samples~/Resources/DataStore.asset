@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: DataStore
   m_EditorClassIdentifier: 
   User:
-    Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0Fub255bW91cyI6dHJ1ZSwidXNlcklkIjoiNjNmNjQyNWM0ZmNhZDAwMDBmM2RmYjM4IiwiYWJpbGl0eSI6W1sibWFuYWdlIiwiQXZhdGFyIix7InVzZXJJZCI6IjYzZjY0MjVjNGZjYWQwMDAwZjNkZmIzOCJ9XSxbIm1hbmFnZSIsIlVzZXIiLHsiX2lkIjoiNjNmNjQyNWM0ZmNhZDAwMDBmM2RmYjM4In1dLFsicmVhZCIsIlBhcnRuZXIiXSxbInJlYWQsY3JlYXRlIiwiT3JnYW5pemF0aW9uIl0sWyJyZWFkIiwiQXBwbGljYXRpb24iXSxbInJlYWQsdXNlIiwiQXNzZXQiLHsicHJlbWl1bSI6eyIkbmUiOnRydWV9fV0sWyJyZWFkLHVzZSIsIkFzc2V0Iix7ImlkIjp7fX1dLFsicmVhZCx1c2UiLCJBc3NldCIseyJncm91cHMuaWQiOnt9fV1dLCJpYXQiOjE2NzcwODMyMjl9.qMbvQ1-bCAOTi_AeKo3M7wAuFGhG0ix7TDpOztXw4SE
-    Id: 63f6425c4fcad0000f3dfb38
+    Token: 
+    Id: 
   AvatarProperties:
-    Partner: demo
-    Gender: 1
-    BodyType: 1
+    Partner: 
+    Gender: 0
+    BodyType: 0
     Base64Image: 
   AvatarId: 
