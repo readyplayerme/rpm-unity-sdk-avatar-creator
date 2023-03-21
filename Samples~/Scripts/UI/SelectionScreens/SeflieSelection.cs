@@ -37,7 +37,7 @@ namespace ReadyPlayerMe
 
         private void OnContinueButton()
         {
-            StateMachine.SetState(NextState);
+            StateMachine.SetState(StateType.Editor);
         }
     }
 }
