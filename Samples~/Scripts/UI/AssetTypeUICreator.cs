@@ -10,6 +10,9 @@ namespace ReadyPlayerMe
 {
     public class AssetTypeUICreator : MonoBehaviour
     {
+        private const string PANEL_SUFFIX = "Panel";
+        private const string BUTTON_SUFFIX = "Button";
+        
         [Serializable]
         private class AssetTypeIcon
         {
@@ -52,14 +55,14 @@ namespace ReadyPlayerMe
 
             assetTypeButtonsMap = new Dictionary<AssetType, AssetTypeButton>();
             PanelSwitcher.FaceTypePanel = faceAssetTypePanel;
-
+            CreateAssetTypePanel(AssetType.SkinColor, leftSidePanelPrefab, assetTypeUI.panelParent);
             foreach (var assetType in assetTypes)
             {
-                if (assetType == AssetType.EyeColor)
+                if (assetType.IsColorAsset())
                 {
                     CreateAssetTypePanel(assetType, leftSidePanelPrefab, assetTypeUI.panelParent);
                 }
-                else if (AssetTypeHelper.IsFaceAsset(assetType))
+                else if (assetType.IsFaceAsset())
                 {
                     CreateAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypeUI.panelParent);
                     CreateAssetTypeButton(assetType, faceAssetTypePanel.GetComponent<ScrollRect>().content.transform, () =>
@@ -102,7 +105,7 @@ namespace ReadyPlayerMe
         private void CreateAssetTypePanel(AssetType assetType, GameObject panelPrefab, Transform parent)
         {
             var assetTypePanel = Instantiate(panelPrefab, parent);
-            assetTypePanel.name = assetType + "Panel";
+            assetTypePanel.name = assetType + PANEL_SUFFIX;
             assetTypePanel.SetActive(false);
 
             PanelSwitcher.AddPanel(assetType, assetTypePanel);
@@ -112,7 +115,7 @@ namespace ReadyPlayerMe
         {
             var assetTypeButtonGameObject = Instantiate(assetTypeUI.buttonPrefab, parent);
             var assetTypeButton = assetTypeButtonGameObject.GetComponent<AssetTypeButton>();
-            assetTypeButton.name = assetType + "Button";
+            assetTypeButton.name = assetType + BUTTON_SUFFIX;
             var assetTypeIcon = assetTypeIcons.FirstOrDefault(x => x.assetType == assetType);
             if (assetTypeIcon != null)
             {
@@ -124,7 +127,7 @@ namespace ReadyPlayerMe
                 SwitchZoomByAssetType(assetType);
                 assetTypeButton.SetSelect(true);
                 selectedAssetTypeButton.SetSelect(false);
-                faceAssetTypeButton.SetSelect(AssetTypeHelper.IsFaceAsset(assetType));
+                faceAssetTypeButton.SetSelect(assetType.IsFaceAsset());
                 selectedAssetTypeButton = assetTypeButton;
                 onClick?.Invoke();
             });

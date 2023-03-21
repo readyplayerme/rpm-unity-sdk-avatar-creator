@@ -49,7 +49,7 @@ namespace ReadyPlayerMe.AvatarCreator
         /// <param name="assetId"></param>
         /// <param name="assetType"></param>
         /// <returns></returns>
-        public async Task<GameObject> Update(string assetId, AssetType assetType)
+        public async Task<GameObject> UpdateAsset(AssetType assetType, object assetId)
         {
             var payload = new AvatarProperties
             {

@@ -12,6 +12,8 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public class PartnerAssetsManager
     {
+        private const string EYE_MASK_SIZE_PARAM = "?w=256";
+        
         private readonly string token;
         private readonly string partner;
         private readonly BodyType bodyType;
@@ -53,7 +55,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
             foreach (var asset in chunk)
             {
-                var url = asset.AssetType == AssetType.EyeColor ? asset.Mask + "?w=256" : asset.Icon;
+                var url = asset.AssetType == AssetType.EyeColor ? asset.Mask + EYE_MASK_SIZE_PARAM : asset.Icon;
                 var iconTask = PartnerAssetsRequests.GetAssetIcon(token, url);
                 assetIconMap.Add(asset.Id, iconTask);
             }

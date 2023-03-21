@@ -56,7 +56,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
             Assert.IsNotNull(avatar);
             Debug.Log("Avatar created with id: " + avatar.name);
 
-            avatar = await avatarManager.Update(2.ToString(), AssetType.SkinColor);
+            avatar = await avatarManager.UpdateAsset(AssetType.SkinColor, 2.ToString());
             Assert.IsNotNull(avatar);
             Debug.Log("Avatar skinColor updated");
 
@@ -69,6 +69,29 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
             await avatarManager.Delete();
             Debug.Log("Avatar deleted.");
             Assert.Pass();
+        }
+
+        [Test]
+        public async Task Avatar_Create_Preview_Avatar_Get_Colors()
+        {
+            var userStore = await authManager.Login();
+            Debug.Log("Logged In with token: " + userStore.Token);
+
+            // Create avatar
+            var avatarProperties = new AvatarProperties
+            {
+                Partner = DOMAIN,
+                Gender = OutfitGender.Masculine,
+                BodyType = BodyType.FullBody,
+                Assets = AvatarPropertiesConstants.MaleDefaultAssets
+            };
+            
+            var avatarManager = new AvatarManager(userStore.Token, avatarProperties.BodyType, avatarProperties.Gender);
+            avatar = await avatarManager.Create(avatarProperties);
+            var avatarAPIRequests = new AvatarAPIRequests(userStore.Token);
+            ColorPalette[] colors = await avatarAPIRequests.GetAllAvatarColors(avatar.name);
+            Assert.IsNotNull(colors);
+            Assert.Greater(colors.Length, 3);
         }
     }
 }

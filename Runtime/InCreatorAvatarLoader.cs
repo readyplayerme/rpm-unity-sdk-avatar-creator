@@ -27,7 +27,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 new GltFastAvatarImporter(),
                 new AvatarProcessor()
             });
-
+            
             try
             {
                 context = await executor.Execute(context);

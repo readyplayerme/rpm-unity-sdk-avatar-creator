@@ -16,7 +16,10 @@ namespace ReadyPlayerMe
         public static void AddPanel(AssetType assetType, GameObject widget)
         {
             AssetTypePanelMap ??= new Dictionary<AssetType, GameObject>();
-            AssetTypePanelMap.Add(assetType, widget);
+            if(!AssetTypePanelMap.ContainsKey(assetType))
+            {
+                AssetTypePanelMap.Add(assetType, widget);
+            }
         }
 
         public static void Clear()
@@ -30,20 +33,33 @@ namespace ReadyPlayerMe
 
         public static void Switch(AssetType assetType)
         {
-            if (AssetTypePanelMap.Keys.Contains(currentAssetType))
-            {
-                SetActivePanel(currentAssetType, false);
-            }
-
-            SetActivePanel(AssetType.EyeColor, false);
+            SetActivePanel(currentAssetType, false);
+            DisableColorPanels();
 
             switch (assetType)
             {
                 case AssetType.FaceShape:
+                    FaceTypePanel.SetActive(true);
+                    SetActivePanel(assetType, true);
+                    SetActivePanel(AssetType.SkinColor, true);
+                    break;
                 case AssetType.EyebrowStyle:
+                    FaceTypePanel.SetActive(true);
+                    SetActivePanel(assetType, true);
+                    SetActivePanel(AssetType.EyebrowColor, true);
+                    break;
+                case AssetType.BeardStyle:
+                    FaceTypePanel.SetActive(true);
+                    SetActivePanel(assetType, true);
+                    SetActivePanel(AssetType.BeardColor, true);
+                    break;
+                case AssetType.HairStyle:
+                    FaceTypePanel.SetActive(false);
+                    SetActivePanel(assetType, true);
+                    SetActivePanel(AssetType.HairColor, true);
+                    break;
                 case AssetType.NoseShape:
                 case AssetType.LipShape:
-                case AssetType.BeardStyle:
                     FaceTypePanel.SetActive(true);
                     SetActivePanel(assetType, true);
                     break;
@@ -60,10 +76,21 @@ namespace ReadyPlayerMe
 
             currentAssetType = assetType;
         }
-
+        
+        private static void DisableColorPanels()
+        {
+            SetActivePanel(AssetType.EyeColor, false);
+            SetActivePanel(AssetType.SkinColor, false);
+            SetActivePanel(AssetType.BeardColor, false);
+            SetActivePanel(AssetType.HairColor, false);
+            SetActivePanel(AssetType.EyebrowColor, false);
+        }
         private static void SetActivePanel(AssetType assetType, bool enable)
         {
-            AssetTypePanelMap[assetType].SetActive(enable);
+            if (AssetTypePanelMap.ContainsKey(assetType))
+            {
+                AssetTypePanelMap[assetType].SetActive(enable); 
+            }
         }
     }
 }
