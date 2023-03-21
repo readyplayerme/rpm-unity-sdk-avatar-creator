@@ -11,30 +11,25 @@ namespace ReadyPlayerMe.AvatarCreator
         private const string RESPONSE_TYPE_PARAMETER = "responseType=glb";
         private const string COLOR_PARAMETERS = "colors?type=skin,beard,hair,eyebrow";
         private readonly Dictionary<string, string> header;
-        private readonly CancellationToken cancellationToken;
+        private readonly CancellationToken ctx;
         
-        public static string GetColorEndpoint(string avatarId)
+        public AvatarAPIRequests(string token, CancellationToken ctx = default)
         {
-            return $"{Endpoints.AVATAR_API_V2}/{avatarId}/{COLOR_PARAMETERS}";
-        }
-
-        public AvatarAPIRequests(string token, CancellationToken cancellationToken = default)
-        {
-            this.cancellationToken = cancellationToken;
+            this.ctx = ctx;
             header = new Dictionary<string, string>
             {
                 { "Content-Type", "application/json" },
                 { "Authorization", $"Bearer {token}" }
             };
         }
-        
+
         public async Task<ColorPalette[]> GetAllAvatarColors(string avatarId)
         {
             var response = await WebRequestDispatcher.SendRequest(
-                GetColorEndpoint(avatarId),
+                $"{Endpoints.AVATAR_API_V2}/{avatarId}/{COLOR_PARAMETERS}",
                 Method.GET,
                 header,
-                token: cancellationToken);
+                ctx: ctx);
 
             return ColorResponseHandler.GetColorsFromResponse(response.Text);
         }
@@ -46,7 +41,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 Method.POST,
                 header,
                 avatarProperties.ToJson(),
-                token: cancellationToken);
+                ctx: ctx);
 
             var metadata = JObject.Parse(response.Text);
             var avatarId = metadata["data"]?["id"]?.ToString();
@@ -63,7 +58,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 url,
                 Method.GET,
                 header,
-                token: cancellationToken);
+                ctx: ctx);
             return response.Data;
         }
 
@@ -78,7 +73,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 Method.PATCH,
                 header,
                 avatarProperties.ToJson(true),
-                token: cancellationToken);
+                ctx: ctx);
 
             return response.Data;
         }
@@ -89,7 +84,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 $"{Endpoints.AVATAR_API_V2}/{avatarId}",
                 Method.PUT,
                 header,
-                token: cancellationToken);
+                ctx: ctx);
 
             return response.Text;
         }
@@ -100,7 +95,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 $"{Endpoints.AVATAR_API_V1}/{avatarId}",
                 Method.DELETE,
                 header,
-                token: cancellationToken);
+                ctx: ctx);
         }
     }
 }

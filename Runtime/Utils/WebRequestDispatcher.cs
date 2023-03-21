@@ -26,7 +26,7 @@ namespace ReadyPlayerMe.AvatarCreator
             Dictionary<string, string> headers = null,
             string payload = null,
             DownloadHandler downloadHandler = default,
-            CancellationToken token = new CancellationToken())
+            CancellationToken ctx = new CancellationToken())
         {
             using var request = new UnityWebRequest();
             request.timeout = TIMEOUT;
@@ -53,12 +53,18 @@ namespace ReadyPlayerMe.AvatarCreator
 
             var startTime = Time.realtimeSinceStartup;
             var asyncOperation = request.SendWebRequest();
-            token.Register(request.Abort);
-            while (!asyncOperation.isDone && !token.IsCancellationRequested)
+            
+            while (!asyncOperation.isDone && !ctx.IsCancellationRequested)
             {
                 await Task.Yield();
             }
 
+            if (ctx.IsCancellationRequested)
+            {
+                request.Abort();
+                return new Response();
+            }
+            
             if (request.result == UnityWebRequest.Result.ProtocolError || request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.Log(request.downloadHandler.text);
