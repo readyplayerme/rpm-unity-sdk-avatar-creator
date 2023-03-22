@@ -409,6 +409,7 @@ MonoBehaviour:
   rawImage: {fileID: 306229396607143546}
   cameraButton: {fileID: 306229398285852282}
   fileButton: {fileID: 306229397059788501}
+  webCameraConfig: {fileID: 11400000, guid: ba2e9ee9753533b47aadb9108f808dca, type: 2}
 --- !u!1 &306229398605069743
 GameObject:
   m_ObjectHideFlags: 0
