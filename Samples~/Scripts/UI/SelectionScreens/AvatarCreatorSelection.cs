@@ -85,18 +85,9 @@ namespace ReadyPlayerMe
         private async void CreateDefaultModel()
         {
             var startTime = Time.time;
-            if (string.IsNullOrEmpty(DataStore.AvatarProperties.Base64Image))
-            {
-                DataStore.AvatarProperties.Assets = DataStore.AvatarProperties.Gender == OutfitGender.Feminine
-                    ? AvatarPropertiesConstants.FemaleDefaultAssets
-                    : AvatarPropertiesConstants.MaleDefaultAssets;
-            }
-            else
-            {
-                DataStore.AvatarProperties.Assets = new Dictionary<AssetType, object>();
-            }
 
-
+            DataStore.AvatarProperties.Assets = GetDefaultAssets();
+            
             avatarManager = new AvatarManager(
                 DataStore.User.Token,
                 DataStore.AvatarProperties.BodyType,
@@ -108,6 +99,18 @@ namespace ReadyPlayerMe
             assetButtonCreator.CreateColorUI(await LoadColors(), UpdateAvatarColor);
             ProcessAvatar();
             Loading.SetActive(false);
+        }
+
+        private Dictionary<AssetType, object> GetDefaultAssets()
+        {
+            if (string.IsNullOrEmpty(DataStore.AvatarProperties.Base64Image))
+            {
+                return DataStore.AvatarProperties.Gender == OutfitGender.Feminine
+                    ? AvatarPropertiesConstants.FemaleDefaultAssets
+                    : AvatarPropertiesConstants.MaleDefaultAssets;
+            }
+            
+            return new Dictionary<AssetType, object>();
         }
         
         private async void UpdateAvatarColor(AssetType assetType, int assetIndex)
