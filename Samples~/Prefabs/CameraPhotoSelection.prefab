@@ -32,10 +32,10 @@ RectTransform:
   m_Father: {fileID: 1506367758321055765}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.689}
-  m_AnchorMax: {x: 0.5, y: 0.689}
-  m_AnchoredPosition: {x: 0, y: -75.60004}
-  m_SizeDelta: {x: 800, y: 400}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.000030517578, y: 0}
+  m_SizeDelta: {x: 808, y: 408}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &306229396607143525
 CanvasRenderer:
@@ -344,8 +344,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 5128766544602402370}
   - {fileID: 1506367758321055765}
+  - {fileID: 5128766544602402370}
   - {fileID: 306229398285852283}
   - {fileID: 306229397059787050}
   m_Father: {fileID: 0}
@@ -409,7 +409,6 @@ MonoBehaviour:
   rawImage: {fileID: 306229396607143546}
   cameraButton: {fileID: 306229398285852282}
   fileButton: {fileID: 306229397059788501}
-  webCameraConfig: {fileID: 11400000, guid: ba2e9ee9753533b47aadb9108f808dca, type: 2}
 --- !u!1 &306229398605069743
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,12 +593,12 @@ RectTransform:
   m_Children:
   - {fileID: 306229396607143547}
   m_Father: {fileID: 306229398391325336}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 180.85373}
-  m_SizeDelta: {x: -1120, y: -556.898}
+  m_AnchorMin: {x: 0.5, y: 0.689}
+  m_AnchorMax: {x: 0.5, y: 0.689}
+  m_AnchoredPosition: {x: -0.00052068, y: -0.0005187988}
+  m_SizeDelta: {x: 808, y: 408}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2261289184713546544
 MonoBehaviour:
@@ -645,7 +644,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 306229398391325336}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.689}
   m_AnchorMax: {x: 0.5, y: 0.689}
