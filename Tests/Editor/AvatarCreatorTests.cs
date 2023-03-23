@@ -27,7 +27,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
         [Test]
         public async Task Receive_Partner_Assets()
         {
-            var userStore = await authManager.Login();
+            var userStore = await authManager.LoginAsAnonymous();
             var partnerAssetManager = new PartnerAssetsManager(userStore.Token, DOMAIN, BodyType.FullBody, OutfitGender.Masculine);
             var avatarAssets = await partnerAssetManager.GetAllAssets();
 
@@ -38,7 +38,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
         [Test]
         public async Task Avatar_Create_Update_Delete()
         {
-            var userStore = await authManager.Login();
+            var userStore = await authManager.LoginAsAnonymous();
             Debug.Log("Logged In with token: " + userStore.Token);
 
             // Create avatar
@@ -74,7 +74,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
         [Test]
         public async Task Avatar_Create_Preview_Avatar_Get_Colors()
         {
-            var userStore = await authManager.Login();
+            var userStore = await authManager.LoginAsAnonymous();
             Debug.Log("Logged In with token: " + userStore.Token);
 
             // Create avatar

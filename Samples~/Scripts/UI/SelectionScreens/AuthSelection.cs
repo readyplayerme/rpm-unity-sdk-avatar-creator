@@ -37,7 +37,7 @@ namespace ReadyPlayerMe
             DataStore.AvatarProperties.Partner = partnerDomain;
 
             var authManager = new AuthManager(partnerDomain);
-            DataStore.User = await authManager.Login();
+            DataStore.User = await authManager.LoginAsAnonymous();
 
             DebugPanel.AddLogWithDuration($"Logged in with userId: {DataStore.User.Id}", Time.time - startTime);
         }

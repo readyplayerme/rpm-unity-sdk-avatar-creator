@@ -7,16 +7,32 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public class AuthManager
     {
-        private readonly string domain;
-
+        private readonly AuthRequests authRequests;
+        
         public AuthManager(string domain)
         {
-            this.domain = domain;
+            authRequests = new AuthRequests(domain);
         }
 
-        public async Task<UserSession> Login()
+        public async Task<UserSession> LoginAsAnonymous()
         {
-            return await AuthRequests.LoginAsAnonymous(domain);
+            return await authRequests.LoginAsAnonymous();
+        }
+
+
+        public async Task SendEmailOTP(string email)
+        {
+            await authRequests.SendEmailOTP( email);
+        }
+
+        public async Task LoginWithOTP(string otp)
+        {
+            await authRequests.LoginWithOTP(otp);
+        }
+
+        public async Task RefreshToken(string token, string refreshToken)
+        {
+            await authRequests.RefreshToken(token, refreshToken);
         }
     }
 }
