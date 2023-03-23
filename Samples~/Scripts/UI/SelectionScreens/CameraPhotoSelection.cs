@@ -6,14 +6,10 @@ namespace ReadyPlayerMe
 {
     public class CameraPhotoSelection : State
     {
-        private const string IGNORE_CAMERA_SUBSTRING = "OBS";
-        
         [SerializeField] private RawImage rawImage;
         [SerializeField] private Button cameraButton;
         [SerializeField] private Button fileButton;
         
-        // TODO use config to determine correct camera device
-        [SerializeField] private WebCameraConfig webCameraConfig;
         public override StateType StateType => StateType.CameraPhoto;
         private WebCamTexture camTexture;
         
@@ -42,13 +38,11 @@ namespace ReadyPlayerMe
             rawImage.color = Color.white;
             foreach (var device in devices)
             {
-                // TODO Find a better approach to select correct camera device
-                if (device.name.Contains(IGNORE_CAMERA_SUBSTRING))
+                if (!device.isFrontFacing)
                 {
-                    if (device.name != webCameraConfig.device)
-                        continue;
+                    continue;
                 }
-
+                
                 var size = rawImage.rectTransform.sizeDelta;
                 camTexture = new WebCamTexture(device.name, (int) size.x, (int) size.y);
                 camTexture.Play();
