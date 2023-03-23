@@ -95,7 +95,6 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public void Dispose()
         {
-            Debug.Log("Dispose");
             ctxSource?.Cancel();
         }
     }
