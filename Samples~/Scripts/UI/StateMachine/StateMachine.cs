@@ -38,7 +38,7 @@ namespace ReadyPlayerMe
             StateChanged?.Invoke(currentState, previousState);
         }
 
-        public void Back()
+        protected void Back()
         {
             var previousState = currentState; 
             stateTypeMap[previousState].gameObject.SetActive(false);

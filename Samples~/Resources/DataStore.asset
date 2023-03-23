@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3323407f456247a19c08b66bb7162cc4, type: 3}
   m_Name: DataStore
   m_EditorClassIdentifier: 
+  User:
+    Token: 
+    Id: 
+  AvatarProperties:
+    Partner: 
+    Gender: 0
+    BodyType: 0
+    Base64Image: 
   AvatarId: 
