@@ -3566,6 +3566,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 747a0202581d4e46a11b7902a32963a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statesToSkip: 
   states:
   - {fileID: 227468989}
   - {fileID: 27957444}
@@ -3576,6 +3577,8 @@ MonoBehaviour:
   dataStore: {fileID: 11400000, guid: b641399742edb414380c1d690dbd37df, type: 2}
   button: {fileID: 1540936656}
   loading: {fileID: 1810997807}
+  defaultGender: 0
+  defaultBodyType: 0
 --- !u!1 &1716912245
 GameObject:
   m_ObjectHideFlags: 0
