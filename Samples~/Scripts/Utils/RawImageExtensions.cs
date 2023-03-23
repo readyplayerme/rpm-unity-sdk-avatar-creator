@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace DefaultNamespace
+namespace ReadyPlayerMe
 {
     public static class RawImageExtensions
     {

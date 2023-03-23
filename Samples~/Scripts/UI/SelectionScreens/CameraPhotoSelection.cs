@@ -47,7 +47,7 @@ namespace ReadyPlayerMe
                 camTexture = new WebCamTexture(device.name, (int) size.x, (int) size.y);
                 camTexture.Play();
                 rawImage.texture = camTexture;
-                rawImage.SetNativeSize();
+                rawImage.SizeToParent();
                 return;
             }
         }
