@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -8,7 +9,8 @@ namespace ReadyPlayerMe.AvatarCreator
     public class AuthManager
     {
         private readonly AuthRequests authRequests;
-        
+        private UserSession userSession;
+
         public AuthManager(string domain)
         {
             authRequests = new AuthRequests(domain);
@@ -19,15 +21,15 @@ namespace ReadyPlayerMe.AvatarCreator
             return await authRequests.LoginAsAnonymous();
         }
 
-
-        public async Task SendEmailOTP(string email)
+        public async void SendEmailCode(string email)
         {
-            await authRequests.SendEmailOTP( email);
+            await authRequests.SendCodeToEmail(email);
         }
 
-        public async Task LoginWithOTP(string otp)
+        public async Task<UserSession> LoginWithCode(string otp)
         {
-            await authRequests.LoginWithOTP(otp);
+            userSession = await authRequests.LoginWithCode(otp);
+            return userSession;
         }
 
         public async Task RefreshToken(string token, string refreshToken)

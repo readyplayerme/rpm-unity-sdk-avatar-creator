@@ -6,6 +6,7 @@ namespace ReadyPlayerMe
     {
         None,
         Login,
+        LoginWithCodeFromEmail,
         BodyTypeSelection,
         GenderSelection,
         SelfieSelection,

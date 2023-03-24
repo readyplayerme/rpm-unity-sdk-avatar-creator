@@ -10,6 +10,10 @@ namespace ReadyPlayerMe.AvatarCreator
     public class AuthRequests
     {
         private readonly string domain;
+        private readonly Dictionary<string, string> headers = new Dictionary<string, string>
+        {
+            { "Content-Type", "application/json" },
+        };
 
         public AuthRequests(string domain)
         {
@@ -18,38 +22,22 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<UserSession> LoginAsAnonymous()
         {
-            var url = Endpoints.AUTH_USERS.Replace("[domain]", domain);
-            var headers = new Dictionary<string, string>
-            {
-                { "Content-Type", "application/json" },
-            };
+            var url = GetUrl(Endpoints.AUTH_USERS);
 
-            var request = await WebRequestDispatcher.SendRequest(url, Method.POST, headers);
+            var response = await WebRequestDispatcher.SendRequest(url, Method.POST, headers);
 
-            if (string.IsNullOrEmpty(request.Text))
+            if (string.IsNullOrEmpty(response.Text))
             {
                 throw new Exception("No response received");
             }
 
-            var response = JObject.Parse(request.Text);
-            var data = response.GetValue("data");
-
-            if (data == null)
-            {
-                throw new Exception("No data received");
-            }
-
+            var data = ParseResponse(response.Text);
             return JsonConvert.DeserializeObject<UserSession>(data!.ToString());
         }
 
-        public async Task SendEmailOTP(string email)
+        public async Task SendCodeToEmail(string email)
         {
-            var url = Endpoints.AUTH_START.Replace("[domain]", domain);
-            var headers = new Dictionary<string, string>
-            {
-                { "Content-Type", "application/json" },
-            };
-
+            var url = GetUrl(Endpoints.AUTH_START);
             var payload = new JObject(new JProperty("data",
                 new JObject(
                     new JProperty("email", email),
@@ -60,39 +48,23 @@ namespace ReadyPlayerMe.AvatarCreator
             await WebRequestDispatcher.SendRequest(url, Method.POST, headers, payload.ToString());
         }
 
-        public async Task LoginWithOTP(string otp)
+        public async Task<UserSession> LoginWithCode(string code)
         {
-            var url = Endpoints.AUTH_LOGIN.Replace("[domain]", domain);
-            var headers = new Dictionary<string, string>
-            {
-                { "Content-Type", "application/json" },
-            };
-
+            var url = GetUrl(Endpoints.AUTH_LOGIN);
             var payload = new JObject(new JProperty("data",
                 new JObject(
-                    new JProperty("code", otp)
+                    new JProperty("code", code)
                 )
             ));
 
             var response = await WebRequestDispatcher.SendRequest(url, Method.POST, headers, payload.ToString());
-            var json = JObject.Parse(response.Text);
-            var data = json.GetValue("data");
-
-            if (data == null)
-            {
-                throw new Exception("No data received");
-            }
-
+            var data = ParseResponse(response.Text);
+            return JsonConvert.DeserializeObject<UserSession>(data!.ToString());
         }
 
         public async Task RefreshToken(string token, string refreshToken)
         {
-            var url = Endpoints.AUTH_REFRESH.Replace("[domain]", domain);
-            var headers = new Dictionary<string, string>
-            {
-                { "Content-Type", "application/json" },
-            };
-
+            var url = GetUrl(Endpoints.AUTH_REFRESH);
             var payload = new JObject(new JProperty("data",
                 new JObject(
                     new JProperty("token", token),
@@ -101,7 +73,17 @@ namespace ReadyPlayerMe.AvatarCreator
             ));
 
             var response = await WebRequestDispatcher.SendRequest(url, Method.POST, headers, payload.ToString());
-            var json = JObject.Parse(response.Text);
+            var data = ParseResponse(response.Text);
+        }
+
+        private string GetUrl(string endpoint)
+        {
+            return endpoint.Replace("[domain]", domain);
+        }
+
+        private JToken ParseResponse(string response)
+        {
+            var json = JObject.Parse(response);
             var data = json.GetValue("data");
 
             if (data == null)
@@ -109,12 +91,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 throw new Exception("No data received");
             }
 
-            Debug.Log(response.Text);
-        }
-
-        private void GetUrl(string domain)
-        {
-            
+            return data;
         }
     }
 }
