@@ -12,6 +12,8 @@ namespace ReadyPlayerMe.AvatarCreator
         private static UserSession userSession;
         public static UserSession UserSession => userSession;
 
+        public static bool IsSignedIn;
+
         static AuthManager()
         {
             AuthenticationRequests = new AuthenticationRequests(CoreSettingsHandler.CoreSettings.Subdomain);
@@ -30,6 +32,7 @@ namespace ReadyPlayerMe.AvatarCreator
         public static async Task LoginWithCode(string otp)
         {
             userSession = await AuthenticationRequests.LoginWithCode(otp);
+            IsSignedIn = true;
         }
 
         public static async Task RefreshToken()

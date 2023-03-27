@@ -27,10 +27,8 @@ namespace ReadyPlayerMe
         private void OnEnable()
         {
             saveButton.onClick.AddListener(OnSave);
-
             Loading.SetActive(true);
-            LoadAssets();
-            CreateDefaultModel();
+            Initialize();
         }
 
         private void OnDisable()
@@ -45,6 +43,16 @@ namespace ReadyPlayerMe
 
             Dispose();
             assetTypeUICreator.ResetUI();
+        }
+
+        private async void Initialize()
+        {
+            if (!AuthManager.IsSignedIn)
+            {
+                await AuthManager.LoginAsAnonymous();
+            }
+            LoadAssets();
+            CreateDefaultModel();
         }
 
         private void CreateUI(BodyType bodyType, Dictionary<string, AssetType> assets)

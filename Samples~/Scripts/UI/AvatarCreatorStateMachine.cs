@@ -11,6 +11,7 @@ namespace ReadyPlayerMe
         [SerializeField] private List<State> states;
         [SerializeField] private Button button;
         [SerializeField] private GameObject loading;
+        [SerializeField] private StateType startingState; 
         [SerializeField] public AvatarCreatorData avatarCreatorData;
 
         public Action<string> AvatarSaved;
@@ -18,7 +19,7 @@ namespace ReadyPlayerMe
         private void Start()
         {
             Initialize();
-            SetState(StateType.Login);
+            SetState(startingState);
         }
 
         private void OnEnable()
