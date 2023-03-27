@@ -7,16 +7,9 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
 {
     public class AvatarCreatorTests
     {
-        private const string DOMAIN = "demo";
+        private const string DOMAIN = "dev-sdk";
 
-        private AuthManager authManager;
         private GameObject avatar;
-
-        [SetUp]
-        public void Setup()
-        {
-            authManager = new AuthManager(DOMAIN);
-        }
 
         [TearDown]
         public void TearDown()
@@ -27,8 +20,8 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
         [Test]
         public async Task Receive_Partner_Assets()
         {
-            var userStore = await authManager.LoginAsAnonymous();
-            var partnerAssetManager = new PartnerAssetsManager(userStore.Token, DOMAIN, BodyType.FullBody, OutfitGender.Masculine);
+            await AuthManager.LoginAsAnonymous();
+            var partnerAssetManager = new PartnerAssetsManager(DOMAIN, BodyType.FullBody, OutfitGender.Masculine);
             var avatarAssets = await partnerAssetManager.GetAllAssets();
 
             Assert.IsNotNull(avatarAssets);
@@ -38,8 +31,8 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
         [Test]
         public async Task Avatar_Create_Update_Delete()
         {
-            var userStore = await authManager.LoginAsAnonymous();
-            Debug.Log("Logged In with token: " + userStore.Token);
+            await AuthManager.LoginAsAnonymous();
+            Debug.Log("Logged In with token: " + AuthManager.UserSession.Token);
 
             // Create avatar
             var avatarProperties = new AvatarProperties
@@ -50,7 +43,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
                 Assets = AvatarPropertiesConstants.MaleDefaultAssets
             };
 
-            var avatarManager = new AvatarManager(userStore.Token, avatarProperties.BodyType, avatarProperties.Gender);
+            var avatarManager = new AvatarManager(avatarProperties.BodyType, avatarProperties.Gender);
             avatar = await avatarManager.Create(avatarProperties);
 
             Assert.IsNotNull(avatar);
@@ -74,8 +67,8 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
         [Test]
         public async Task Avatar_Create_Preview_Avatar_Get_Colors()
         {
-            var userStore = await authManager.LoginAsAnonymous();
-            Debug.Log("Logged In with token: " + userStore.Token);
+            await AuthManager.LoginAsAnonymous();
+            Debug.Log("Logged In with token: " + AuthManager.UserSession.Token);
 
             // Create avatar
             var avatarProperties = new AvatarProperties
@@ -85,11 +78,11 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
                 BodyType = BodyType.FullBody,
                 Assets = AvatarPropertiesConstants.MaleDefaultAssets
             };
-            
-            var avatarManager = new AvatarManager(userStore.Token, avatarProperties.BodyType, avatarProperties.Gender);
+
+            var avatarManager = new AvatarManager(avatarProperties.BodyType, avatarProperties.Gender);
             avatar = await avatarManager.Create(avatarProperties);
-            var avatarAPIRequests = new AvatarAPIRequests(userStore.Token);
-            ColorPalette[] colors = await avatarAPIRequests.GetAllAvatarColors(avatar.name);
+            var avatarAPIRequests = new AvatarAPIRequests();
+            var colors = await avatarAPIRequests.GetAllAvatarColors(avatar.name);
             Assert.IsNotNull(colors);
             Assert.Greater(colors.Length, 3);
         }
