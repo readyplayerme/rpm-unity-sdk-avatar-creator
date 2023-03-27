@@ -74,7 +74,7 @@ namespace ReadyPlayerMe
             texture.Apply();
 
             var bytes = texture.EncodeToPNG();
-            DataStore.AvatarProperties.Base64Image = Convert.ToBase64String(bytes);
+            AvatarCreatorData.AvatarProperties.Base64Image = Convert.ToBase64String(bytes);
 
             StateMachine.SetState(StateType.Editor);
         }

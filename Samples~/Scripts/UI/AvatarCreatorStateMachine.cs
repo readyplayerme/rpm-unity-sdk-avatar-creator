@@ -9,17 +9,15 @@ namespace ReadyPlayerMe
     public class AvatarCreatorStateMachine : StateMachine
     {
         [SerializeField] private List<State> states;
-        [SerializeField] private DataStore dataStore;
         [SerializeField] private Button button;
         [SerializeField] private GameObject loading;
-        [SerializeField] private OutfitGender defaultGender;
-        [SerializeField] private BodyType defaultBodyType;
+        [SerializeField] public AvatarCreatorData avatarCreatorData;
 
         public Action<string> AvatarSaved;
 
         private void Start()
         {
-            Initialize(states);
+            Initialize();
             SetState(StateType.Login);
         }
 
@@ -35,14 +33,11 @@ namespace ReadyPlayerMe
             button.onClick.RemoveListener(Back);
         }
 
-        protected override void Initialize(List<State> states)
+        private void Initialize()
         {
-            dataStore.AvatarProperties.BodyType = defaultBodyType;
-            dataStore.AvatarProperties.Gender = defaultGender;
-
             foreach (var state in states)
             {
-                state.Initialize(this, dataStore, loading);
+                state.Initialize(this, avatarCreatorData, loading);
             }
             base.Initialize(states);
         }
@@ -53,8 +48,7 @@ namespace ReadyPlayerMe
 
             if (current == StateType.End)
             {
-                gameObject.SetActive(false);
-                AvatarSaved?.Invoke(dataStore.AvatarId);
+                AvatarSaved?.Invoke(avatarCreatorData.AvatarId);
             }
         }
     }

@@ -12,8 +12,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private readonly AuthorizedRequest authorizedRequest;
         private readonly CancellationToken ctx;
-
-
+        
         public AvatarAPIRequests(CancellationToken ctx = default)
         {
             this.ctx = ctx;

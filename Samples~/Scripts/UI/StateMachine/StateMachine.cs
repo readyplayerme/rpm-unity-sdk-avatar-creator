@@ -13,9 +13,8 @@ namespace ReadyPlayerMe
 
         protected Action<StateType, StateType> StateChanged;
         private StateType currentState;
-
         
-        protected virtual void Initialize(List<State> states)
+        protected void Initialize(List<State> states)
         {
             foreach (var state in states)
             {

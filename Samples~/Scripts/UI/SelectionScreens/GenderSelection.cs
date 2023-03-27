@@ -45,7 +45,7 @@ namespace ReadyPlayerMe
 
         private void SetNextState(OutfitGender gender)
         {
-            DataStore.AvatarProperties.Gender = gender;
+            AvatarCreatorData.AvatarProperties.Gender = gender;
             StateMachine.SetState(NextState);
         }
     }

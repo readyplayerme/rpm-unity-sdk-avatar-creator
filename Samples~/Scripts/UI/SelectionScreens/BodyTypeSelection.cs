@@ -26,13 +26,13 @@ namespace ReadyPlayerMe
 
         private void OnFullBodySelected()
         {
-            DataStore.AvatarProperties.BodyType = BodyType.FullBody;
+            AvatarCreatorData.AvatarProperties.BodyType = BodyType.FullBody;
             StateMachine.SetState(NextState);
         }
 
         private void OnHalfBodySelected()
         {
-            DataStore.AvatarProperties.BodyType = BodyType.HalfBody;
+            AvatarCreatorData.AvatarProperties.BodyType = BodyType.HalfBody;
             StateMachine.SetState(NextState);
         }
     }

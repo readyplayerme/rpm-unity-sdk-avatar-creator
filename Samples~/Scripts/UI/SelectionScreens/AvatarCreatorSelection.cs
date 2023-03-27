@@ -58,7 +58,7 @@ namespace ReadyPlayerMe
         {
             var startTime = Time.time;
             var avatarId = await avatarManager.Save();
-            DataStore.AvatarId = avatarId;
+            AvatarCreatorData.AvatarId = avatarId;
             DebugPanel.AddLogWithDuration("Avatar saved", Time.time - startTime);
             StateMachine.SetState(StateType.End);
         }
@@ -68,13 +68,13 @@ namespace ReadyPlayerMe
             var startTime = Time.time;
 
             partnerAssetManager = new PartnerAssetsManager(
-                DataStore.AvatarProperties.Partner,
-                DataStore.AvatarProperties.BodyType,
-                DataStore.AvatarProperties.Gender);
+                AvatarCreatorData.AvatarProperties.Partner,
+                AvatarCreatorData.AvatarProperties.BodyType,
+                AvatarCreatorData.AvatarProperties.Gender);
             var assetIconDownloadTasks = await partnerAssetManager.GetAllAssets();
 
             DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
-            CreateUI(DataStore.AvatarProperties.BodyType, assetIconDownloadTasks);
+            CreateUI(AvatarCreatorData.AvatarProperties.BodyType, assetIconDownloadTasks);
             partnerAssetManager.DownloadAssetsIcon(assetButtonCreator.SetAssetIcons);
         }
 
@@ -90,14 +90,14 @@ namespace ReadyPlayerMe
         {
             var startTime = Time.time;
 
-            DataStore.AvatarProperties.Assets = GetDefaultAssets();
+            AvatarCreatorData.AvatarProperties.Assets = GetDefaultAssets();
             
             avatarManager = new AvatarManager(
-                DataStore.AvatarProperties.BodyType,
-                DataStore.AvatarProperties.Gender,
+                AvatarCreatorData.AvatarProperties.BodyType,
+                AvatarCreatorData.AvatarProperties.Gender,
                 inCreatorConfig);
 
-            avatar = await avatarManager.Create(DataStore.AvatarProperties);
+            avatar = await avatarManager.Create(AvatarCreatorData.AvatarProperties);
             if (avatar == null)
             {
                 return;
@@ -111,9 +111,9 @@ namespace ReadyPlayerMe
 
         private Dictionary<AssetType, object> GetDefaultAssets()
         {
-            if (string.IsNullOrEmpty(DataStore.AvatarProperties.Base64Image))
+            if (string.IsNullOrEmpty(AvatarCreatorData.AvatarProperties.Base64Image))
             {
-                return DataStore.AvatarProperties.Gender == OutfitGender.Feminine
+                return AvatarCreatorData.AvatarProperties.Gender == OutfitGender.Feminine
                     ? AvatarPropertiesConstants.FemaleDefaultAssets
                     : AvatarPropertiesConstants.MaleDefaultAssets;
             }
@@ -166,7 +166,7 @@ namespace ReadyPlayerMe
 
         private void ProcessAvatar()
         {
-            if (DataStore.AvatarProperties.BodyType == BodyType.FullBody)
+            if (AvatarCreatorData.AvatarProperties.BodyType == BodyType.FullBody)
             {
                 avatar.GetComponent<Animator>().runtimeAnimatorController = animator;
             }

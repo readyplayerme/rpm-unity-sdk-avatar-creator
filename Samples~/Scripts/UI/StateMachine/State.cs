@@ -18,16 +18,16 @@ namespace ReadyPlayerMe
     public abstract class State : MonoBehaviour
     {
         protected StateMachine StateMachine;
-        protected DataStore DataStore;
+        protected AvatarCreatorData AvatarCreatorData;
         protected GameObject Loading;
 
         public abstract StateType StateType { get; }
         public abstract StateType NextState { get; }
 
-        public void Initialize(StateMachine stateMachine, DataStore dataStore, GameObject loading)
+        public void Initialize(StateMachine stateMachine, AvatarCreatorData avatarCreatorData, GameObject loading)
         {
             StateMachine = stateMachine;
-            DataStore = dataStore;
+            AvatarCreatorData = avatarCreatorData;
             Loading = loading;
             gameObject.SetActive(false);
         }

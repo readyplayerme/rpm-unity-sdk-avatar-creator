@@ -16,7 +16,7 @@ namespace ReadyPlayerMe
 
         private void Start()
         {
-            DataStore.AvatarProperties.Partner = CoreSettingsHandler.CoreSettings.Subdomain;
+            AvatarCreatorData.AvatarProperties.Partner = CoreSettingsHandler.CoreSettings.Subdomain;
         }
 
         private void OnEnable()
