@@ -19,13 +19,6 @@ public class LoginWithEmailSelection : State
     public override StateType StateType => StateType.LoginWithCodeFromEmail;
     public override StateType NextState => StateType.BodyTypeSelection;
 
-    private AuthManager authManager;
-
-    private void Start()
-    {
-        authManager = new AuthManager(DataStore.AvatarProperties.Partner);
-    }
-
     private void OnEnable()
     {
         sendActivationCodeButton.onClick.AddListener(OnSendActivationCode);
@@ -44,7 +37,7 @@ public class LoginWithEmailSelection : State
 
     private void OnSendActivationCode()
     {
-        authManager.SendEmailCode(emailField.text);
+        AuthManager.SendEmailCode(emailField.text);
         OnHaveCodeButton(); 
     }
 
@@ -64,7 +57,7 @@ public class LoginWithEmailSelection : State
     private async void OnLogin()
     {
         Loading.SetActive(true);
-        DataStore.User = await authManager.LoginWithCode(codeField.text);
+         await AuthManager.LoginWithCode(codeField.text);
         Loading.SetActive(false);
         StateMachine.SetState(StateType.BodyTypeSelection);
     }

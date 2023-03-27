@@ -1,40 +1,42 @@
 ﻿using System.Threading.Tasks;
-using UnityEngine;
+using ReadyPlayerMe.Core;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
     /// <summary>
     /// Placeholder for login, signup and signout
     /// </summary>
-    public class AuthManager
+    public static class AuthManager
     {
-        private readonly AuthRequests authRequests;
-        private UserSession userSession;
+        private static readonly AuthenticationRequests AuthenticationRequests;
+        private static UserSession userSession;
+        public static UserSession UserSession => userSession;
 
-        public AuthManager(string domain)
+        static AuthManager()
         {
-            authRequests = new AuthRequests(domain);
+            AuthenticationRequests = new AuthenticationRequests(CoreSettingsHandler.CoreSettings.Subdomain);
         }
 
-        public async Task<UserSession> LoginAsAnonymous()
+        public static async Task LoginAsAnonymous()
         {
-            return await authRequests.LoginAsAnonymous();
+            userSession = await AuthenticationRequests.LoginAsAnonymous();
         }
 
-        public async void SendEmailCode(string email)
+        public static async void SendEmailCode(string email)
         {
-            await authRequests.SendCodeToEmail(email);
+            await AuthenticationRequests.SendCodeToEmail(email);
         }
 
-        public async Task<UserSession> LoginWithCode(string otp)
+        public static async Task LoginWithCode(string otp)
         {
-            userSession = await authRequests.LoginWithCode(otp);
-            return userSession;
+            userSession = await AuthenticationRequests.LoginWithCode(otp);
         }
 
-        public async Task RefreshToken(string token, string refreshToken)
+        public static async Task RefreshToken()
         {
-            await authRequests.RefreshToken(token, refreshToken);
+            var newTokens = await AuthenticationRequests.RefreshToken(userSession.Token, userSession.RefreshToken);
+            userSession.Token = newTokens.Item1;
+            userSession.RefreshToken = newTokens.Item2;
         }
     }
 }

@@ -53,22 +53,28 @@ namespace ReadyPlayerMe.AvatarCreator
 
             var startTime = Time.realtimeSinceStartup;
             var asyncOperation = request.SendWebRequest();
-            
+
             while (!asyncOperation.isDone && !ctx.IsCancellationRequested)
             {
                 await Task.Yield();
             }
 
+            var response = new Response();
+            response.ResponseCode = request.responseCode;
+            
             if (ctx.IsCancellationRequested)
             {
                 request.Abort();
-                return new Response();
+                response.IsSuccess = false;
+                return response;
             }
-            
-            if (request.result == UnityWebRequest.Result.ProtocolError || request.result == UnityWebRequest.Result.ConnectionError)
+
+            if (request.result != UnityWebRequest.Result.Success)
             {
                 Debug.Log(request.downloadHandler.text);
-                throw new Exception(request.error);
+                response.IsSuccess = false;
+                response.Text = request.error;
+                return response;
             }
 
             Texture texture = null;

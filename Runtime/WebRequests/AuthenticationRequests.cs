@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
-    public class AuthRequests
+    public class AuthenticationRequests
     {
         private readonly string domain;
         private readonly Dictionary<string, string> headers = new Dictionary<string, string>
@@ -15,7 +14,7 @@ namespace ReadyPlayerMe.AvatarCreator
             { "Content-Type", "application/json" },
         };
 
-        public AuthRequests(string domain)
+        public AuthenticationRequests(string domain)
         {
             this.domain = domain;
         }
@@ -62,7 +61,7 @@ namespace ReadyPlayerMe.AvatarCreator
             return JsonConvert.DeserializeObject<UserSession>(data!.ToString());
         }
 
-        public async Task RefreshToken(string token, string refreshToken)
+        public async Task<(string,string)> RefreshToken(string token, string refreshToken)
         {
             var url = GetUrl(Endpoints.AUTH_REFRESH);
             var payload = new JObject(new JProperty("data",
@@ -74,6 +73,9 @@ namespace ReadyPlayerMe.AvatarCreator
 
             var response = await WebRequestDispatcher.SendRequest(url, Method.POST, headers, payload.ToString());
             var data = ParseResponse(response.Text);
+            var newToken = data["token"]!.ToString();
+            var newRefreshToken = data["refreshToken"]!.ToString();
+            return (newToken, newRefreshToken);
         }
 
         private string GetUrl(string endpoint)

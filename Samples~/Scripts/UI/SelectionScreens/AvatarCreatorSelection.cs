@@ -68,7 +68,6 @@ namespace ReadyPlayerMe
             var startTime = Time.time;
 
             partnerAssetManager = new PartnerAssetsManager(
-                DataStore.User.Token,
                 DataStore.AvatarProperties.Partner,
                 DataStore.AvatarProperties.BodyType,
                 DataStore.AvatarProperties.Gender);
@@ -82,7 +81,7 @@ namespace ReadyPlayerMe
         private async Task<ColorPalette[]> LoadColors()
         {
             var startTime = Time.time;
-            var avatarAPIRequests = new AvatarAPIRequests(DataStore.User.Token);
+            var avatarAPIRequests = new AvatarAPIRequests();
             DebugPanel.AddLogWithDuration("All colors loaded", Time.time - startTime);
             return await avatarAPIRequests.GetAllAvatarColors(avatar.name); // avatar.name is same as draft avatar ID
         }
@@ -94,7 +93,6 @@ namespace ReadyPlayerMe
             DataStore.AvatarProperties.Assets = GetDefaultAssets();
             
             avatarManager = new AvatarManager(
-                DataStore.User.Token,
                 DataStore.AvatarProperties.BodyType,
                 DataStore.AvatarProperties.Gender,
                 inCreatorConfig);

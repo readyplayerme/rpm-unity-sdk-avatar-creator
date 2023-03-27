@@ -25,7 +25,7 @@ namespace ReadyPlayerMe.AvatarCreator
         /// <param name="bodyType">Body type of avatar</param>
         /// <param name="gender">Gender of avatar</param>
         /// <param name="avatarConfig">Config for downloading preview avatar</param>
-        public AvatarManager(string token, BodyType bodyType, OutfitGender gender, AvatarConfig avatarConfig = null)
+        public AvatarManager(BodyType bodyType, OutfitGender gender, AvatarConfig avatarConfig = null)
         {
             this.bodyType = bodyType;
             this.gender = gender;
@@ -37,7 +37,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
             ctxSource = new CancellationTokenSource();
             inCreatorAvatarLoader = new InCreatorAvatarLoader();
-            avatarAPIRequests = new AvatarAPIRequests(token, ctxSource.Token);
+            avatarAPIRequests = new AvatarAPIRequests(ctxSource.Token);
         }
 
         public async Task<GameObject> Create(AvatarProperties avatarProperties)

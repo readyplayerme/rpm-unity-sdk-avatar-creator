@@ -14,12 +14,9 @@ namespace ReadyPlayerMe
         public override StateType StateType => StateType.Login;
         public override StateType NextState => StateType.BodyTypeSelection;
 
-        private string partnerDomain;
-
         private void Start()
         {
-            partnerDomain = CoreSettingsHandler.CoreSettings.Subdomain;
-            DataStore.AvatarProperties.Partner = partnerDomain;
+            DataStore.AvatarProperties.Partner = CoreSettingsHandler.CoreSettings.Subdomain;
         }
 
         private void OnEnable()
@@ -45,9 +42,8 @@ namespace ReadyPlayerMe
         private async Task Login()
         {
             var startTime = Time.time;
-            var authManager = new AuthManager(partnerDomain);
-            DataStore.User = await authManager.LoginAsAnonymous();
-            DebugPanel.AddLogWithDuration($"Logged in with userId: {DataStore.User.Id}", Time.time - startTime);
+             await AuthManager.LoginAsAnonymous();
+            DebugPanel.AddLogWithDuration($"Logged in with userId: {AuthManager.UserSession.Id}", Time.time - startTime);
         }
 
         private void LoginWithEmail()
