@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -45,7 +44,7 @@ namespace ReadyPlayerMe
 
         private void OnStateChanged(StateType current, StateType previous)
         {
-            button.gameObject.SetActive(current != StateType.Login);
+            button.gameObject.SetActive(current != StateType.BodyTypeSelection);
 
             if (current == StateType.End)
             {
