@@ -7,7 +7,7 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
 {
     public class AvatarCreatorTests
     {
-        private const string DOMAIN = "dev-sdk";
+        private const string DOMAIN = "demo";
 
         private GameObject avatar;
 
