@@ -4,7 +4,7 @@ using ReadyPlayerMe.Core;
 namespace ReadyPlayerMe.AvatarCreator
 {
     /// <summary>
-    /// Placeholder for login, signup and signout
+    /// Provides methods for managing the user's authentication and session.
     /// </summary>
     public static class AuthManager
     {
