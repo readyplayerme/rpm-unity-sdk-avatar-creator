@@ -11,6 +11,7 @@ namespace ReadyPlayerMe
         GenderSelection,
         SelfieSelection,
         CameraPhoto,
+        DefaultAvatarSelection,
         Editor,
         End
     }

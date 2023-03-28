@@ -39,7 +39,7 @@ namespace ReadyPlayerMe
 
         private void OnContinueButton()
         {
-            StateMachine.SetState(StateType.Editor);
+            StateMachine.SetState(StateType.DefaultAvatarSelection);
         }
     }
 }

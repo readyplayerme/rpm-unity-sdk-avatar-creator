@@ -67,7 +67,7 @@ namespace ReadyPlayerMe
         {
             var startTime = Time.time;
             var avatarId = await avatarManager.Save();
-            AvatarCreatorData.AvatarId = avatarId;
+            AvatarCreatorData.AvatarProperties.Id = avatarId;
             DebugPanel.AddLogWithDuration("Avatar saved", Time.time - startTime);
             StateMachine.SetState(StateType.End);
         }

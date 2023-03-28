@@ -9,6 +9,9 @@ namespace ReadyPlayerMe.AvatarCreator
     public struct AvatarProperties
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Id;
+        
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Partner;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

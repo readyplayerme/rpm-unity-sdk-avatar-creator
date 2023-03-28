@@ -48,7 +48,7 @@ namespace ReadyPlayerMe
 
             if (current == StateType.End)
             {
-                AvatarSaved?.Invoke(avatarCreatorData.AvatarId);
+                AvatarSaved?.Invoke(avatarCreatorData.AvatarProperties.Id);
             }
         }
     }
