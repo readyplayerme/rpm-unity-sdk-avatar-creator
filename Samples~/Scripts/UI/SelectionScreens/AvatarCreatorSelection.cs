@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -74,6 +75,8 @@ namespace ReadyPlayerMe
         private async void LoadAssets()
         {
             var startTime = Time.time;
+
+            AvatarCreatorData.AvatarProperties.Partner = CoreSettingsHandler.CoreSettings.Subdomain;
 
             partnerAssetManager = new PartnerAssetsManager(
                 AvatarCreatorData.AvatarProperties.Partner,
