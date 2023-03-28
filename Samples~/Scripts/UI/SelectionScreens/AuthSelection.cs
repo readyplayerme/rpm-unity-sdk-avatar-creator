@@ -1,24 +1,34 @@
+using System;
+using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.UI;
-using Task = System.Threading.Tasks.Task;
 
 namespace ReadyPlayerMe
 {
     public class AuthSelection : State
     {
-        [SerializeField] private Button login;
+        [SerializeField] private Button anonymousLoginButton;
+        [SerializeField] private Button loginButton;
         public override StateType StateType => StateType.Login;
+        public override StateType NextState => StateType.BodyTypeSelection;
+
+        private void Start()
+        {
+            AvatarCreatorData.AvatarProperties.Partner = CoreSettingsHandler.CoreSettings.Subdomain;
+        }
 
         private void OnEnable()
         {
-            login.onClick.AddListener(LoginAsAnonymous);
+            anonymousLoginButton.onClick.AddListener(LoginAsAnonymous);
+            loginButton.onClick.AddListener(LoginWithEmail);
         }
 
         private void OnDisable()
         {
-            login.onClick.RemoveListener(LoginAsAnonymous);
+            anonymousLoginButton.onClick.RemoveListener(LoginAsAnonymous);
+            loginButton.onClick.RemoveListener(LoginWithEmail);
         }
 
         private async void LoginAsAnonymous()
@@ -26,19 +36,19 @@ namespace ReadyPlayerMe
             Loading.SetActive(true);
             await Login();
             Loading.SetActive(false);
-            StateMachine.SetState(StateType.BodyTypeSelection);
+            StateMachine.SetState(NextState);
         }
 
         private async Task Login()
         {
             var startTime = Time.time;
-            var partnerDomain = CoreSettingsHandler.CoreSettings.Subdomain;
-            DataStore.AvatarProperties.Partner = partnerDomain;
+             await AuthManager.LoginAsAnonymous();
+            DebugPanel.AddLogWithDuration($"Logged in with userId: {AuthManager.UserSession.Id}", Time.time - startTime);
+        }
 
-            var authManager = new AuthManager(partnerDomain);
-            DataStore.User = await authManager.Login();
-
-            DebugPanel.AddLogWithDuration($"Logged in with userId: {DataStore.User.Id}", Time.time - startTime);
+        private void LoginWithEmail()
+        {
+            StateMachine.SetState(StateType.LoginWithCodeFromEmail);
         }
     }
 }

@@ -11,6 +11,8 @@ namespace ReadyPlayerMe
         [SerializeField] private Button fileButton;
         
         public override StateType StateType => StateType.CameraPhoto;
+        public override StateType NextState => StateType.Editor;
+
         private WebCamTexture camTexture;
         
         private void OnEnable()
@@ -72,7 +74,7 @@ namespace ReadyPlayerMe
             texture.Apply();
 
             var bytes = texture.EncodeToPNG();
-            DataStore.AvatarProperties.Base64Image = Convert.ToBase64String(bytes);
+            AvatarCreatorData.AvatarProperties.Base64Image = Convert.ToBase64String(bytes);
 
             StateMachine.SetState(StateType.Editor);
         }

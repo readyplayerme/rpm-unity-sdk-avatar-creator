@@ -10,14 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3323407f456247a19c08b66bb7162cc4, type: 3}
-  m_Name: DataStore
+  m_Name: AvatarCreatorData
   m_EditorClassIdentifier: 
-  User:
-    Token: 
-    Id: 
+  AvatarId: 6421c0962ec187fafe206da0
   AvatarProperties:
-    Partner: 
-    Gender: 0
-    BodyType: 0
+    Partner: demo
+    Gender: 2
+    BodyType: 1
     Base64Image: 
-  AvatarId: 

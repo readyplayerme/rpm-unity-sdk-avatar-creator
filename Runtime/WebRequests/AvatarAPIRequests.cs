@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -10,43 +9,41 @@ namespace ReadyPlayerMe.AvatarCreator
         private const string PREVIEW_PARAMETER = "preview=true";
         private const string RESPONSE_TYPE_PARAMETER = "responseType=glb";
         private const string COLOR_PARAMETERS = "colors?type=skin,beard,hair,eyebrow";
-        private readonly Dictionary<string, string> header;
-        private readonly CancellationToken cancellationToken;
+
+        private readonly AuthorizedRequest authorizedRequest;
+        private readonly CancellationToken ctx;
         
-        public static string GetColorEndpoint(string avatarId)
+        public AvatarAPIRequests(CancellationToken ctx = default)
         {
-            return $"{Endpoints.AVATAR_API_V2}/{avatarId}/{COLOR_PARAMETERS}";
+            this.ctx = ctx;
+            authorizedRequest = new AuthorizedRequest();
         }
 
-        public AvatarAPIRequests(string token, CancellationToken cancellationToken = default)
-        {
-            this.cancellationToken = cancellationToken;
-            header = new Dictionary<string, string>
-            {
-                { "Content-Type", "application/json" },
-                { "Authorization", $"Bearer {token}" }
-            };
-        }
-        
         public async Task<ColorPalette[]> GetAllAvatarColors(string avatarId)
         {
-            var response = await WebRequestDispatcher.SendRequest(
-                GetColorEndpoint(avatarId),
-                Method.GET,
-                header,
-                token: cancellationToken);
+            var response = await authorizedRequest.SendRequest(
+                new RequestData
+                {
+                    Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}/{COLOR_PARAMETERS}",
+                    Method = Method.GET,
+                },
+                ctx: ctx
+            );
 
             return ColorResponseHandler.GetColorsFromResponse(response.Text);
         }
 
         public async Task<string> CreateNewAvatar(AvatarProperties avatarProperties)
         {
-            var response = await WebRequestDispatcher.SendRequest(
-                Endpoints.AVATAR_API_V2,
-                Method.POST,
-                header,
-                avatarProperties.ToJson(),
-                token: cancellationToken);
+            var response = await authorizedRequest.SendRequest(
+                new RequestData
+                {
+                    Url = Endpoints.AVATAR_API_V2,
+                    Method = Method.POST,
+                    Payload = avatarProperties.ToJson()
+                },
+                ctx: ctx
+            );
 
             var metadata = JObject.Parse(response.Text);
             var avatarId = metadata["data"]?["id"]?.ToString();
@@ -59,11 +56,13 @@ namespace ReadyPlayerMe.AvatarCreator
                 ? $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb?{PREVIEW_PARAMETER}"
                 : $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}&{PREVIEW_PARAMETER}";
 
-            var response = await WebRequestDispatcher.SendRequest(
-                url,
-                Method.GET,
-                header,
-                token: cancellationToken);
+            var response = await authorizedRequest.SendRequest(
+                new RequestData
+                {
+                    Url = url,
+                    Method = Method.GET,
+                },
+                ctx: ctx);
             return response.Data;
         }
 
@@ -73,34 +72,40 @@ namespace ReadyPlayerMe.AvatarCreator
                 ? $"{Endpoints.AVATAR_API_V2}/{avatarId}?{RESPONSE_TYPE_PARAMETER}"
                 : $"{Endpoints.AVATAR_API_V2}/{avatarId}{parameters}&{RESPONSE_TYPE_PARAMETER}";
 
-            var response = await WebRequestDispatcher.SendRequest(
-                url,
-                Method.PATCH,
-                header,
-                avatarProperties.ToJson(true),
-                token: cancellationToken);
+            var response = await authorizedRequest.SendRequest(
+                new RequestData
+                {
+                    Url = url,
+                    Method = Method.PATCH,
+                    Payload = avatarProperties.ToJson(true)
+                },
+                ctx: ctx);
 
             return response.Data;
         }
 
         public async Task<string> SaveAvatar(string avatarId)
         {
-            var response = await WebRequestDispatcher.SendRequest(
-                $"{Endpoints.AVATAR_API_V2}/{avatarId}",
-                Method.PUT,
-                header,
-                token: cancellationToken);
+            var response = await authorizedRequest.SendRequest(
+                new RequestData
+                {
+                    Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}",
+                    Method = Method.PUT,
+                },
+                ctx: ctx);
 
             return response.Text;
         }
 
         public async Task DeleteAvatar(string avatarId)
         {
-            await WebRequestDispatcher.SendRequest(
-                $"{Endpoints.AVATAR_API_V1}/{avatarId}",
-                Method.DELETE,
-                header,
-                token: cancellationToken);
+            await authorizedRequest.SendRequest(
+                new RequestData
+                {
+                    Url = $"{Endpoints.AVATAR_API_V1}/{avatarId}",
+                    Method = Method.DELETE,
+                },
+                ctx: ctx);
         }
     }
 }

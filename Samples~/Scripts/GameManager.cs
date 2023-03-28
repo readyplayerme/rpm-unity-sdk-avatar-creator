@@ -1,4 +1,5 @@
-﻿using ReadyPlayerMe.AvatarCreator;
+﻿using System;
+using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace ReadyPlayerMe
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private AvatarCreatorStateMachine  avatarCreatorStateMachine;
+        [SerializeField] private AvatarCreatorStateMachine avatarCreatorStateMachine;
         [SerializeField] private AvatarConfig inGameConfig;
 
         private void OnEnable()
@@ -21,6 +22,8 @@ namespace ReadyPlayerMe
 
         private void OnAvatarSaved(string avatarId)
         {
+            avatarCreatorStateMachine.gameObject.SetActive(false);
+
             var startTime = Time.time;
             var avatarObjectLoader = new AvatarObjectLoader();
             avatarObjectLoader.AvatarConfig = inGameConfig;

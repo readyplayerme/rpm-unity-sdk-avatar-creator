@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
@@ -8,13 +10,14 @@ namespace ReadyPlayerMe.AvatarCreator
     /// <summary>
     /// It is responsible for creating a new avatar, updating and deleting an avatar.
     /// </summary>
-    public class AvatarManager
+    public class AvatarManager: IDisposable
     {
         private readonly BodyType bodyType;
         private readonly OutfitGender gender;
         private readonly AvatarAPIRequests avatarAPIRequests;
         private readonly string avatarConfigParameters;
         private readonly InCreatorAvatarLoader inCreatorAvatarLoader;
+        private readonly CancellationTokenSource ctxSource;
 
         private string avatarId;
 
@@ -22,7 +25,7 @@ namespace ReadyPlayerMe.AvatarCreator
         /// <param name="bodyType">Body type of avatar</param>
         /// <param name="gender">Gender of avatar</param>
         /// <param name="avatarConfig">Config for downloading preview avatar</param>
-        public AvatarManager(string token, BodyType bodyType, OutfitGender gender, AvatarConfig avatarConfig = null)
+        public AvatarManager(BodyType bodyType, OutfitGender gender, AvatarConfig avatarConfig = null)
         {
             this.bodyType = bodyType;
             this.gender = gender;
@@ -32,14 +35,20 @@ namespace ReadyPlayerMe.AvatarCreator
                 avatarConfigParameters = AvatarConfigProcessor.ProcessAvatarConfiguration(avatarConfig);
             }
 
+            ctxSource = new CancellationTokenSource();
             inCreatorAvatarLoader = new InCreatorAvatarLoader();
-            avatarAPIRequests = new AvatarAPIRequests(token);
+            avatarAPIRequests = new AvatarAPIRequests(ctxSource.Token);
         }
 
         public async Task<GameObject> Create(AvatarProperties avatarProperties)
         {
             avatarId = await avatarAPIRequests.CreateNewAvatar(avatarProperties);
             var data = await avatarAPIRequests.GetPreviewAvatar(avatarId, avatarConfigParameters);
+            if (ctxSource.IsCancellationRequested)
+            {
+                return null;
+            }
+            
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
         }
 
@@ -59,6 +68,11 @@ namespace ReadyPlayerMe.AvatarCreator
             payload.Assets.Add(assetType, assetId);
 
             var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
+            if (ctxSource.IsCancellationRequested)
+            {
+                return null;
+            }
+            
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
         }
 
@@ -77,6 +91,11 @@ namespace ReadyPlayerMe.AvatarCreator
         public async Task Delete()
         {
             await avatarAPIRequests.DeleteAvatar(avatarId);
+        }
+
+        public void Dispose()
+        {
+            ctxSource?.Cancel();
         }
     }
 }

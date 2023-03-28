@@ -1,22 +1,45 @@
 ﻿using System.Threading.Tasks;
+using ReadyPlayerMe.Core;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
     /// <summary>
-    /// Placeholder for login, signup and signout
+    /// Provides methods for managing the user's authentication and session.
     /// </summary>
-    public class AuthManager
+    public static class AuthManager
     {
-        private readonly string domain;
+        private static readonly AuthenticationRequests AuthenticationRequests;
+        private static UserSession userSession;
+        public static UserSession UserSession => userSession;
 
-        public AuthManager(string domain)
+        public static bool IsSignedIn;
+
+        static AuthManager()
         {
-            this.domain = domain;
+            AuthenticationRequests = new AuthenticationRequests(CoreSettingsHandler.CoreSettings.Subdomain);
         }
 
-        public async Task<UserSession> Login()
+        public static async Task LoginAsAnonymous()
         {
-            return await AuthRequests.LoginAsAnonymous(domain);
+            userSession = await AuthenticationRequests.LoginAsAnonymous();
+        }
+
+        public static async void SendEmailCode(string email)
+        {
+            await AuthenticationRequests.SendCodeToEmail(email);
+        }
+
+        public static async Task LoginWithCode(string otp)
+        {
+            userSession = await AuthenticationRequests.LoginWithCode(otp);
+            IsSignedIn = true;
+        }
+
+        public static async Task RefreshToken()
+        {
+            var newTokens = await AuthenticationRequests.RefreshToken(userSession.Token, userSession.RefreshToken);
+            userSession.Token = newTokens.Item1;
+            userSession.RefreshToken = newTokens.Item2;
         }
     }
 }
