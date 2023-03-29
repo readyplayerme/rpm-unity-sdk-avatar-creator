@@ -101,7 +101,10 @@ namespace ReadyPlayerMe
         {
             var startTime = Time.time;
 
-            AvatarCreatorData.AvatarProperties.Assets = GetDefaultAssets();
+            if (AvatarCreatorData.AvatarProperties.Assets == null)
+            {
+                AvatarCreatorData.AvatarProperties.Assets = GetDefaultAssets();
+            }
             
             avatarManager = new AvatarManager(
                 AvatarCreatorData.AvatarProperties.BodyType,

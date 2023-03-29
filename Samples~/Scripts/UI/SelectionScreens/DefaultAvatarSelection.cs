@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,9 +14,6 @@ namespace ReadyPlayerMe
 {
     public class DefaultAvatarSelection : State
     {
-        [SerializeField] private Transform parent;
-        [SerializeField] private GameObject buttonPrefab;
-
         private readonly string[] maleAvatarIds =
         {
             "64229ee84a25835c6ae8a5a4",
@@ -47,9 +45,15 @@ namespace ReadyPlayerMe
             "6422a1d87fc17f5f678cd716",
             "6422a2254a25835c6ae8a6db",
         };
+        
+        private readonly Dictionary<string, GameObject> avatarRenderMap = new Dictionary<string, GameObject>();
+
+        [SerializeField] private Transform parent;
+        [SerializeField] private GameObject buttonPrefab;
 
         public override StateType StateType => StateType.DefaultAvatarSelection;
         public override StateType NextState => StateType.Editor;
+        
         private CancellationTokenSource ctxSource;
 
         private async void OnEnable()
@@ -57,7 +61,20 @@ namespace ReadyPlayerMe
             Loading.SetActive(true);
             ctxSource = new CancellationTokenSource();
             var avatarIds = AvatarCreatorData.AvatarProperties.Gender == OutfitGender.Feminine ? femaleAvatarIds : maleAvatarIds;
-            var downloadRenderTasks = avatarIds.Select(GetRender).ToList();
+            var downloadRenderTasks = new List<Task>();
+
+            foreach (var avatarId in avatarIds)
+            {
+                if (!avatarRenderMap.ContainsKey(avatarId))
+                {
+                    downloadRenderTasks.Add(AddAvatarRender(avatarId));
+                }
+                else
+                {
+                    avatarRenderMap[avatarId].SetActive(true);
+                }
+            }
+
             while (!downloadRenderTasks.All(x => x.IsCompleted) && !ctxSource.IsCancellationRequested)
             {
                 await Task.Yield();
@@ -70,11 +87,11 @@ namespace ReadyPlayerMe
             ctxSource?.Cancel();
             foreach (Transform child in parent)
             {
-                Destroy(child.gameObject);
+                child.gameObject.SetActive(false);
             }
         }
 
-        private async Task GetRender(string avatarId)
+        private async Task AddAvatarRender(string avatarId)
         {
             var isCompleted = false;
             var renderLoader = new AvatarRenderLoader();
@@ -86,8 +103,9 @@ namespace ReadyPlayerMe
                 rawImage.texture = renderImage;
                 rawImage.SetNativeSize();
                 isCompleted = true;
+                avatarRenderMap.Add(avatarId, button);
             };
-            renderLoader.LoadRender(Endpoints.AVATAR_API_V1 + "/" + avatarId + ".glb", AvatarRenderScene.Portrait);
+            renderLoader.LoadRender($"{Endpoints.AVATAR_API_V1}/{avatarId}.glb", AvatarRenderScene.Portrait);
             while (!isCompleted)
             {
                 await Task.Yield();
@@ -96,12 +114,10 @@ namespace ReadyPlayerMe
 
         private async void OnAvatarSelected(string avatarId)
         {
-            var response = await WebRequestDispatcher.SendRequest(Endpoints.AVATAR_API_V2 + "/" + avatarId + ".json", Method.GET);
+            var response = await WebRequestDispatcher.SendRequest($"{Endpoints.AVATAR_API_V2}/{avatarId}.json", Method.GET);
             Debug.Log(response.Text);
-            var avatar = JsonConvert.DeserializeObject<AvatarProperties>(JObject.Parse(response.Text)["data"]!.ToString());
-            Debug.Log(avatar.Id);
-            Debug.Log(avatar.Gender);
-            Debug.Log(avatar.Assets.Count);
+            AvatarCreatorData.AvatarProperties = JsonConvert.DeserializeObject<AvatarProperties>(JObject.Parse(response.Text)["data"]!.ToString());
+            StateMachine.SetState(StateType.Editor);
         }
     }
 }
