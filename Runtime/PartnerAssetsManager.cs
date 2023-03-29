@@ -19,7 +19,7 @@ namespace ReadyPlayerMe.AvatarCreator
         private readonly BodyType bodyType;
         private readonly OutfitGender gender;
 
-        private  CancellationTokenSource ctxSource;
+        private readonly CancellationTokenSource ctxSource;
 
         private PartnerAsset[] assets;
 
