@@ -8624,6 +8624,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 328830860}
     m_Modifications:
+    - target: {fileID: 9060062646416640093, guid: c281e86ff452ab846a890afd9a0589e9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9218963701916522482, guid: c281e86ff452ab846a890afd9a0589e9, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0.9329834
@@ -8722,7 +8726,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9218963702183330277, guid: c281e86ff452ab846a890afd9a0589e9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c281e86ff452ab846a890afd9a0589e9, type: 3}
