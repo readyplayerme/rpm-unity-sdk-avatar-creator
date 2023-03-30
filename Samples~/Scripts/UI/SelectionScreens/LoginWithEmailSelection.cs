@@ -56,9 +56,9 @@ public class LoginWithEmailSelection : State
 
     private async void OnLogin()
     {
-        Loading.SetActive(true);
+        LoadingManager.EnableLoading("Signing In");
          await AuthManager.LoginWithCode(codeField.text);
-        Loading.SetActive(false);
+        LoadingManager.DisableLoading();
         StateMachine.SetState(StateType.BodyTypeSelection);
     }
 }

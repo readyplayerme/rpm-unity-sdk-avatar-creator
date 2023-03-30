@@ -20,16 +20,16 @@ namespace ReadyPlayerMe
     {
         protected StateMachine StateMachine;
         protected AvatarCreatorData AvatarCreatorData;
-        protected GameObject Loading;
+        protected LoadingManager LoadingManager;
 
         public abstract StateType StateType { get; }
         public abstract StateType NextState { get; }
 
-        public void Initialize(StateMachine stateMachine, AvatarCreatorData avatarCreatorData, GameObject loading)
+        public void Initialize(StateMachine stateMachine, AvatarCreatorData avatarCreatorData, LoadingManager loadingManager)
         {
             StateMachine = stateMachine;
             AvatarCreatorData = avatarCreatorData;
-            Loading = loading;
+            LoadingManager = loadingManager;
             gameObject.SetActive(false);
         }
     }

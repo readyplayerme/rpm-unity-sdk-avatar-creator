@@ -58,7 +58,8 @@ namespace ReadyPlayerMe
 
         private async void OnEnable()
         {
-            Loading.SetActive(true);
+            LoadingManager.EnableLoading("Fetching default avatars");
+
             ctxSource = new CancellationTokenSource();
             var avatarIds = AvatarCreatorData.AvatarProperties.Gender == OutfitGender.Feminine ? femaleAvatarIds : maleAvatarIds;
             var downloadRenderTasks = new List<Task>();
@@ -79,7 +80,7 @@ namespace ReadyPlayerMe
             {
                 await Task.Yield();
             }
-            Loading.SetActive(false);
+            LoadingManager.DisableLoading();
         }
 
         private void OnDisable()
@@ -115,7 +116,6 @@ namespace ReadyPlayerMe
         private async void OnAvatarSelected(string avatarId)
         {
             var response = await WebRequestDispatcher.SendRequest($"{Endpoints.AVATAR_API_V2}/{avatarId}.json", Method.GET);
-            Debug.Log(response.Text);
             AvatarCreatorData.AvatarProperties = JsonConvert.DeserializeObject<AvatarProperties>(JObject.Parse(response.Text)["data"]!.ToString());
             StateMachine.SetState(StateType.Editor);
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace ReadyPlayerMe
@@ -9,7 +10,7 @@ namespace ReadyPlayerMe
     {
         [SerializeField] private List<State> states;
         [SerializeField] private Button button;
-        [SerializeField] private GameObject loading;
+        [SerializeField] private LoadingManager loadingManager;
         [SerializeField] private StateType startingState; 
         [SerializeField] public AvatarCreatorData avatarCreatorData;
 
@@ -37,7 +38,7 @@ namespace ReadyPlayerMe
         {
             foreach (var state in states)
             {
-                state.Initialize(this, avatarCreatorData, loading);
+                state.Initialize(this, avatarCreatorData, loadingManager);
             }
             base.Initialize(states);
         }
