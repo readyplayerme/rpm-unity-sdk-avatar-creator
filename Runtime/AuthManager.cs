@@ -27,6 +27,13 @@ namespace ReadyPlayerMe.AvatarCreator
             userSession = await AuthenticationRequests.LoginAsAnonymous();
         }
 
+        public static void SetUser(UserSession session)
+        {
+            userSession = session;
+            IsSignedIn = true;
+            SignedIn?.Invoke(userSession);
+        }
+
         public static async void SendEmailCode(string email)
         {
             await AuthenticationRequests.SendCodeToEmail(email);
