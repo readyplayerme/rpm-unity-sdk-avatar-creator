@@ -99,10 +99,9 @@ namespace ReadyPlayerMe
             renderLoader.OnCompleted = renderImage =>
             {
                 var button = Instantiate(buttonPrefab, parent);
-                var rawImage = button.GetComponent<RawImage>();
+                var rawImage = button.GetComponentInChildren<RawImage>();
                 button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(avatarId));
                 rawImage.texture = renderImage;
-                rawImage.SetNativeSize();
                 isCompleted = true;
                 avatarRenderMap.Add(avatarId, button);
             };
