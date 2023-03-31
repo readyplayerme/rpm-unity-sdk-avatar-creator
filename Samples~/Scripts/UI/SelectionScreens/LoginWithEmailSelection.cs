@@ -38,7 +38,7 @@ public class LoginWithEmailSelection : State
     private void OnSendActivationCode()
     {
         AuthManager.SendEmailCode(emailField.text);
-        OnHaveCodeButton(); 
+        OnHaveCodeButton();
     }
 
     private void OnHaveCodeButton()
@@ -57,7 +57,8 @@ public class LoginWithEmailSelection : State
     private async void OnLogin()
     {
         LoadingManager.EnableLoading("Signing In");
-         await AuthManager.LoginWithCode(codeField.text);
+        await AuthManager.LoginWithCode(codeField.text);
+        OnChangeEmail();
         LoadingManager.DisableLoading();
         StateMachine.SetState(StateType.BodyTypeSelection);
     }

@@ -46,6 +46,11 @@ namespace ReadyPlayerMe
             StateChanged?.Invoke(currentState, previousState);
         }
 
+        public void ClearPreviousStates()
+        {
+            previousStates.Clear();
+        }
+
         protected void Back()
         {
             var previousState = currentState; 

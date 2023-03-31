@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ReadyPlayerMe.Core;
 
 namespace ReadyPlayerMe.AvatarCreator
@@ -13,6 +14,8 @@ namespace ReadyPlayerMe.AvatarCreator
         public static UserSession UserSession => userSession;
 
         public static bool IsSignedIn;
+
+        public static Action<UserSession> SignedIn;
 
         static AuthManager()
         {
@@ -33,6 +36,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             userSession = await AuthenticationRequests.LoginWithCode(otp);
             IsSignedIn = true;
+            SignedIn?.Invoke(userSession);
         }
 
         public static async Task RefreshToken()

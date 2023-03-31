@@ -11,7 +11,7 @@ namespace ReadyPlayerMe
         [SerializeField] private List<State> states;
         [SerializeField] private Button button;
         [SerializeField] private LoadingManager loadingManager;
-        [SerializeField] private StateType startingState; 
+        [SerializeField] private StateType startingState;
         [SerializeField] public AvatarCreatorData avatarCreatorData;
 
         public Action<string> AvatarSaved;
@@ -45,7 +45,14 @@ namespace ReadyPlayerMe
 
         private void OnStateChanged(StateType current, StateType previous)
         {
-            button.gameObject.SetActive(current != StateType.BodyTypeSelection);
+            if (current == StateType.BodyTypeSelection || current == StateType.LoginWithCodeFromEmail)
+            {
+                button.gameObject.SetActive(false);
+            }
+            else
+            {
+                button.gameObject.SetActive(true);
+            }
 
             if (current == StateType.End)
             {
