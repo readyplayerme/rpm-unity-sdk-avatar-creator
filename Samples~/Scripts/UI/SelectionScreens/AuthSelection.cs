@@ -33,9 +33,9 @@ namespace ReadyPlayerMe
 
         private async void LoginAsAnonymous()
         {
-            Loading.SetActive(true);
+            LoadingManager.EnableLoading("Logging In");
             await Login();
-            Loading.SetActive(false);
+            LoadingManager.DisableLoading();
             StateMachine.SetState(NextState);
         }
 

@@ -11,6 +11,8 @@ namespace ReadyPlayerMe
 {
     public class AvatarCreatorSelection : State, IDisposable
     {
+        private const string UPDATING_YOUR_AVATAR_LOADING_TEXT = "Updating your avatar";
+
         [SerializeField] private AssetTypeUICreator assetTypeUICreator;
         [SerializeField] private AssetButtonCreator assetButtonCreator;
         [SerializeField] private Button saveButton;
@@ -28,7 +30,7 @@ namespace ReadyPlayerMe
         private void OnEnable()
         {
             saveButton.onClick.AddListener(OnSave);
-            Loading.SetActive(true);
+            LoadingManager.EnableLoading();
             Initialize();
         }
 
@@ -67,7 +69,7 @@ namespace ReadyPlayerMe
         {
             var startTime = Time.time;
             var avatarId = await avatarManager.Save();
-            AvatarCreatorData.AvatarId = avatarId;
+            AvatarCreatorData.AvatarProperties.Id = avatarId;
             DebugPanel.AddLogWithDuration("Avatar saved", Time.time - startTime);
             StateMachine.SetState(StateType.End);
         }
@@ -101,8 +103,11 @@ namespace ReadyPlayerMe
         {
             var startTime = Time.time;
 
-            AvatarCreatorData.AvatarProperties.Assets = GetDefaultAssets();
-            
+            if (AvatarCreatorData.AvatarProperties.Assets == null)
+            {
+                AvatarCreatorData.AvatarProperties.Assets = GetDefaultAssets();
+            }
+
             avatarManager = new AvatarManager(
                 AvatarCreatorData.AvatarProperties.BodyType,
                 AvatarCreatorData.AvatarProperties.Gender,
@@ -117,7 +122,7 @@ namespace ReadyPlayerMe
             DebugPanel.AddLogWithDuration("Avatar loaded", Time.time - startTime);
             assetButtonCreator.CreateColorUI(await LoadColors(), UpdateAvatarColor);
             ProcessAvatar();
-            Loading.SetActive(false);
+            LoadingManager.DisableLoading();
         }
 
         private Dictionary<AssetType, object> GetDefaultAssets()
@@ -128,14 +133,13 @@ namespace ReadyPlayerMe
                     ? AvatarPropertiesConstants.FemaleDefaultAssets
                     : AvatarPropertiesConstants.MaleDefaultAssets;
             }
-            
+
             return new Dictionary<AssetType, object>();
         }
-        
+
         private async void UpdateAvatarColor(AssetType assetType, int assetIndex)
         {
             var startTime = Time.time;
-
             var payload = new AvatarProperties
             {
                 Assets = new Dictionary<AssetType, object>()
@@ -143,6 +147,7 @@ namespace ReadyPlayerMe
 
             payload.Assets.Add(assetType, assetIndex);
             lastRotation = avatar.transform.rotation = lastRotation;
+            LoadingManager.EnableLoading(UPDATING_YOUR_AVATAR_LOADING_TEXT, LoadingManager.LoadingType.Popup);
             avatar = await avatarManager.UpdateAsset(assetType, assetIndex);
             if (avatar == null)
             {
@@ -150,6 +155,7 @@ namespace ReadyPlayerMe
             }
 
             ProcessAvatar();
+            LoadingManager.DisableLoading();
             DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
         }
 
@@ -164,6 +170,7 @@ namespace ReadyPlayerMe
 
             payload.Assets.Add(assetType, assetId);
             lastRotation = avatar.transform.rotation = lastRotation;
+            LoadingManager.EnableLoading(UPDATING_YOUR_AVATAR_LOADING_TEXT, LoadingManager.LoadingType.Popup);
             avatar = await avatarManager.UpdateAsset(assetType, assetId);
             if (avatar == null)
             {
@@ -171,6 +178,7 @@ namespace ReadyPlayerMe
             }
 
             ProcessAvatar();
+            LoadingManager.DisableLoading();
             DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
         }
 

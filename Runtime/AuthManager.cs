@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ReadyPlayerMe.Core;
 
 namespace ReadyPlayerMe.AvatarCreator
@@ -14,6 +15,8 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public static bool IsSignedIn;
 
+        public static Action<UserSession> OnSignedIn;
+
         static AuthManager()
         {
             AuthenticationRequests = new AuthenticationRequests(CoreSettingsHandler.CoreSettings.Subdomain);
@@ -22,6 +25,13 @@ namespace ReadyPlayerMe.AvatarCreator
         public static async Task LoginAsAnonymous()
         {
             userSession = await AuthenticationRequests.LoginAsAnonymous();
+        }
+
+        public static void SetUser(UserSession session)
+        {
+            userSession = session;
+            IsSignedIn = true;
+            OnSignedIn?.Invoke(userSession);
         }
 
         public static async void SendEmailCode(string email)
@@ -33,6 +43,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             userSession = await AuthenticationRequests.LoginWithCode(otp);
             IsSignedIn = true;
+            OnSignedIn?.Invoke(userSession);
         }
 
         public static async Task RefreshToken()
