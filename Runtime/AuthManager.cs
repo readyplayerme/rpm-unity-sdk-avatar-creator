@@ -15,7 +15,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public static bool IsSignedIn;
 
-        public static Action<UserSession> SignedIn;
+        public static Action<UserSession> OnSignedIn;
 
         static AuthManager()
         {
@@ -31,7 +31,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             userSession = session;
             IsSignedIn = true;
-            SignedIn?.Invoke(userSession);
+            OnSignedIn?.Invoke(userSession);
         }
 
         public static async void SendEmailCode(string email)
@@ -43,7 +43,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             userSession = await AuthenticationRequests.LoginWithCode(otp);
             IsSignedIn = true;
-            SignedIn?.Invoke(userSession);
+            OnSignedIn?.Invoke(userSession);
         }
 
         public static async Task RefreshToken()

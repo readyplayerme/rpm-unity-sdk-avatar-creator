@@ -14,6 +14,8 @@ namespace ReadyPlayerMe
 {
     public class DefaultAvatarSelection : State
     {
+        private const string LOADING_MESSAGE = "Fetching default avatars";
+        
         private readonly string[] maleAvatarIds =
         {
             "64229ee84a25835c6ae8a5a4",
@@ -58,7 +60,7 @@ namespace ReadyPlayerMe
 
         private async void OnEnable()
         {
-            LoadingManager.EnableLoading("Fetching default avatars");
+            LoadingManager.EnableLoading( LOADING_MESSAGE);
 
             ctxSource = new CancellationTokenSource();
             var avatarIds = AvatarCreatorData.AvatarProperties.Gender == OutfitGender.Feminine ? femaleAvatarIds : maleAvatarIds;

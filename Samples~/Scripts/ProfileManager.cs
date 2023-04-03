@@ -23,13 +23,13 @@ namespace ReadyPlayerMe
 
         private void OnEnable()
         {
-            AuthManager.SignedIn += OnSignIn;
+            AuthManager.OnSignedIn += OnSignIn;
             profileUI.SignedOut += OnSignOut;
         }
 
         private void OnDisable()
         {
-            AuthManager.SignedIn -= OnSignIn;
+            AuthManager.OnSignedIn -= OnSignIn;
             profileUI.SignedOut -= OnSignOut;
         }
 

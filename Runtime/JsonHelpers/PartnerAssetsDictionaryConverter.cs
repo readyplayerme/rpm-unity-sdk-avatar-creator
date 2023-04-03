@@ -30,7 +30,7 @@ namespace ReadyPlayerMe.AvatarCreator
             {
                 foreach (var element in token.ToObject<Dictionary<string, object>>())
                 {
-                    if (element.Key == "createdAt" || element.Key == "updatedAt" || element.Key == "skinColorHex")
+                    if (CanSkipProperty(element.Key))
                     {
                         continue;
                     }
@@ -43,5 +43,11 @@ namespace ReadyPlayerMe.AvatarCreator
 
             return assets;
         }
+        
+        private bool CanSkipProperty(string propertyName)
+        {
+            return propertyName == "createdAt" || propertyName == "updatedAt" || propertyName == "skinColorHex";
+        }
+
     }
 }
