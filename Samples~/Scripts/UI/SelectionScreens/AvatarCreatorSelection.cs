@@ -147,7 +147,7 @@ namespace ReadyPlayerMe
 
             payload.Assets.Add(assetType, assetIndex);
             lastRotation = avatar.transform.rotation = lastRotation;
-            LoadingManager.EnableLoading(UPDATING_YOUR_AVATAR_LOADING_TEXT, LoadingManager.LoadingType.B);
+            LoadingManager.EnableLoading(UPDATING_YOUR_AVATAR_LOADING_TEXT, LoadingManager.LoadingType.Popup);
             avatar = await avatarManager.UpdateAsset(assetType, assetIndex);
             if (avatar == null)
             {
@@ -170,7 +170,7 @@ namespace ReadyPlayerMe
 
             payload.Assets.Add(assetType, assetId);
             lastRotation = avatar.transform.rotation = lastRotation;
-            LoadingManager.EnableLoading(UPDATING_YOUR_AVATAR_LOADING_TEXT, LoadingManager.LoadingType.B);
+            LoadingManager.EnableLoading(UPDATING_YOUR_AVATAR_LOADING_TEXT, LoadingManager.LoadingType.Popup);
             avatar = await avatarManager.UpdateAsset(assetType, assetId);
             if (avatar == null)
             {

@@ -8,8 +8,8 @@ namespace ReadyPlayerMe
     {
         public enum LoadingType
         {
-            A,
-            B
+            Fullscreen,
+            Popup
         }
 
         [Serializable]
@@ -19,23 +19,23 @@ namespace ReadyPlayerMe
             public Text tex;
         }
 
-        [SerializeField] private LoadingData loadingA;
-        [SerializeField] private LoadingData loadingB;
+        [SerializeField] private LoadingData fullscreenLoading;
+        [SerializeField] private LoadingData popupLoading;
 
         private LoadingType currentLoadingType;
 
-        public void EnableLoading(string text = "Loading your avatar", LoadingType type = LoadingType.A)
+        public void EnableLoading(string text = "Loading your avatar", LoadingType type = LoadingType.Fullscreen)
         {
             switch (type)
             {
-                case LoadingType.A:
-                    loadingA.tex.text = text;
-                    loadingA.container.SetActive(true);
+                case LoadingType.Fullscreen:
+                    fullscreenLoading.tex.text = text;
+                    fullscreenLoading.container.SetActive(true);
                     currentLoadingType = type;
                     break;
-                case LoadingType.B:
-                    loadingB.tex.text = text;
-                    loadingB.container.SetActive(true);
+                case LoadingType.Popup:
+                    popupLoading.tex.text = text;
+                    popupLoading.container.SetActive(true);
                     currentLoadingType = type;
                     break;
                 default:
@@ -47,11 +47,11 @@ namespace ReadyPlayerMe
         {
             switch (currentLoadingType)
             {
-                case LoadingType.A:
-                    loadingA.container.SetActive(false);
+                case LoadingType.Fullscreen:
+                    fullscreenLoading.container.SetActive(false);
                     break;
-                case LoadingType.B:
-                    loadingB.container.SetActive(false);
+                case LoadingType.Popup:
+                    popupLoading.container.SetActive(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(currentLoadingType), currentLoadingType, null);
