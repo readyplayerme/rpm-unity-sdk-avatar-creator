@@ -92,16 +92,22 @@ namespace ReadyPlayerMe
         private void CreateButton(string avatarId)
         {
             var button = Instantiate(buttonPrefab, parent);
-            button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(avatarId));
-            button.GetComponent<AvatarButton>().avatarId = avatarId;
+            button.GetComponent<AvatarButton>().Init(avatarId, () => OnCustomize(avatarId),()=> OnSelected(avatarId));
             avatarButtonsMap.Add(avatarId, button);
         }
 
-        private async void OnAvatarSelected(string avatarId)
+
+        private async void OnCustomize(string avatarId)
         {
             AvatarCreatorData.AvatarProperties.Id = avatarId;
             AvatarCreatorData.AvatarProperties = await avatarAPIRequests.GetAvatarMetadata(avatarId);
             StateMachine.SetState(StateType.Editor);
+        }
+        
+        private void OnSelected(string avatarId)
+        {
+            AvatarCreatorData.AvatarProperties.Id = avatarId;
+            StateMachine.SetState(StateType.End);
         }
     }
 }
