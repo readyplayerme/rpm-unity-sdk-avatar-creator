@@ -70,7 +70,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
             if (request.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(request.downloadHandler.text);
+                Debug.Log(request.downloadHandler.text + "\n" + url);
                 response.IsSuccess = false;
                 response.Text = request.error;
                 return response;

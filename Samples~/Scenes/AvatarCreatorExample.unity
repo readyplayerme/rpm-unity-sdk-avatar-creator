@@ -1860,7 +1860,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -7, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &417838403
 MonoBehaviour:
@@ -2083,7 +2083,7 @@ GameObject:
   - component: {fileID: 491471116}
   - component: {fileID: 491471115}
   m_Layer: 5
-  m_Name: PopupLoading
+  m_Name: UpdatingLoading
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3250,7 +3250,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: -17}
+  m_SizeDelta: {x: 20, y: -17}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &850951571
 MonoBehaviour:
@@ -6718,10 +6718,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 2
-    m_Right: 2
-    m_Top: 2
-    m_Bottom: 2
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
@@ -7803,10 +7803,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fullscreenLoading:
     container: {fileID: 2061558133}
-    tex: {fileID: 1280029089}
+    text: {fileID: 446309240}
   popupLoading:
     container: {fileID: 491471113}
-    tex: {fileID: 446309240}
+    text: {fileID: 1280029089}
 --- !u!222 &1810997810
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8547,7 +8547,7 @@ GameObject:
   - component: {fileID: 2061558136}
   - component: {fileID: 2061558135}
   m_Layer: 5
-  m_Name: FullscreenLoading
+  m_Name: Loading
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
