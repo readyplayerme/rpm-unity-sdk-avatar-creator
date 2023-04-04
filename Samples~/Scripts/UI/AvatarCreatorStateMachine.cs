@@ -29,12 +29,22 @@ namespace ReadyPlayerMe
         private void OnEnable()
         {
             StateChanged += OnStateChanged;
-            AuthManager.SignedIn += OnSignIn;
+            AuthManager.OnSignedIn += OnSignedIn;
             AuthManager.OnSignedOut += OnSignedOut;
+            AuthManager.OnSessionRefreshed += OnSessionRefreshed;
             button.onClick.AddListener(Back);
         }
 
-        private void OnSignIn(UserSession userSession)
+        private void OnDisable()
+        {
+            StateChanged -= OnStateChanged;
+            AuthManager.OnSignedIn -= OnSignedIn;
+            AuthManager.OnSignedOut -= OnSignedOut;
+            AuthManager.OnSessionRefreshed -= OnSessionRefreshed;
+            button.onClick.RemoveListener(Back);
+        }
+        
+        private void OnSignedIn(UserSession userSession)
         {
             profileManager.SaveSession(userSession);
         }
@@ -45,12 +55,10 @@ namespace ReadyPlayerMe
             SetState(StateType.LoginWithCodeFromEmail);
             ClearPreviousStates();
         }
-
-        private void OnDisable()
+        
+        private void OnSessionRefreshed(UserSession userSession)
         {
-            StateChanged -= OnStateChanged;
-            AuthManager.OnSignedOut -= OnSignedOut;
-            button.onClick.RemoveListener(Back);
+            profileManager.SaveSession(userSession);
         }
 
         private void Initialize()
