@@ -60,6 +60,6 @@ public class LoginWithEmailSelection : State
         await AuthManager.LoginWithCode(codeField.text);
         OnChangeEmail();
         LoadingManager.DisableLoading();
-        StateMachine.SetState(StateType.BodyTypeSelection);
+        StateMachine.SetState(StateType.AvatarSelection);
     }
 }

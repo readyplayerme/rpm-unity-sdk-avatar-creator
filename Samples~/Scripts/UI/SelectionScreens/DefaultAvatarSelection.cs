@@ -70,7 +70,7 @@ namespace ReadyPlayerMe
             {
                 if (!avatarRenderMap.ContainsKey(avatarId))
                 {
-                    downloadRenderTasks.Add(AddAvatarRender(avatarId));
+                    downloadRenderTasks.Add(CreateAvatarRender(avatarId));
                 }
                 else
                 {
@@ -94,24 +94,13 @@ namespace ReadyPlayerMe
             }
         }
 
-        private async Task AddAvatarRender(string avatarId)
+        private async Task CreateAvatarRender(string avatarId)
         {
-            var isCompleted = false;
-            var renderLoader = new AvatarRenderLoader();
-            renderLoader.OnCompleted = renderImage =>
-            {
-                var button = Instantiate(buttonPrefab, parent);
-                var rawImage = button.GetComponentInChildren<RawImage>();
-                button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(avatarId));
-                rawImage.texture = renderImage;
-                isCompleted = true;
-                avatarRenderMap.Add(avatarId, button);
-            };
-            renderLoader.LoadRender($"{Endpoints.AVATAR_API_V1}/{avatarId}.glb", AvatarRenderScene.Portrait);
-            while (!isCompleted)
-            {
-                await Task.Yield();
-            }
+            var renderImage = await AvatarRenderHelper.GetPortrait(avatarId);
+            var button = Instantiate(buttonPrefab, parent);
+            var rawImage = button.GetComponentInChildren<RawImage>();
+            button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(avatarId));
+            rawImage.texture = renderImage;
         }
 
         private async void OnAvatarSelected(string avatarId)

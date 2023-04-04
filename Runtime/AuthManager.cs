@@ -15,7 +15,8 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public static bool IsSignedIn;
 
-        public static Action<UserSession> OnSignedIn;
+        public static Action<UserSession> SignedIn;
+        public static Action OnSignedOut;
 
         static AuthManager()
         {
@@ -51,6 +52,13 @@ namespace ReadyPlayerMe.AvatarCreator
             var newTokens = await AuthenticationRequests.RefreshToken(userSession.Token, userSession.RefreshToken);
             userSession.Token = newTokens.Item1;
             userSession.RefreshToken = newTokens.Item2;
+        }
+
+        public static void Logout()
+        {
+            IsSignedIn = false;
+            userSession = new UserSession();
+            OnSignedOut?.Invoke();
         }
     }
 }

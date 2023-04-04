@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ReadyPlayerMe.Core;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace ReadyPlayerMe
@@ -18,6 +18,7 @@ namespace ReadyPlayerMe
 
         private void Start()
         {
+            avatarCreatorData.AvatarProperties.Partner = CoreSettingsHandler.CoreSettings.Subdomain;
             Initialize();
             SetState(startingState);
         }

@@ -21,7 +21,6 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private string avatarId;
 
-        /// <param name="token">Authentication token</param>
         /// <param name="bodyType">Body type of avatar</param>
         /// <param name="gender">Gender of avatar</param>
         /// <param name="avatarConfig">Config for downloading preview avatar</param>
@@ -40,10 +39,32 @@ namespace ReadyPlayerMe.AvatarCreator
             avatarAPIRequests = new AvatarAPIRequests(ctxSource.Token);
         }
 
+        /// <summary>
+        /// Create a new avatar.
+        /// </summary>
+        /// <param name="avatarProperties">Properties which describes avatar</param>
+        /// <returns>Avatar gameObject</returns>
         public async Task<GameObject> Create(AvatarProperties avatarProperties)
         {
             avatarId = await avatarAPIRequests.CreateNewAvatar(avatarProperties);
             var data = await avatarAPIRequests.GetPreviewAvatar(avatarId, avatarConfigParameters);
+            if (ctxSource.IsCancellationRequested)
+            {
+                return null;
+            }
+            
+            return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
+        }
+        
+        /// <summary>
+        /// Download and import pre-created avatar.
+        /// </summary>
+        /// <param name="id">Avatar id</param>
+        /// <returns>Avatar gameObject</returns>
+        public async Task<GameObject> GetAvatar(string id)
+        {
+            avatarId = id;
+            var data = await avatarAPIRequests.GetAvatar(avatarId, avatarConfigParameters);
             if (ctxSource.IsCancellationRequested)
             {
                 return null;
@@ -57,7 +78,7 @@ namespace ReadyPlayerMe.AvatarCreator
         /// </summary>
         /// <param name="assetId"></param>
         /// <param name="assetType"></param>
-        /// <returns></returns>
+        /// <returns>Avatar gameObject</returns>
         public async Task<GameObject> UpdateAsset(AssetType assetType, object assetId)
         {
             var payload = new AvatarProperties

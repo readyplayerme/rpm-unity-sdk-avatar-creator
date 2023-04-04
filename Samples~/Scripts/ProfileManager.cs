@@ -15,7 +15,7 @@ namespace ReadyPlayerMe
 
         private string path;
 
-        private void Start()
+        private void Awake()
         {
             path = Application.persistentDataPath + FILE_PATH;
             LoadSession();
