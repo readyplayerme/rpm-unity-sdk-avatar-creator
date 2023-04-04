@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ namespace ReadyPlayerMe
         [SerializeField] private LoadingManager loadingManager;
         [SerializeField] private StateType startingState;
         [SerializeField] public AvatarCreatorData avatarCreatorData;
+        [SerializeField] private ProfileManager profileManager;
 
         public Action<string> AvatarSaved;
 
@@ -20,18 +22,34 @@ namespace ReadyPlayerMe
         {
             avatarCreatorData.AvatarProperties.Partner = CoreSettingsHandler.CoreSettings.Subdomain;
             Initialize();
-            SetState(startingState);
+            
+            SetState(profileManager.LoadSession() ? StateType.AvatarSelection : startingState);
         }
 
         private void OnEnable()
         {
             StateChanged += OnStateChanged;
+            AuthManager.SignedIn += OnSignIn;
+            AuthManager.OnSignedOut += OnSignedOut;
             button.onClick.AddListener(Back);
+        }
+
+        private void OnSignIn(UserSession userSession)
+        {
+            profileManager.SaveSession(userSession);
+        }
+
+        private void OnSignedOut()
+        {
+            avatarCreatorData.AvatarProperties.Id = string.Empty;
+            SetState(StateType.LoginWithCodeFromEmail);
+            ClearPreviousStates();
         }
 
         private void OnDisable()
         {
             StateChanged -= OnStateChanged;
+            AuthManager.OnSignedOut -= OnSignedOut;
             button.onClick.RemoveListener(Back);
         }
 
@@ -46,7 +64,7 @@ namespace ReadyPlayerMe
 
         private void OnStateChanged(StateType current, StateType previous)
         {
-            if (current == StateType.BodyTypeSelection || current == StateType.LoginWithCodeFromEmail)
+            if (current == StateType.BodyTypeSelection || current == StateType.LoginWithCodeFromEmail || current == StateType.AvatarSelection)
             {
                 button.gameObject.SetActive(false);
             }

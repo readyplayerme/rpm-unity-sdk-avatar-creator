@@ -106,7 +106,9 @@ namespace ReadyPlayerMe
         private async void OnAvatarSelected(string avatarId)
         {
             var response = await WebRequestDispatcher.SendRequest($"{Endpoints.AVATAR_API_V2}/{avatarId}.json", Method.GET);
-            AvatarCreatorData.AvatarProperties = JsonConvert.DeserializeObject<AvatarProperties>(JObject.Parse(response.Text)["data"]!.ToString());
+            var json = JObject.Parse(response.Text)["data"]!.ToString();
+            var avatarProperties = JsonConvert.DeserializeObject<AvatarProperties>(json);
+            AvatarCreatorData.AvatarProperties.Assets = avatarProperties.Assets;
             StateMachine.SetState(StateType.Editor);
         }
     }

@@ -93,7 +93,7 @@ namespace ReadyPlayerMe
             var startTime = Time.time;
             var avatarAPIRequests = new AvatarAPIRequests();
             DebugPanel.AddLogWithDuration("All colors loaded", Time.time - startTime);
-            return await avatarAPIRequests.GetAllAvatarColors(avatar.name); // avatar.name is same as draft avatar ID
+            return await avatarAPIRequests.GetAllAvatarColors(AvatarCreatorData.AvatarProperties.Id); // avatar.name is same as draft avatar ID
         }
 
         private async void CreateDefaultModel()
@@ -109,6 +109,7 @@ namespace ReadyPlayerMe
             {
                 AvatarCreatorData.AvatarProperties.Assets ??= GetDefaultAssets();
                 avatar = await avatarManager.Create(AvatarCreatorData.AvatarProperties);
+                AvatarCreatorData.AvatarProperties.Id = avatarManager.AvatarId;
             }
             else
             {

@@ -10,7 +10,7 @@ namespace ReadyPlayerMe.AvatarCreator
     /// <summary>
     /// It is responsible for creating a new avatar, updating and deleting an avatar.
     /// </summary>
-    public class AvatarManager: IDisposable
+    public class AvatarManager : IDisposable
     {
         private readonly BodyType bodyType;
         private readonly OutfitGender gender;
@@ -18,6 +18,8 @@ namespace ReadyPlayerMe.AvatarCreator
         private readonly string avatarConfigParameters;
         private readonly InCreatorAvatarLoader inCreatorAvatarLoader;
         private readonly CancellationTokenSource ctxSource;
+
+        public string AvatarId => avatarId;
 
         private string avatarId;
 

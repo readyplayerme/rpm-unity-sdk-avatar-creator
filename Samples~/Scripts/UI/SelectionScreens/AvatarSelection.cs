@@ -9,6 +9,7 @@ namespace ReadyPlayerMe
     {
         [SerializeField] private Button partnerAvatarsButton;
         [SerializeField] private Button allAvatarsButton;
+        [SerializeField] private Button createAvatarButton;
         [SerializeField] private GameObject buttonPrefab;
         [SerializeField] private Transform parent;
         public override StateType StateType => StateType.AvatarSelection;
@@ -51,6 +52,7 @@ namespace ReadyPlayerMe
         {
             partnerAvatarsButton.onClick.AddListener(OnPartnerAvatarsButton);
             allAvatarsButton.onClick.AddListener(OnAllAvatarsButton);
+            createAvatarButton.onClick.AddListener(OnCreateAvatarButton);
             AuthManager.OnSignedOut += OnSignedOut;
 
             CreateAvatarButtons();
@@ -60,17 +62,8 @@ namespace ReadyPlayerMe
         {
             partnerAvatarsButton.onClick.RemoveListener(OnPartnerAvatarsButton);
             allAvatarsButton.onClick.RemoveListener(OnAllAvatarsButton);
+            createAvatarButton.onClick.RemoveListener(OnCreateAvatarButton);
             AuthManager.OnSignedOut -= OnSignedOut;
-        }
-
-        private void OnSignedOut()
-        {
-            foreach (var avatars in avatarButtonsMap)
-            {
-                Destroy(avatars.Value);
-            }
-            avatarButtonsMap.Clear();
-            avatarPartnerMap.Clear();
         }
 
         private void OnAllAvatarsButton()
@@ -88,14 +81,29 @@ namespace ReadyPlayerMe
                 avatarButtonsMap[avatar.Key].SetActive(avatar.Value == AvatarCreatorData.AvatarProperties.Partner);
             }
         }
+        
+        private void OnCreateAvatarButton()
+        {
+            AvatarCreatorData.AvatarProperties.Id = string.Empty;
+            StateMachine.SetState(StateType.BodyTypeSelection);
+        }
 
+        private void OnSignedOut()
+        {
+            foreach (var avatars in avatarButtonsMap)
+            {
+                Destroy(avatars.Value);
+            }
+            avatarButtonsMap.Clear();
+            avatarPartnerMap.Clear();
+        }
+        
         private void CreateButton(string avatarId)
         {
             var button = Instantiate(buttonPrefab, parent);
             button.GetComponent<AvatarButton>().Init(avatarId, () => OnCustomize(avatarId),()=> OnSelected(avatarId));
             avatarButtonsMap.Add(avatarId, button);
         }
-
 
         private async void OnCustomize(string avatarId)
         {

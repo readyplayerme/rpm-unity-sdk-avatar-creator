@@ -11,63 +11,64 @@ namespace ReadyPlayerMe
         private const string FILE_PATH = "/Ready Player Me/user";
 
         [SerializeField] private ProfileUI profileUI;
-        [SerializeField] private StateMachine stateMachine;
 
         private string path;
 
         private void Awake()
         {
             path = Application.persistentDataPath + FILE_PATH;
-            LoadSession();
         }
 
         private void OnEnable()
         {
-            AuthManager.OnSignedIn += OnSignIn;
             profileUI.SignedOut += OnSignOut;
         }
 
         private void OnDisable()
         {
-            AuthManager.OnSignedIn -= OnSignIn;
             profileUI.SignedOut -= OnSignOut;
         }
 
-        private void OnSignIn(UserSession userSession)
+        public bool LoadSession()
+        {
+            if (!File.Exists(path))
+            {
+                return false;
+            }
+           
+            var bytes = File.ReadAllBytes(path);
+            var json = Encoding.UTF8.GetString(bytes);
+            var userSession = JsonConvert.DeserializeObject<UserSession>(json);
+            AuthManager.SetUser(userSession);
+            SetProfileData(userSession);
+            return true;
+
+        }
+
+        public void SaveSession(UserSession userSession)
+        {
+            var json = JsonConvert.SerializeObject(userSession);
+            File.WriteAllBytes(path, Encoding.UTF8.GetBytes(json));
+            SetProfileData(userSession);
+        }
+
+
+        private void SetProfileData(UserSession userSession)
         {
             profileUI.SetProfileData(
                 userSession.Name,
                 char.ToUpperInvariant(userSession.Name[0]).ToString()
             );
-
-            SaveSession(userSession);
         }
 
         private void OnSignOut()
         {
-            stateMachine.SetState(StateType.LoginWithCodeFromEmail);
-            stateMachine.ClearPreviousStates();
+            AuthManager.Logout();
             if (File.Exists(path))
             {
                 File.Delete(path);
             }
         }
 
-        private void LoadSession()
-        {
-            if (File.Exists(path))
-            {
-                var bytes = File.ReadAllBytes(path);
-                var json = Encoding.UTF8.GetString(bytes);
-                var userSession = JsonConvert.DeserializeObject<UserSession>(json);
-                AuthManager.SetUser(userSession);
-            }
-        }
-
-        private void SaveSession(UserSession userSession)
-        {
-            var json = JsonConvert.SerializeObject(userSession);
-            File.WriteAllBytes(path, Encoding.UTF8.GetBytes(json));
-        }
     }
 }
