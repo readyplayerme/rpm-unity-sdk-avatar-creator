@@ -1,8 +1,6 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -13,9 +11,9 @@ namespace ReadyPlayerMe.AvatarCreator
             var isCompleted = false;
             var renderLoader = new AvatarRenderLoader();
             Texture2D image = null;
-            renderLoader.OnFailed = (type, s) =>
+            renderLoader.OnFailed = (type, errorString) =>
             {
-                Debug.LogError("Failed: ");
+                Debug.LogError(type + ", " + errorString);
             };
             renderLoader.OnCompleted = renderImage =>
             {

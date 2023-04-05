@@ -77,7 +77,7 @@ namespace ReadyPlayerMe.AvatarCreator
             }
 
             Texture texture = null;
-            if (downloadHandler is DownloadHandlerTexture downloadHandlerTexture)
+            if (request.downloadHandler is DownloadHandlerTexture downloadHandlerTexture)
             {
                 texture = downloadHandlerTexture.texture;
             }
