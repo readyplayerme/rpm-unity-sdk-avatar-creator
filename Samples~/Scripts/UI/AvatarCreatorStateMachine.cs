@@ -10,7 +10,7 @@ namespace ReadyPlayerMe
     public class AvatarCreatorStateMachine : StateMachine
     {
         [SerializeField] private List<State> states;
-        [SerializeField] private Button button;
+        [SerializeField] private Button backButton;
         [SerializeField] private LoadingManager loadingManager;
         [SerializeField] private StateType startingState;
         [SerializeField] public AvatarCreatorData avatarCreatorData;
@@ -32,7 +32,7 @@ namespace ReadyPlayerMe
             AuthManager.OnSignedIn += OnSignedIn;
             AuthManager.OnSignedOut += OnSignedOut;
             AuthManager.OnSessionRefreshed += OnSessionRefreshed;
-            button.onClick.AddListener(Back);
+            backButton.onClick.AddListener(Back);
         }
 
         private void OnDisable()
@@ -41,7 +41,7 @@ namespace ReadyPlayerMe
             AuthManager.OnSignedIn -= OnSignedIn;
             AuthManager.OnSignedOut -= OnSignedOut;
             AuthManager.OnSessionRefreshed -= OnSessionRefreshed;
-            button.onClick.RemoveListener(Back);
+            backButton.onClick.RemoveListener(Back);
         }
         
         private void OnSignedIn(UserSession userSession)
@@ -72,19 +72,17 @@ namespace ReadyPlayerMe
 
         private void OnStateChanged(StateType current, StateType previous)
         {
-            if (current == StateType.BodyTypeSelection || current == StateType.LoginWithCodeFromEmail || current == StateType.AvatarSelection)
-            {
-                button.gameObject.SetActive(false);
-            }
-            else
-            {
-                button.gameObject.SetActive(true);
-            }
+            backButton.gameObject.SetActive(!CanShowBackButton(current));
 
             if (current == StateType.End)
             {
                 AvatarSaved?.Invoke(avatarCreatorData.AvatarProperties.Id);
             }
         }
+
+        private bool CanShowBackButton(StateType current)
+        {
+            return current == StateType.BodyTypeSelection || current == StateType.LoginWithCodeFromEmail || current == StateType.AvatarSelection;
+        } 
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -21,7 +23,7 @@ namespace ReadyPlayerMe.AvatarCreator
             authorizedRequest = new AuthorizedRequest();
         }
 
-        public async Task<AvatarPartnerData[]> FetchAvatar(string userId)
+        public async Task<Dictionary<string,string>> FetchUserAvatars(string userId)
         {
             var response = await authorizedRequest.SendRequest(
                 new RequestData
@@ -32,8 +34,8 @@ namespace ReadyPlayerMe.AvatarCreator
                 ctx: ctx
             );
             var json = JObject.Parse(response.Text);
-            var data = json["data"]!.ToString();
-            return JsonConvert.DeserializeObject<AvatarPartnerData[]>(data);
+            var data = json["data"]!;
+            return data.ToDictionary(element => element["id"]!.ToString(), element => element["partner"]!.ToString());
         }
 
         public async Task<ColorPalette[]> GetAllAvatarColors(string avatarId)

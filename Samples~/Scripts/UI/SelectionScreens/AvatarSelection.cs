@@ -18,36 +18,7 @@ namespace ReadyPlayerMe
         private Dictionary<string, string> avatarPartnerMap;
         private Dictionary<string, GameObject> avatarButtonsMap;
         private AvatarAPIRequests avatarAPIRequests;
-
-        private async void CreateAvatarButtons()
-        {
-            if (avatarPartnerMap != null && avatarPartnerMap.Count != 0)
-            {
-                return;
-            }
-
-            LoadingManager.EnableLoading();
-
-            avatarAPIRequests = new AvatarAPIRequests();
-            var avatarPartnerData = await avatarAPIRequests.FetchAvatar(AuthManager.UserSession.Id);
-
-            avatarPartnerMap = new Dictionary<string, string>();
-            avatarButtonsMap = new Dictionary<string, GameObject>();
-          
-            foreach (var data in avatarPartnerData)
-            {
-                avatarPartnerMap.Add(data.Id, data.Partner);
-            }
-            
-            foreach (var avatar in avatarPartnerMap)
-            {
-                CreateButton(avatar.Key);
-            }
-
-            OnPartnerAvatarsButton();
-            LoadingManager.DisableLoading();
-        }
-
+        
         private void OnEnable()
         {
             partnerAvatarsButton.onClick.AddListener(OnPartnerAvatarsButton);
@@ -65,7 +36,29 @@ namespace ReadyPlayerMe
             createAvatarButton.onClick.RemoveListener(OnCreateAvatarButton);
             AuthManager.OnSignedOut -= OnSignedOut;
         }
+        
+        private async void CreateAvatarButtons()
+        {
+            if (avatarPartnerMap != null && avatarPartnerMap.Count != 0)
+            {
+                return;
+            }
 
+            LoadingManager.EnableLoading();
+
+            avatarAPIRequests = new AvatarAPIRequests();
+            avatarPartnerMap = await avatarAPIRequests.FetchUserAvatars(AuthManager.UserSession.Id);
+
+            avatarButtonsMap = new Dictionary<string, GameObject>();
+            foreach (var avatar in avatarPartnerMap)
+            {
+                CreateButton(avatar.Key);
+            }
+
+            OnPartnerAvatarsButton();
+            LoadingManager.DisableLoading();
+        }
+        
         private void OnAllAvatarsButton()
         {
             foreach (var avatar in avatarPartnerMap)
