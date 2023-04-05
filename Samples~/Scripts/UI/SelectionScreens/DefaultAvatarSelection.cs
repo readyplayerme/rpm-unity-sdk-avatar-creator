@@ -101,6 +101,7 @@ namespace ReadyPlayerMe
             var rawImage = button.GetComponentInChildren<RawImage>();
             button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(avatarId));
             rawImage.texture = renderImage;
+            avatarRenderMap.Add(avatarId, button);
         }
 
         private async void OnAvatarSelected(string avatarId)
@@ -109,6 +110,7 @@ namespace ReadyPlayerMe
             var json = JObject.Parse(response.Text)["data"]!.ToString();
             var avatarProperties = JsonConvert.DeserializeObject<AvatarProperties>(json);
             AvatarCreatorData.AvatarProperties.Assets = avatarProperties.Assets;
+            AvatarCreatorData.AvatarProperties.Id = string.Empty;
             StateMachine.SetState(StateType.Editor);
         }
     }
