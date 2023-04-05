@@ -101,7 +101,8 @@ namespace ReadyPlayerMe
         private void CreateButton(string avatarId)
         {
             var button = Instantiate(buttonPrefab, parent);
-            button.GetComponent<AvatarButton>().Init(avatarId, () => OnCustomize(avatarId),()=> OnSelected(avatarId));
+            button.GetComponent<AvatarButton>().Init(avatarId, () => OnCustomize(avatarId), () => OnSelected(avatarId),
+                avatarPartnerMap[avatarId] == AvatarCreatorData.AvatarProperties.Partner);
             avatarButtonsMap.Add(avatarId, button);
         }
 

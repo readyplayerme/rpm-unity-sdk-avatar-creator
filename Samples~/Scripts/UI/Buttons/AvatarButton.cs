@@ -15,8 +15,8 @@ namespace ReadyPlayerMe
         [SerializeField] private Button customizeButton;
         [SerializeField] private Button selectButton;
 
-
         private string avatarId;
+        private bool showButtons;
 
         private async void Start()
         {
@@ -27,21 +27,28 @@ namespace ReadyPlayerMe
             LoadImage();
         }
 
-        public void Init(string id, Action onCustomize, Action onSelect)
+        public void Init(string id, Action onCustomize, Action onSelect, bool isCurrentPartner)
         {
             avatarId = id;
             customizeButton.onClick.AddListener(() => onCustomize());
             selectButton.onClick.AddListener(() => onSelect());
+            showButtons = isCurrentPartner;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            buttonsPanel.SetActive(true);
+            if (showButtons)
+            {
+                buttonsPanel.SetActive(true);
+            }
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            buttonsPanel.SetActive(false);
+            if (showButtons)
+            {
+                buttonsPanel.SetActive(false);
+            }
         }
 
         private async void LoadImage()
