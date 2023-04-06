@@ -1,5 +1,8 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ReadyPlayerMe.AvatarCreator
@@ -9,6 +12,7 @@ namespace ReadyPlayerMe.AvatarCreator
         private const string PREVIEW_PARAMETER = "preview=true";
         private const string RESPONSE_TYPE_PARAMETER = "responseType=glb";
         private const string COLOR_PARAMETERS = "colors?type=skin,beard,hair,eyebrow";
+        private const string FETCH_AVATAR_PARAMETERS = "?select=id,partner&userId=";
 
         private readonly AuthorizedRequest authorizedRequest;
         private readonly CancellationToken ctx;
@@ -17,6 +21,21 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             this.ctx = ctx;
             authorizedRequest = new AuthorizedRequest();
+        }
+
+        public async Task<Dictionary<string,string>> FetchUserAvatars(string userId)
+        {
+            var response = await authorizedRequest.SendRequest(
+                new RequestData
+                {
+                    Url = $"{Endpoints.AVATAR_API_V1}{FETCH_AVATAR_PARAMETERS}{userId}",
+                    Method = Method.GET,
+                },
+                ctx: ctx
+            );
+            var json = JObject.Parse(response.Text);
+            var data = json["data"]!;
+            return data.ToDictionary(element => element["id"]!.ToString(), element => element["partner"]!.ToString());
         }
 
         public async Task<ColorPalette[]> GetAllAvatarColors(string avatarId)
@@ -31,6 +50,21 @@ namespace ReadyPlayerMe.AvatarCreator
             );
 
             return ColorResponseHandler.GetColorsFromResponse(response.Text);
+        }
+
+        public async Task<AvatarProperties> GetAvatarMetadata(string avatarId)
+        {
+            var response = await authorizedRequest.SendRequest(
+                new RequestData
+                {
+                    Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}.json",
+                    Method = Method.GET,
+                },
+                ctx: ctx
+            );
+            var json = JObject.Parse(response.Text);
+            var data = json["data"]!.ToString();
+            return JsonConvert.DeserializeObject<AvatarProperties>(data);
         }
 
         public async Task<string> CreateNewAvatar(AvatarProperties avatarProperties)
@@ -60,6 +94,18 @@ namespace ReadyPlayerMe.AvatarCreator
                 new RequestData
                 {
                     Url = url,
+                    Method = Method.GET,
+                },
+                ctx: ctx);
+            return response.Data;
+        }
+
+        public async Task<byte[]> GetAvatar(string avatarId, string parameters = null)
+        {
+            var response = await authorizedRequest.SendRequest(
+                new RequestData
+                {
+                    Url =  $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}",
                     Method = Method.GET,
                 },
                 ctx: ctx);

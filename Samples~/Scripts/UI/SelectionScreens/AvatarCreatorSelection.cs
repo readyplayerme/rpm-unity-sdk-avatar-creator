@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
-using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -78,8 +77,6 @@ namespace ReadyPlayerMe
         {
             var startTime = Time.time;
 
-            AvatarCreatorData.AvatarProperties.Partner = CoreSettingsHandler.CoreSettings.Subdomain;
-
             partnerAssetManager = new PartnerAssetsManager(
                 AvatarCreatorData.AvatarProperties.Partner,
                 AvatarCreatorData.AvatarProperties.BodyType,
@@ -96,29 +93,34 @@ namespace ReadyPlayerMe
             var startTime = Time.time;
             var avatarAPIRequests = new AvatarAPIRequests();
             DebugPanel.AddLogWithDuration("All colors loaded", Time.time - startTime);
-            return await avatarAPIRequests.GetAllAvatarColors(avatar.name); // avatar.name is same as draft avatar ID
+            return await avatarAPIRequests.GetAllAvatarColors(AvatarCreatorData.AvatarProperties.Id); // avatar.name is same as draft avatar ID
         }
 
         private async void CreateDefaultModel()
         {
             var startTime = Time.time;
-
-            if (AvatarCreatorData.AvatarProperties.Assets == null)
-            {
-                AvatarCreatorData.AvatarProperties.Assets = GetDefaultAssets();
-            }
-
+            
             avatarManager = new AvatarManager(
                 AvatarCreatorData.AvatarProperties.BodyType,
                 AvatarCreatorData.AvatarProperties.Gender,
                 inCreatorConfig);
-
-            avatar = await avatarManager.Create(AvatarCreatorData.AvatarProperties);
+            
+            if (string.IsNullOrEmpty(AvatarCreatorData.AvatarProperties.Id))
+            {
+                AvatarCreatorData.AvatarProperties.Assets ??= GetDefaultAssets();
+                avatar = await avatarManager.Create(AvatarCreatorData.AvatarProperties);
+                AvatarCreatorData.AvatarProperties.Id = avatarManager.AvatarId;
+            }
+            else
+            {
+                avatar = await avatarManager.GetAvatar(AvatarCreatorData.AvatarProperties.Id);
+            }
+            
             if (avatar == null)
             {
                 return;
             }
-
+            
             DebugPanel.AddLogWithDuration("Avatar loaded", Time.time - startTime);
             assetButtonCreator.CreateColorUI(await LoadColors(), UpdateAvatarColor);
             ProcessAvatar();

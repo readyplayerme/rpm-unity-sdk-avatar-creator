@@ -70,7 +70,7 @@ namespace ReadyPlayerMe
             {
                 if (!avatarRenderMap.ContainsKey(avatarId))
                 {
-                    downloadRenderTasks.Add(AddAvatarRender(avatarId));
+                    downloadRenderTasks.Add(CreateAvatarRender(avatarId));
                 }
                 else
                 {
@@ -94,30 +94,23 @@ namespace ReadyPlayerMe
             }
         }
 
-        private async Task AddAvatarRender(string avatarId)
+        private async Task CreateAvatarRender(string avatarId)
         {
-            var isCompleted = false;
-            var renderLoader = new AvatarRenderLoader();
-            renderLoader.OnCompleted = renderImage =>
-            {
-                var button = Instantiate(buttonPrefab, parent);
-                var rawImage = button.GetComponentInChildren<RawImage>();
-                button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(avatarId));
-                rawImage.texture = renderImage;
-                isCompleted = true;
-                avatarRenderMap.Add(avatarId, button);
-            };
-            renderLoader.LoadRender($"{Endpoints.AVATAR_API_V1}/{avatarId}.glb", AvatarRenderScene.Portrait);
-            while (!isCompleted)
-            {
-                await Task.Yield();
-            }
+            var renderImage = await AvatarRenderHelper.GetPortrait(avatarId);
+            var button = Instantiate(buttonPrefab, parent);
+            var rawImage = button.GetComponentInChildren<RawImage>();
+            button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(avatarId));
+            rawImage.texture = renderImage;
+            avatarRenderMap.Add(avatarId, button);
         }
 
         private async void OnAvatarSelected(string avatarId)
         {
             var response = await WebRequestDispatcher.SendRequest($"{Endpoints.AVATAR_API_V2}/{avatarId}.json", Method.GET);
-            AvatarCreatorData.AvatarProperties = JsonConvert.DeserializeObject<AvatarProperties>(JObject.Parse(response.Text)["data"]!.ToString());
+            var json = JObject.Parse(response.Text)["data"]!.ToString();
+            var avatarProperties = JsonConvert.DeserializeObject<AvatarProperties>(json);
+            AvatarCreatorData.AvatarProperties.Assets = avatarProperties.Assets;
+            AvatarCreatorData.AvatarProperties.Id = string.Empty;
             StateMachine.SetState(StateType.Editor);
         }
     }

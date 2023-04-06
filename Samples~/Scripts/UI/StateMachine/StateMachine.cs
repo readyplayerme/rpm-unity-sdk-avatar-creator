@@ -46,7 +46,7 @@ namespace ReadyPlayerMe
             StateChanged?.Invoke(currentState, previousState);
         }
 
-        public void ClearPreviousStates()
+        protected void ClearPreviousStates()
         {
             previousStates.Clear();
         }

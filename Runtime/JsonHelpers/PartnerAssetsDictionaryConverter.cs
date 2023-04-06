@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -48,6 +47,5 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             return propertyName == "createdAt" || propertyName == "updatedAt" || propertyName == "skinColorHex";
         }
-
     }
 }

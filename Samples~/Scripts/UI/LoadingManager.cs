@@ -16,7 +16,7 @@ namespace ReadyPlayerMe
         private class LoadingData
         {
             public GameObject container;
-            public Text tex;
+            public Text text;
         }
 
         [SerializeField] private LoadingData fullscreenLoading;
@@ -29,12 +29,12 @@ namespace ReadyPlayerMe
             switch (type)
             {
                 case LoadingType.Fullscreen:
-                    fullscreenLoading.tex.text = text;
+                    fullscreenLoading.text.text = text;
                     fullscreenLoading.container.SetActive(true);
                     currentLoadingType = type;
                     break;
                 case LoadingType.Popup:
-                    popupLoading.tex.text = text;
+                    popupLoading.text.text = text;
                     popupLoading.container.SetActive(true);
                     currentLoadingType = type;
                     break;

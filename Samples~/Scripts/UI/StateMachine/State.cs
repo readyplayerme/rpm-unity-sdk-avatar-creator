@@ -5,8 +5,8 @@ namespace ReadyPlayerMe
     public enum StateType
     {
         None,
-        Login,
         LoginWithCodeFromEmail,
+        AvatarSelection,
         BodyTypeSelection,
         GenderSelection,
         SelfieSelection,
