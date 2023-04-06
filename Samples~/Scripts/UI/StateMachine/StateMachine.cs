@@ -9,11 +9,12 @@ namespace ReadyPlayerMe
         private readonly Stack<StateType> previousStates = new Stack<StateType>();
         private readonly Dictionary<StateType, State> stateTypeMap = new Dictionary<StateType, State>();
 
-        protected Action<StateType, StateType> StateChanged;
+        [SerializeField] protected List<StateType> statesToSkip;
 
+        protected Action<StateType, StateType> StateChanged;
         private StateType currentState;
         
-        protected virtual void Initialize(List<State> states)
+        protected void Initialize(List<State> states)
         {
             foreach (var state in states)
             {
@@ -27,6 +28,13 @@ namespace ReadyPlayerMe
             if (previousState != StateType.None)
             {
                 stateTypeMap[previousState].gameObject.SetActive(false);
+
+                if (statesToSkip.Contains(stateType))
+                {
+                    SetState(stateTypeMap[stateType].NextState);
+                    return;
+                }
+                
                 previousStates.Push(previousState);
             }
 
@@ -38,7 +46,12 @@ namespace ReadyPlayerMe
             StateChanged?.Invoke(currentState, previousState);
         }
 
-        public void Back()
+        protected void ClearPreviousStates()
+        {
+            previousStates.Clear();
+        }
+
+        protected void Back()
         {
             var previousState = currentState; 
             stateTypeMap[previousState].gameObject.SetActive(false);

@@ -3,12 +3,10 @@ using UnityEngine;
 
 namespace ReadyPlayerMe
 {
-    [CreateAssetMenu(fileName = "DataStore", menuName = "Scriptable Objects/Ready Player Me/Data Store", order = 1)]
-    public class DataStore : ScriptableObject
+    [CreateAssetMenu(fileName = "AvatarCreatorData", menuName = "Scriptable Objects/Ready Player Me/Avatar Creator Data", order = 1)]
+    public class AvatarCreatorData : ScriptableObject
     {
-        public UserSession User;
         public AvatarProperties AvatarProperties;
-        public string AvatarId;
         
         public void Awake()
         {

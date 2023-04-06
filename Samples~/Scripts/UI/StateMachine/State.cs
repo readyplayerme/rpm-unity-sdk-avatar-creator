@@ -5,11 +5,13 @@ namespace ReadyPlayerMe
     public enum StateType
     {
         None,
-        Login,
+        LoginWithCodeFromEmail,
+        AvatarSelection,
         BodyTypeSelection,
         GenderSelection,
         SelfieSelection,
         CameraPhoto,
+        DefaultAvatarSelection,
         Editor,
         End
     }
@@ -17,16 +19,17 @@ namespace ReadyPlayerMe
     public abstract class State : MonoBehaviour
     {
         protected StateMachine StateMachine;
-        protected DataStore DataStore;
-        protected GameObject Loading;
+        protected AvatarCreatorData AvatarCreatorData;
+        protected LoadingManager LoadingManager;
 
         public abstract StateType StateType { get; }
+        public abstract StateType NextState { get; }
 
-        public void Initialize(StateMachine stateMachine, DataStore dataStore, GameObject loading)
+        public void Initialize(StateMachine stateMachine, AvatarCreatorData avatarCreatorData, LoadingManager loadingManager)
         {
             StateMachine = stateMachine;
-            DataStore = dataStore;
-            Loading = loading;
+            AvatarCreatorData = avatarCreatorData;
+            LoadingManager = loadingManager;
             gameObject.SetActive(false);
         }
     }

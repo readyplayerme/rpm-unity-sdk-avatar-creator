@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,7 +25,7 @@ namespace ReadyPlayerMe.AvatarCreator
             Dictionary<string, string> headers = null,
             string payload = null,
             DownloadHandler downloadHandler = default,
-            CancellationToken token = new CancellationToken())
+            CancellationToken ctx = new CancellationToken())
         {
             using var request = new UnityWebRequest();
             request.timeout = TIMEOUT;
@@ -53,20 +52,32 @@ namespace ReadyPlayerMe.AvatarCreator
 
             var startTime = Time.realtimeSinceStartup;
             var asyncOperation = request.SendWebRequest();
-            token.Register(request.Abort);
-            while (!asyncOperation.isDone && !token.IsCancellationRequested)
+
+            while (!asyncOperation.isDone && !ctx.IsCancellationRequested)
             {
                 await Task.Yield();
             }
 
-            if (request.result == UnityWebRequest.Result.ProtocolError || request.result == UnityWebRequest.Result.ConnectionError)
+            var response = new Response();
+            response.ResponseCode = request.responseCode;
+            
+            if (ctx.IsCancellationRequested)
             {
-                Debug.Log(request.downloadHandler.text);
-                throw new Exception(request.error);
+                request.Abort();
+                response.IsSuccess = false;
+                return response;
+            }
+
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(request.downloadHandler.text + "\n" + url);
+                response.IsSuccess = false;
+                response.Text = request.error;
+                return response;
             }
 
             Texture texture = null;
-            if (downloadHandler is DownloadHandlerTexture downloadHandlerTexture)
+            if (request.downloadHandler is DownloadHandlerTexture downloadHandlerTexture)
             {
                 texture = downloadHandlerTexture.texture;
             }

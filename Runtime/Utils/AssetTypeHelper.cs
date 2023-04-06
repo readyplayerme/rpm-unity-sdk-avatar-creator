@@ -6,7 +6,6 @@ namespace ReadyPlayerMe.AvatarCreator
 {
     public static class AssetTypeHelper
     {
-        private const string COLOR_TAG = "Color";
         public static IEnumerable<AssetType> GetAssetTypeList(BodyType bodyType)
         {
             return PartnerAssetTypeMap
@@ -96,7 +95,5 @@ namespace ReadyPlayerMe.AvatarCreator
                     return false;
             }
         }
-
-
     }
 }
