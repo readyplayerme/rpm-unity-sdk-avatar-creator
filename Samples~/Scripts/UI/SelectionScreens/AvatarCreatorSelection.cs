@@ -122,7 +122,8 @@ namespace ReadyPlayerMe
             }
             
             DebugPanel.AddLogWithDuration("Avatar loaded", Time.time - startTime);
-            assetButtonCreator.CreateColorUI(await LoadColors(), UpdateAvatarColor);
+            var colors = await LoadColors(); 
+            assetButtonCreator.CreateColorUI(colors, UpdateAvatarColor);
             ProcessAvatar();
             LoadingManager.DisableLoading();
         }
