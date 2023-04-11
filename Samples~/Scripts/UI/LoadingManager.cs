@@ -17,6 +17,7 @@ namespace ReadyPlayerMe
         {
             public GameObject container;
             public Text text;
+            public GameObject animation;
         }
 
         [SerializeField] private LoadingData fullscreenLoading;
@@ -24,18 +25,20 @@ namespace ReadyPlayerMe
 
         private LoadingType currentLoadingType;
 
-        public void EnableLoading(string text = "Loading your avatar", LoadingType type = LoadingType.Fullscreen)
+        public void EnableLoading(string text = "Loading your avatar", LoadingType type = LoadingType.Fullscreen, bool enableLoadingAnimation = true)
         {
             switch (type)
             {
                 case LoadingType.Fullscreen:
                     fullscreenLoading.text.text = text;
                     fullscreenLoading.container.SetActive(true);
+                    fullscreenLoading.animation.SetActive(enableLoadingAnimation);
                     currentLoadingType = type;
                     break;
                 case LoadingType.Popup:
                     popupLoading.text.text = text;
                     popupLoading.container.SetActive(true);
+                    popupLoading.animation.SetActive(enableLoadingAnimation);
                     currentLoadingType = type;
                     break;
                 default:

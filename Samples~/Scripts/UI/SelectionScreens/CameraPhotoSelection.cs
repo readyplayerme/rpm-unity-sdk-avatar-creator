@@ -8,8 +8,7 @@ namespace ReadyPlayerMe
     {
         [SerializeField] private RawImage rawImage;
         [SerializeField] private Button cameraButton;
-        [SerializeField] private Button fileButton;
-        
+
         public override StateType StateType => StateType.CameraPhoto;
         public override StateType NextState => StateType.Editor;
 
@@ -18,14 +17,12 @@ namespace ReadyPlayerMe
         private void OnEnable()
         {
             cameraButton.onClick.AddListener(OnCameraButton);
-            fileButton.onClick.AddListener(OnFileButton);
             OpenCamera();
         }
 
         private void OnDisable()
         {
             cameraButton.onClick.RemoveListener(OnCameraButton);
-            fileButton.onClick.RemoveListener(OnFileButton);
             CloseCamera();
         }
 
@@ -62,13 +59,15 @@ namespace ReadyPlayerMe
             }
         }
 
-        private void OnFileButton()
-        {
-            // Will not be implemented
-        }
-
         private void OnCameraButton()
         {
+            if (camTexture == null || !camTexture.isPlaying)
+            {
+                LoadingManager.EnableLoading("Camera is not available.", LoadingManager.LoadingType.Popup, false);
+                return;
+            }
+
+
             var texture = new Texture2D(rawImage.texture.width, rawImage.texture.height, TextureFormat.ARGB32, false);
             texture.SetPixels(camTexture.GetPixels());
             texture.Apply();
