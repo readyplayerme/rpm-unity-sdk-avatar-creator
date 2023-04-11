@@ -60,7 +60,7 @@ namespace ReadyPlayerMe
 
         private async void OnEnable()
         {
-            LoadingManager.EnableLoading( LOADING_MESSAGE);
+            LoadingManager.EnableLoading(LOADING_MESSAGE);
 
             ctxSource = new CancellationTokenSource();
             var avatarIds = AvatarCreatorData.AvatarProperties.Gender == OutfitGender.Feminine ? femaleAvatarIds : maleAvatarIds;
@@ -111,6 +111,7 @@ namespace ReadyPlayerMe
             var avatarProperties = JsonConvert.DeserializeObject<AvatarProperties>(json);
             AvatarCreatorData.AvatarProperties.Assets = avatarProperties.Assets;
             AvatarCreatorData.AvatarProperties.Id = string.Empty;
+            AvatarCreatorData.AvatarProperties.Base64Image = string.Empty;
             StateMachine.SetState(StateType.Editor);
         }
     }
