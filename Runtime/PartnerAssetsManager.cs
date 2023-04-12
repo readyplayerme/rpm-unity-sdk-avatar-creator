@@ -23,12 +23,12 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private PartnerAsset[] assets;
 
-        public PartnerAssetsManager(string partner, BodyType bodyType, OutfitGender gender)
+        public PartnerAssetsManager(string partner, BodyType bodyType, OutfitGender gender, CancellationToken token = default)
         {
             this.partner = partner;
             this.bodyType = bodyType;
             this.gender = gender;
-            ctxSource = new CancellationTokenSource();
+            ctxSource = CancellationTokenSource.CreateLinkedTokenSource(token);
         }
 
         public async Task<Dictionary<string, AssetType>> GetAllAssets()

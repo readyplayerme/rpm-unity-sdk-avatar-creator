@@ -51,7 +51,7 @@ namespace ReadyPlayerMe
             previousStates.Clear();
         }
 
-        protected void Back()
+        public void Back()
         {
             var previousState = currentState; 
             stateTypeMap[previousState].gameObject.SetActive(false);

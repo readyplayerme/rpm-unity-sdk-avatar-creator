@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
@@ -22,6 +23,7 @@ namespace ReadyPlayerMe
         private AvatarManager avatarManager;
         private GameObject currentAvatar;
         private Quaternion lastRotation;
+        private CancellationTokenSource ctxSource;
 
         public override StateType StateType => StateType.Editor;
         public override StateType NextState => StateType.End;
@@ -48,9 +50,8 @@ namespace ReadyPlayerMe
 
         private async void Initialize()
         {
-            var startTime = Time.time;
-
             LoadingManager.EnableLoading();
+            ctxSource = new CancellationTokenSource();
             if (!AuthManager.IsSignedIn)
             {
                 await AuthManager.LoginAsAnonymous();
@@ -59,61 +60,95 @@ namespace ReadyPlayerMe
             avatarManager = new AvatarManager(
                 AvatarCreatorData.AvatarProperties.BodyType,
                 AvatarCreatorData.AvatarProperties.Gender,
-                inCreatorConfig);
+                inCreatorConfig,
+                ctxSource.Token);
+            avatarManager.OnError = OnErrorCallback;
 
             await LoadAssets();
-            DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
-
-            startTime = Time.time;
             currentAvatar = await LoadAvatar();
-            DebugPanel.AddLogWithDuration("Avatar loaded", Time.time - startTime);
 
-            startTime = Time.time;
+            if (string.IsNullOrEmpty(avatarManager.AvatarId)) 
+                return;
+            
             await LoadAvatarColors();
-            DebugPanel.AddLogWithDuration("All colors loaded", Time.time - startTime);
-
             LoadingManager.DisableLoading();
+        }
+
+        private void OnErrorCallback(string error)
+        {
+            ctxSource.Cancel();
+            StateMachine.Back();
+            LoadingManager.EnableLoading(error, LoadingManager.LoadingType.Popup, false);
         }
 
         private async Task LoadAssets()
         {
+            var startTime = Time.time;
             partnerAssetManager = new PartnerAssetsManager(
                 AvatarCreatorData.AvatarProperties.Partner,
                 AvatarCreatorData.AvatarProperties.BodyType,
-                AvatarCreatorData.AvatarProperties.Gender);
+                AvatarCreatorData.AvatarProperties.Gender,
+                ctxSource.Token);
+
             var assetIconDownloadTasks = await partnerAssetManager.GetAllAssets();
 
             CreateUI(AvatarCreatorData.AvatarProperties.BodyType, assetIconDownloadTasks);
             partnerAssetManager.DownloadAssetsIcon(assetButtonCreator.SetAssetIcons);
+            DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
         }
 
         private async Task<GameObject> LoadAvatar()
         {
+            var startTime = Time.time;
+
             GameObject avatar;
-            
+
             if (string.IsNullOrEmpty(AvatarCreatorData.AvatarProperties.Id))
             {
                 AvatarCreatorData.AvatarProperties.Assets ??= GetDefaultAssets();
                 avatar = await avatarManager.Create(AvatarCreatorData.AvatarProperties);
-                AvatarCreatorData.AvatarProperties.Id = avatarManager.AvatarId;
             }
             else
             {
                 avatar = await avatarManager.GetAvatar(AvatarCreatorData.AvatarProperties.Id);
             }
 
+            if (avatar == null)
+            {
+                return null;
+            }
+
+            AvatarCreatorData.AvatarProperties.Id = avatarManager.AvatarId;
+
             ProcessAvatar(avatar);
+
+            DebugPanel.AddLogWithDuration("Avatar loaded", Time.time - startTime);
             return avatar;
         }
 
 
         private async Task LoadAvatarColors()
         {
+            var startTime = Time.time;
             var avatarAPIRequests = new AvatarAPIRequests();
-            var colors = await avatarAPIRequests.GetAllAvatarColors(AvatarCreatorData.AvatarProperties.Id); // avatar.name is same as draft avatar ID
+            ColorPalette[] colors = null;
+            try
+            {
+                colors = await avatarAPIRequests.GetAllAvatarColors(AvatarCreatorData.AvatarProperties.Id);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+
+            if (colors == null)
+            {
+                return;
+            }
             assetButtonCreator.CreateColorUI(colors, UpdateAvatar);
+            DebugPanel.AddLogWithDuration("All colors loaded", Time.time - startTime);
         }
-        
+
         private void CreateUI(BodyType bodyType, Dictionary<string, AssetType> assets)
         {
             assetTypeUICreator.CreateUI(bodyType, AssetTypeHelper.GetAssetTypeList(bodyType));

@@ -23,10 +23,12 @@ namespace ReadyPlayerMe
         [SerializeField] private LoadingData fullscreenLoading;
         [SerializeField] private LoadingData popupLoading;
 
-        private LoadingType currentLoadingType;
+        private LoadingType currentLoadingType = LoadingType.Fullscreen;
 
         public void EnableLoading(string text = "Loading your avatar", LoadingType type = LoadingType.Fullscreen, bool enableLoadingAnimation = true)
         {
+            DisableLoading();
+            
             switch (type)
             {
                 case LoadingType.Fullscreen:

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -48,6 +50,11 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx
             );
+            
+            if (!response.IsSuccess)
+            {
+                throw new Exception(response.Text);
+            }
 
             return ColorResponseHandler.GetColorsFromResponse(response.Text);
         }
@@ -62,6 +69,12 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx
             );
+            
+            if (!response.IsSuccess)
+            {
+                throw new Exception(response.Text);
+            }
+            
             var json = JObject.Parse(response.Text);
             var data = json["data"]!.ToString();
             return JsonConvert.DeserializeObject<AvatarProperties>(data);
@@ -78,6 +91,11 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx
             );
+            
+            if (!response.IsSuccess)
+            {
+                throw new Exception(response.Text);
+            }
 
             var metadata = JObject.Parse(response.Text);
             var avatarId = metadata["data"]?["id"]?.ToString();
@@ -97,6 +115,12 @@ namespace ReadyPlayerMe.AvatarCreator
                     Method = Method.GET,
                 },
                 ctx: ctx);
+            
+            if (!response.IsSuccess)
+            {
+                throw new Exception(response.Text);
+            }
+            
             return response.Data;
         }
 
@@ -109,6 +133,12 @@ namespace ReadyPlayerMe.AvatarCreator
                     Method = Method.GET,
                 },
                 ctx: ctx);
+
+            if (!response.IsSuccess)
+            {
+                throw new Exception(response.Text);
+            }
+            
             return response.Data;
         }
 
@@ -126,6 +156,11 @@ namespace ReadyPlayerMe.AvatarCreator
                     Payload = avatarProperties.ToJson(true)
                 },
                 ctx: ctx);
+           
+            if (!response.IsSuccess)
+            {
+                throw new Exception(response.Text);
+            }
 
             return response.Data;
         }
@@ -139,19 +174,29 @@ namespace ReadyPlayerMe.AvatarCreator
                     Method = Method.PUT,
                 },
                 ctx: ctx);
+            
+            if (!response.IsSuccess)
+            {
+                throw new Exception(response.Text);
+            }
 
             return response.Text;
         }
 
         public async Task DeleteAvatar(string avatarId)
         {
-            await authorizedRequest.SendRequest(
+            var response = await authorizedRequest.SendRequest(
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V1}/{avatarId}",
                     Method = Method.DELETE,
                 },
                 ctx: ctx);
+            
+            if (!response.IsSuccess)
+            {
+                throw new Exception(response.Text);
+            }
         }
     }
 }

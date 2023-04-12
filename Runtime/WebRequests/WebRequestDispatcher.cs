@@ -92,7 +92,8 @@ namespace ReadyPlayerMe.AvatarCreator
                 Data = request.downloadHandler.data,
                 Texture = texture,
                 Size = responseSize,
-                Duration = requestDuration
+                Duration = requestDuration,
+                IsSuccess = true,
             };
         }
     }
