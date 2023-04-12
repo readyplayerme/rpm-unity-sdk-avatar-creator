@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine.Networking;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -10,6 +10,7 @@ namespace ReadyPlayerMe.AvatarCreator
         public string Url;
         public Method Method;
         public string Payload;
+        public DownloadHandler DownloadHandler;
     }
 
     public class AuthorizedRequest
@@ -40,6 +41,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 requestData.Method,
                 headers, 
                 requestData.Payload,
+                requestData.DownloadHandler,
                 ctx:ctx
             );
         }

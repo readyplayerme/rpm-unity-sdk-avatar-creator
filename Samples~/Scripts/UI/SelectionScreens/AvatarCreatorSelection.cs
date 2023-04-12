@@ -90,6 +90,8 @@ namespace ReadyPlayerMe
                 AvatarCreatorData.AvatarProperties.Gender,
                 ctxSource.Token);
 
+            partnerAssetManager.OnError = OnErrorCallback;
+            
             var assetIconDownloadTasks = await partnerAssetManager.GetAllAssets();
 
             CreateUI(AvatarCreatorData.AvatarProperties.BodyType, assetIconDownloadTasks);
