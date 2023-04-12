@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +23,7 @@ namespace ReadyPlayerMe.AvatarCreator
             authorizedRequest = new AuthorizedRequest();
         }
 
-        public async Task<Dictionary<string,string>> FetchUserAvatars(string userId)
+        public async Task<Dictionary<string, string>> FetchUserAvatars(string userId)
         {
             var response = await authorizedRequest.SendRequest(
                 new RequestData
@@ -34,6 +33,9 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx
             );
+            
+            response.ThrowIfError();
+
             var json = JObject.Parse(response.Text);
             var data = json["data"]!;
             return data.ToDictionary(element => element["id"]!.ToString(), element => element["partner"]!.ToString());
@@ -49,12 +51,8 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx
             );
-            
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.Text);
-            }
 
+            response.ThrowIfError();
             return ColorResponseHandler.GetColorsFromResponse(response.Text);
         }
 
@@ -68,11 +66,8 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx
             );
-            
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.Text);
-            }
+
+            response.ThrowIfError();
             
             var json = JObject.Parse(response.Text);
             var data = json["data"]!.ToString();
@@ -90,11 +85,8 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx
             );
-            
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.Text);
-            }
+
+            response.ThrowIfError();
 
             var metadata = JObject.Parse(response.Text);
             var avatarId = metadata["data"]?["id"]?.ToString();
@@ -114,12 +106,9 @@ namespace ReadyPlayerMe.AvatarCreator
                     Method = Method.GET,
                 },
                 ctx: ctx);
-            
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.Text);
-            }
-            
+
+
+            response.ThrowIfError();
             return response.Data;
         }
 
@@ -128,16 +117,12 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest(
                 new RequestData
                 {
-                    Url =  $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}",
+                    Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}",
                     Method = Method.GET,
                 },
                 ctx: ctx);
 
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.Text);
-            }
-            
+            response.ThrowIfError();
             return response.Data;
         }
 
@@ -155,12 +140,8 @@ namespace ReadyPlayerMe.AvatarCreator
                     Payload = avatarProperties.ToJson(true)
                 },
                 ctx: ctx);
-           
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.Text);
-            }
 
+            response.ThrowIfError();
             return response.Data;
         }
 
@@ -173,12 +154,8 @@ namespace ReadyPlayerMe.AvatarCreator
                     Method = Method.PUT,
                 },
                 ctx: ctx);
-            
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.Text);
-            }
 
+            response.ThrowIfError();
             return response.Text;
         }
 
@@ -191,11 +168,8 @@ namespace ReadyPlayerMe.AvatarCreator
                     Method = Method.DELETE,
                 },
                 ctx: ctx);
-            
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.Text);
-            }
+
+            response.ThrowIfError();
         }
     }
 }

@@ -28,11 +28,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 Method = Method.GET,
             }, ctx: ctx);
 
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.Text);
-            }
-
+            response.ThrowIfError();
             return JsonConvert.DeserializeObject<PartnerAsset[]>(response.Text);
         }
 
@@ -46,11 +42,7 @@ namespace ReadyPlayerMe.AvatarCreator
                     DownloadHandler = downloadHandler,
                 }, ctx: ctx);
 
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.Text);
-            }
-
+            response.ThrowIfError();
             return response.Texture;
         }
     }

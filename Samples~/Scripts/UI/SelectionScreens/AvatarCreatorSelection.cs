@@ -76,7 +76,10 @@ namespace ReadyPlayerMe
 
         private void OnErrorCallback(string error)
         {
-            ctxSource.Cancel();
+            avatarManager.OnError = null;
+            partnerAssetManager.OnError = null;
+
+            ctxSource?.Cancel();
             StateMachine.Back();
             LoadingManager.EnableLoading(error, LoadingManager.LoadingType.Popup, false);
         }
