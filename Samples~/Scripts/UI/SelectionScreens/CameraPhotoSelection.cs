@@ -67,7 +67,6 @@ namespace ReadyPlayerMe
                 return;
             }
 
-
             var texture = new Texture2D(rawImage.texture.width, rawImage.texture.height, TextureFormat.ARGB32, false);
             texture.SetPixels(camTexture.GetPixels());
             texture.Apply();

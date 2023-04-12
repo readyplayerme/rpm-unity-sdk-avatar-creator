@@ -28,6 +28,7 @@ namespace ReadyPlayerMe.AvatarCreator
         /// <param name="bodyType">Body type of avatar</param>
         /// <param name="gender">Gender of avatar</param>
         /// <param name="avatarConfig">Config for downloading preview avatar</param>
+        /// <param name="token">Cancellation token</param>
         public AvatarManager(BodyType bodyType, OutfitGender gender, AvatarConfig avatarConfig = null, CancellationToken token = default)
         {
             this.bodyType = bodyType;
