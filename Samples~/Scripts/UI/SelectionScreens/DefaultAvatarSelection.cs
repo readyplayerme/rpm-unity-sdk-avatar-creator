@@ -2,13 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
-using WebRequestDispatcher = ReadyPlayerMe.AvatarCreator.WebRequestDispatcher;
 
 namespace ReadyPlayerMe
 {
@@ -106,9 +103,8 @@ namespace ReadyPlayerMe
 
         private async void OnAvatarSelected(string avatarId)
         {
-            var response = await WebRequestDispatcher.SendRequest($"{Endpoints.AVATAR_API_V2}/{avatarId}.json", Method.GET);
-            var json = JObject.Parse(response.Text)["data"]!.ToString();
-            var avatarProperties = JsonConvert.DeserializeObject<AvatarProperties>(json);
+            var avatarAPIRequests = new AvatarAPIRequests();
+            var avatarProperties = await avatarAPIRequests.GetAvatarMetadata(avatarId);
             AvatarCreatorData.AvatarProperties.Assets = avatarProperties.Assets;
             AvatarCreatorData.AvatarProperties.Id = string.Empty;
             AvatarCreatorData.AvatarProperties.Base64Image = string.Empty;
