@@ -5,41 +5,51 @@ namespace ReadyPlayerMe
 {
     public class SeflieSelection : State
     {
+        private const string TERMS_URL = "https://readyplayer.me/terms";
+        private const string PRIVACY_URL = "https://readyplayer.me/privacy";
+
         [SerializeField] private Button photoButton;
-        [SerializeField] private Button fileButton;
         [SerializeField] private Button continueButton;
+        [SerializeField] private Button termsButton;
+        [SerializeField] private Button privacyButton;
 
         public override StateType StateType => StateType.SelfieSelection;
         public override StateType NextState => StateType.Editor;
 
-
         private void OnEnable()
         {
             photoButton.onClick.AddListener(OnPhotoButton);
-            fileButton.onClick.AddListener(OnFileButton);
             continueButton.onClick.AddListener(OnContinueButton);
+            termsButton.onClick.AddListener(OnTermsButton);
+            privacyButton.onClick.AddListener(OnPrivacyButton);
         }
         
         private void OnDisable()
         {
             photoButton.onClick.RemoveListener(OnPhotoButton);
-            fileButton.onClick.RemoveListener(OnFileButton);
             continueButton.onClick.RemoveListener(OnContinueButton);
+            termsButton.onClick.RemoveListener(OnTermsButton);
+            privacyButton.onClick.RemoveListener(OnPrivacyButton);
         }
         
         private void OnPhotoButton()
         {
             StateMachine.SetState(StateType.CameraPhoto);
         }
-        
-        private void OnFileButton()
-        {
-            // Will not be implemented
-        }
 
         private void OnContinueButton()
         {
             StateMachine.SetState(StateType.DefaultAvatarSelection);
+        }
+
+        private void OnTermsButton()
+        {
+            Application.OpenURL(TERMS_URL);
+        }
+
+        private void OnPrivacyButton()
+        {
+            Application.OpenURL(PRIVACY_URL);
         }
     }
 }
