@@ -19,6 +19,8 @@ namespace ReadyPlayerMe.AvatarCreator
         private readonly InCreatorAvatarLoader inCreatorAvatarLoader;
         private readonly CancellationTokenSource ctxSource;
 
+        public Action<string> OnError { get; set; }
+
         public string AvatarId => avatarId;
 
         private string avatarId;
@@ -26,7 +28,8 @@ namespace ReadyPlayerMe.AvatarCreator
         /// <param name="bodyType">Body type of avatar</param>
         /// <param name="gender">Gender of avatar</param>
         /// <param name="avatarConfig">Config for downloading preview avatar</param>
-        public AvatarManager(BodyType bodyType, OutfitGender gender, AvatarConfig avatarConfig = null)
+        /// <param name="token">Cancellation token</param>
+        public AvatarManager(BodyType bodyType, OutfitGender gender, AvatarConfig avatarConfig = null, CancellationToken token = default)
         {
             this.bodyType = bodyType;
             this.gender = gender;
@@ -36,7 +39,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 avatarConfigParameters = AvatarConfigProcessor.ProcessAvatarConfiguration(avatarConfig);
             }
 
-            ctxSource = new CancellationTokenSource();
+            ctxSource = CancellationTokenSource.CreateLinkedTokenSource(token);
             inCreatorAvatarLoader = new InCreatorAvatarLoader();
             avatarAPIRequests = new AvatarAPIRequests(ctxSource.Token);
         }
@@ -48,16 +51,35 @@ namespace ReadyPlayerMe.AvatarCreator
         /// <returns>Avatar gameObject</returns>
         public async Task<GameObject> Create(AvatarProperties avatarProperties)
         {
-            avatarId = await avatarAPIRequests.CreateNewAvatar(avatarProperties);
-            var data = await avatarAPIRequests.GetPreviewAvatar(avatarId, avatarConfigParameters);
+            try
+            {
+                avatarId = await avatarAPIRequests.CreateNewAvatar(avatarProperties);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                return null;
+            }
+
+            byte[] data;
+            try
+            {
+                data = await avatarAPIRequests.GetPreviewAvatar(avatarId, avatarConfigParameters);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                return null;
+            }
+
             if (ctxSource.IsCancellationRequested)
             {
                 return null;
             }
-            
+
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
         }
-        
+
         /// <summary>
         /// Download and import pre-created avatar.
         /// </summary>
@@ -66,12 +88,22 @@ namespace ReadyPlayerMe.AvatarCreator
         public async Task<GameObject> GetAvatar(string id)
         {
             avatarId = id;
-            var data = await avatarAPIRequests.GetAvatar(avatarId, avatarConfigParameters);
+            byte[] data;
+            try
+            {
+                data = await avatarAPIRequests.GetAvatar(avatarId, avatarConfigParameters);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                return null;
+            }
+
             if (ctxSource.IsCancellationRequested)
             {
                 return null;
             }
-            
+
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
         }
 
@@ -90,12 +122,22 @@ namespace ReadyPlayerMe.AvatarCreator
 
             payload.Assets.Add(assetType, assetId);
 
-            var data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
+            byte[] data;
+            try
+            {
+                data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                return null;
+            }
+
             if (ctxSource.IsCancellationRequested)
             {
                 return null;
             }
-            
+
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
         }
 
@@ -104,7 +146,16 @@ namespace ReadyPlayerMe.AvatarCreator
         /// </summary>
         public async Task<string> Save()
         {
-            await avatarAPIRequests.SaveAvatar(avatarId);
+            try
+            {
+                await avatarAPIRequests.SaveAvatar(avatarId);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                return null;
+            }
+
             return avatarId;
         }
 
@@ -113,7 +164,14 @@ namespace ReadyPlayerMe.AvatarCreator
         /// </summary>
         public async Task Delete()
         {
-            await avatarAPIRequests.DeleteAvatar(avatarId);
+            try
+            {
+                await avatarAPIRequests.DeleteAvatar(avatarId);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+            }
         }
 
         public void Dispose()

@@ -37,7 +37,7 @@ namespace ReadyPlayerMe
             }
         }
 
-        public void CreateColorUI(ColorPalette[] colorPalettes, Action<AssetType, int> onClick)
+        public void CreateColorUI(ColorPalette[] colorPalettes, Action<object, AssetType> onClick)
         {
             foreach (var colorPalette in colorPalettes)
             {
@@ -69,8 +69,8 @@ namespace ReadyPlayerMe
                 }
             }
         }
-        
-        private AssetButton AddColorButton(int index, Transform parent, AssetType assetType, Action<AssetType, int> onClick)
+
+        private AssetButton AddColorButton(int index, Transform parent, AssetType assetType, Action<object, AssetType> onClick)
         {
             var assetButtonGameObject = Instantiate(colorAssetButtonPrefab, parent.GetComponent<ScrollRect>().content);
             var buttonName = $"{assetType}_{index}";
@@ -80,7 +80,7 @@ namespace ReadyPlayerMe
             {
                 UpdateSelectedAssetTypeMap(assetType, assetButton);
                 assetButton.SetSelect(true);
-                onClick?.Invoke(assetType, index);
+                onClick?.Invoke(index, assetType);
             });
             assetMap.Add(buttonName, assetButton);
             return assetButton;
@@ -149,7 +149,7 @@ namespace ReadyPlayerMe
                 case AssetType.Facewear:
                 case AssetType.Headwear:
                 case AssetType.FaceStyle:
-                case AssetType.EyeShape: 
+                case AssetType.EyeShape:
                 case AssetType.FaceShape:
                 case AssetType.LipShape:
                 case AssetType.NoseShape:

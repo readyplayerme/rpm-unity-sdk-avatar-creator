@@ -15,25 +15,36 @@ namespace ReadyPlayerMe.AvatarCreator
     {
         private const string EYE_MASK_SIZE_PARAM = "?w=256";
 
-        private readonly string partner;
         private readonly BodyType bodyType;
         private readonly OutfitGender gender;
 
+        private readonly PartnerAssetsRequests partnerAssetsRequests;
         private readonly CancellationTokenSource ctxSource;
+
+        public Action<string> OnError { get; set; }
 
         private PartnerAsset[] assets;
 
-        public PartnerAssetsManager(string partner, BodyType bodyType, OutfitGender gender)
+        public PartnerAssetsManager(string partner, BodyType bodyType, OutfitGender gender, CancellationToken token = default)
         {
-            this.partner = partner;
             this.bodyType = bodyType;
             this.gender = gender;
-            ctxSource = new CancellationTokenSource();
+            ctxSource = CancellationTokenSource.CreateLinkedTokenSource(token);
+            partnerAssetsRequests = new PartnerAssetsRequests(partner);
         }
 
         public async Task<Dictionary<string, AssetType>> GetAllAssets()
         {
-            assets = await PartnerAssetsRequests.Get(AuthManager.UserSession.Token, partner, ctxSource.Token);
+            try
+            {
+                assets = await partnerAssetsRequests.Get(ctxSource.Token);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                return null;
+            }
+
             assets = assets.Where(FilterAssets).ToArray();
             return assets.ToDictionary(asset => asset.Id, asset => asset.AssetType);
         }
@@ -45,7 +56,17 @@ namespace ReadyPlayerMe.AvatarCreator
 
             foreach (var list in chunkList)
             {
-                var assetIdTextureMap = await DownloadIcons(list);
+                Dictionary<string, Texture> assetIdTextureMap;
+                try
+                {
+                    assetIdTextureMap = await DownloadIcons(list);
+                }
+                catch (Exception e)
+                {
+                    OnError?.Invoke(e.Message);
+                    return;
+                }
+
                 if (ctxSource.IsCancellationRequested)
                 {
                     return;
@@ -64,10 +85,10 @@ namespace ReadyPlayerMe.AvatarCreator
             {
                 var url = asset.AssetType == AssetType.EyeColor ? asset.Mask + EYE_MASK_SIZE_PARAM : asset.Icon;
                 var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(ctxSource.Token);
-                var iconTask = PartnerAssetsRequests.GetAssetIcon(AuthManager.UserSession.Token, url, linkedTokenSource.Token);
+                var iconTask = partnerAssetsRequests.GetAssetIcon(url, linkedTokenSource.Token);
                 assetIconMap.Add(asset.Id, iconTask);
             }
-            
+
             while (!assetIconMap.Values.All(x => x.IsCompleted) && !ctxSource.IsCancellationRequested)
             {
                 await Task.Yield();

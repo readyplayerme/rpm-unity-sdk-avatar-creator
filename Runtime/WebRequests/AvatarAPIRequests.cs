@@ -23,7 +23,7 @@ namespace ReadyPlayerMe.AvatarCreator
             authorizedRequest = new AuthorizedRequest();
         }
 
-        public async Task<Dictionary<string,string>> FetchUserAvatars(string userId)
+        public async Task<Dictionary<string, string>> FetchUserAvatars(string userId)
         {
             var response = await authorizedRequest.SendRequest(
                 new RequestData
@@ -33,6 +33,9 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx
             );
+            
+            response.ThrowIfError();
+
             var json = JObject.Parse(response.Text);
             var data = json["data"]!;
             return data.ToDictionary(element => element["id"]!.ToString(), element => element["partner"]!.ToString());
@@ -49,6 +52,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 ctx: ctx
             );
 
+            response.ThrowIfError();
             return ColorResponseHandler.GetColorsFromResponse(response.Text);
         }
 
@@ -62,6 +66,9 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx
             );
+
+            response.ThrowIfError();
+            
             var json = JObject.Parse(response.Text);
             var data = json["data"]!.ToString();
             return JsonConvert.DeserializeObject<AvatarProperties>(data);
@@ -78,6 +85,8 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx
             );
+
+            response.ThrowIfError();
 
             var metadata = JObject.Parse(response.Text);
             var avatarId = metadata["data"]?["id"]?.ToString();
@@ -97,6 +106,9 @@ namespace ReadyPlayerMe.AvatarCreator
                     Method = Method.GET,
                 },
                 ctx: ctx);
+
+
+            response.ThrowIfError();
             return response.Data;
         }
 
@@ -105,10 +117,12 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest(
                 new RequestData
                 {
-                    Url =  $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}",
+                    Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}",
                     Method = Method.GET,
                 },
                 ctx: ctx);
+
+            response.ThrowIfError();
             return response.Data;
         }
 
@@ -127,6 +141,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx);
 
+            response.ThrowIfError();
             return response.Data;
         }
 
@@ -140,18 +155,21 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx);
 
+            response.ThrowIfError();
             return response.Text;
         }
 
         public async Task DeleteAvatar(string avatarId)
         {
-            await authorizedRequest.SendRequest(
+            var response = await authorizedRequest.SendRequest(
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V1}/{avatarId}",
                     Method = Method.DELETE,
                 },
                 ctx: ctx);
+
+            response.ThrowIfError();
         }
     }
 }
