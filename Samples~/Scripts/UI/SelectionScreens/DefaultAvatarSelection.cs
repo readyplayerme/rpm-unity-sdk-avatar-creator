@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -93,7 +94,17 @@ namespace ReadyPlayerMe
 
         private async Task CreateAvatarRender(string avatarId)
         {
-            var renderImage = await AvatarRenderHelper.GetPortrait(avatarId);
+            Texture2D renderImage;
+            try
+            {
+                 renderImage = await AvatarRenderHelper.GetPortrait(avatarId);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+                return;
+            }
+            
             var button = Instantiate(buttonPrefab, parent);
             var rawImage = button.GetComponentInChildren<RawImage>();
             button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(avatarId));
