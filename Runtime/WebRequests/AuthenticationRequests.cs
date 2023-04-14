@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReadyPlayerMe.Core;
+using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -28,11 +29,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var url = GetUrl(Endpoints.AUTH_USERS);
 
             var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers);
-
-            if (string.IsNullOrEmpty(response.Text))
-            {
-                throw new Exception("No response received");
-            }
+            response.ThrowIfError();
 
             var data = ParseResponse(response.Text);
             return JsonConvert.DeserializeObject<UserSession>(data!.ToString());
@@ -47,8 +44,8 @@ namespace ReadyPlayerMe.AvatarCreator
                     new JProperty("authType", "code")
                 )
             ));
-
-            await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload.ToString());
+            var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload.ToString());
+            response.ThrowIfError();
         }
 
         public async Task<UserSession> LoginWithCode(string code)
@@ -61,6 +58,8 @@ namespace ReadyPlayerMe.AvatarCreator
             ));
 
             var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload.ToString());
+            response.ThrowIfError();
+
             var data = ParseResponse(response.Text);
             return JsonConvert.DeserializeObject<UserSession>(data!.ToString());
         }
@@ -76,6 +75,8 @@ namespace ReadyPlayerMe.AvatarCreator
             ));
 
             var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload.ToString());
+            response.ThrowIfError();
+
             var data = ParseResponse(response.Text);
             var newToken = data["token"]!.ToString();
             var newRefreshToken = data["refreshToken"]!.ToString();

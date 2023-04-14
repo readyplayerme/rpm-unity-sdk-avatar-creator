@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReadyPlayerMe.Core;
+using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -30,11 +31,10 @@ namespace ReadyPlayerMe.AvatarCreator
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V1}{FETCH_AVATAR_PARAMETERS}{userId}",
-                    Method = HttpMethod.POST,
+                    Method = HttpMethod.GET,
                 },
                 ctx: ctx
             );
-            
             response.ThrowIfError();
 
             var json = JObject.Parse(response.Text);
