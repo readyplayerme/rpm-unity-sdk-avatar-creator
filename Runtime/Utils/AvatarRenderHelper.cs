@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -9,14 +9,11 @@ namespace ReadyPlayerMe.AvatarCreator
     {
         public static async Task<Texture2D> GetPortrait(string avatarId)
         {
-            var response = await WebRequestDispatcher.SendRequest($"{Endpoints.AVATAR_API_V1}/{avatarId}.png", Method.GET,
+            var webRequestDispatcher = new WebRequestDispatcher();
+            var response = await webRequestDispatcher.SendRequest<ResponseTexture>($"{Endpoints.AVATAR_API_V1}/{avatarId}.png", HttpMethod.GET,
                 downloadHandler: new DownloadHandlerTexture());
-            if (!response.IsSuccess)
-            {
-                throw new Exception(response.Text);
-            }
-            
-            return (Texture2D)response.Texture;
+            response.ThrowIfError();
+            return response.Texture;
         }
     }
 }

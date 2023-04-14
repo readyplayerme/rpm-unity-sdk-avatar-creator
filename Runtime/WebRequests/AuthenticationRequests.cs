@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ReadyPlayerMe.Core;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -14,16 +15,19 @@ namespace ReadyPlayerMe.AvatarCreator
             { "Content-Type", "application/json" },
         };
 
+        private readonly WebRequestDispatcher webRequestDispatcher;
+
         public AuthenticationRequests(string domain)
         {
             this.domain = domain;
+            webRequestDispatcher = new WebRequestDispatcher();
         }
 
         public async Task<UserSession> LoginAsAnonymous()
         {
             var url = GetUrl(Endpoints.AUTH_USERS);
 
-            var response = await WebRequestDispatcher.SendRequest(url, Method.POST, headers);
+            var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers);
 
             if (string.IsNullOrEmpty(response.Text))
             {
@@ -44,7 +48,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 )
             ));
 
-            await WebRequestDispatcher.SendRequest(url, Method.POST, headers, payload.ToString());
+            await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload.ToString());
         }
 
         public async Task<UserSession> LoginWithCode(string code)
@@ -56,7 +60,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 )
             ));
 
-            var response = await WebRequestDispatcher.SendRequest(url, Method.POST, headers, payload.ToString());
+            var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload.ToString());
             var data = ParseResponse(response.Text);
             return JsonConvert.DeserializeObject<UserSession>(data!.ToString());
         }
@@ -71,7 +75,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 )
             ));
 
-            var response = await WebRequestDispatcher.SendRequest(url, Method.POST, headers, payload.ToString());
+            var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload.ToString());
             var data = ParseResponse(response.Text);
             var newToken = data["token"]!.ToString();
             var newRefreshToken = data["refreshToken"]!.ToString();
