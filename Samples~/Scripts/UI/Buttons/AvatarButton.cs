@@ -54,7 +54,15 @@ namespace ReadyPlayerMe
         private async void LoadImage()
         {
             loading.SetActive(true);
-            image.texture = await AvatarRenderHelper.GetPortrait(avatarId);
+            try
+            {
+                image.texture = await AvatarRenderHelper.GetPortrait(avatarId);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+            
             loading.SetActive(false);
         }
     }

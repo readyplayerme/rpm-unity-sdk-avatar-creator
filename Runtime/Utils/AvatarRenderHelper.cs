@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
-using ReadyPlayerMe.AvatarLoader;
+﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -8,25 +9,14 @@ namespace ReadyPlayerMe.AvatarCreator
     {
         public static async Task<Texture2D> GetPortrait(string avatarId)
         {
-            var isCompleted = false;
-            var renderLoader = new AvatarRenderLoader();
-            Texture2D image = null;
-            renderLoader.OnFailed = (type, errorString) =>
+            var response = await WebRequestDispatcher.SendRequest($"{Endpoints.AVATAR_API_V1}/{avatarId}.png", Method.GET,
+                downloadHandler: new DownloadHandlerTexture());
+            if (!response.IsSuccess)
             {
-                Debug.LogError(type + ", " + errorString);
-            };
-            renderLoader.OnCompleted = renderImage =>
-            {
-                image = renderImage;
-                isCompleted = true;
-            };
-            renderLoader.LoadRender($"{Endpoints.AVATAR_API_V1}/{avatarId}.glb", AvatarRenderScene.Portrait);
-            while (!isCompleted)
-            {
-                await Task.Yield();
+                throw new Exception(response.Text);
             }
-
-            return image;
+            
+            return (Texture2D)response.Texture;
         }
     }
 }
