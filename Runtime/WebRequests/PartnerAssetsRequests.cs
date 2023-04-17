@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -22,10 +22,10 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<PartnerAsset[]> Get(CancellationToken ctx = new CancellationToken())
         {
-            var response = await authorizedRequest.SendRequest(new RequestData
+            var response = await authorizedRequest.SendRequest<Response>(new RequestData
             {
                 Url = Endpoints.ASSETS.Replace("[domain]", domain),
-                Method = Method.GET,
+                Method = HttpMethod.GET,
             }, ctx: ctx);
 
             response.ThrowIfError();
@@ -35,10 +35,10 @@ namespace ReadyPlayerMe.AvatarCreator
         public async Task<Texture> GetAssetIcon(string url, CancellationToken ctx = new CancellationToken())
         {
             var downloadHandler = new DownloadHandlerTexture();
-            var response = await authorizedRequest.SendRequest(new RequestData
+            var response = await authorizedRequest.SendRequest<ResponseTexture>(new RequestData
                 {
                     Url = url,
-                    Method = Method.GET,
+                    Method = HttpMethod.GET,
                     DownloadHandler = downloadHandler,
                 }, ctx: ctx);
 

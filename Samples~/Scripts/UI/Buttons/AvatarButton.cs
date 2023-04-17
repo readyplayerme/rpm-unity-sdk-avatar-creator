@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
@@ -17,6 +18,8 @@ namespace ReadyPlayerMe
 
         private string avatarId;
         private bool showButtons;
+
+        private CancellationTokenSource ctxSource;
 
         private async void Start()
         {
@@ -51,16 +54,27 @@ namespace ReadyPlayerMe
             }
         }
 
+        private void OnDisable()
+        {
+            ctxSource?.Cancel();
+        }
+
         private async void LoadImage()
         {
             loading.SetActive(true);
             try
             {
-                image.texture = await AvatarRenderHelper.GetPortrait(avatarId);
+                ctxSource = new CancellationTokenSource();
+                image.texture = await AvatarRenderHelper.GetPortrait(avatarId, ctxSource.Token);
             }
             catch (Exception e)
             {
                 Debug.Log(e);
+            }
+
+            if (ctxSource.IsCancellationRequested)
+            {
+                return;
             }
             
             loading.SetActive(false);

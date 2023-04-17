@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ReadyPlayerMe.Core;
+using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -25,15 +27,14 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<Dictionary<string, string>> FetchUserAvatars(string userId)
         {
-            var response = await authorizedRequest.SendRequest(
+            var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V1}{FETCH_AVATAR_PARAMETERS}{userId}",
-                    Method = Method.GET,
+                    Method = HttpMethod.GET,
                 },
                 ctx: ctx
             );
-            
             response.ThrowIfError();
 
             var json = JObject.Parse(response.Text);
@@ -43,11 +44,11 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<ColorPalette[]> GetAllAvatarColors(string avatarId)
         {
-            var response = await authorizedRequest.SendRequest(
+            var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}/{COLOR_PARAMETERS}",
-                    Method = Method.GET,
+                    Method = HttpMethod.GET,
                 },
                 ctx: ctx
             );
@@ -58,11 +59,11 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<AvatarProperties> GetAvatarMetadata(string avatarId)
         {
-            var response = await authorizedRequest.SendRequest(
+            var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}.json",
-                    Method = Method.GET,
+                    Method = HttpMethod.GET,
                 },
                 ctx: ctx
             );
@@ -76,11 +77,11 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<string> CreateNewAvatar(AvatarProperties avatarProperties)
         {
-            var response = await authorizedRequest.SendRequest(
+            var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
                     Url = Endpoints.AVATAR_API_V2,
-                    Method = Method.POST,
+                    Method = HttpMethod.POST,
                     Payload = avatarProperties.ToJson()
                 },
                 ctx: ctx
@@ -99,11 +100,11 @@ namespace ReadyPlayerMe.AvatarCreator
                 ? $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb?{PREVIEW_PARAMETER}"
                 : $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}&{PREVIEW_PARAMETER}";
 
-            var response = await authorizedRequest.SendRequest(
+            var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
                     Url = url,
-                    Method = Method.GET,
+                    Method = HttpMethod.GET,
                 },
                 ctx: ctx);
 
@@ -114,11 +115,11 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<byte[]> GetAvatar(string avatarId, string parameters = null)
         {
-            var response = await authorizedRequest.SendRequest(
+            var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}",
-                    Method = Method.GET,
+                    Method = HttpMethod.GET,
                 },
                 ctx: ctx);
 
@@ -132,11 +133,11 @@ namespace ReadyPlayerMe.AvatarCreator
                 ? $"{Endpoints.AVATAR_API_V2}/{avatarId}?{RESPONSE_TYPE_PARAMETER}"
                 : $"{Endpoints.AVATAR_API_V2}/{avatarId}{parameters}&{RESPONSE_TYPE_PARAMETER}";
 
-            var response = await authorizedRequest.SendRequest(
+            var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
                     Url = url,
-                    Method = Method.PATCH,
+                    Method = HttpMethod.PATCH,
                     Payload = avatarProperties.ToJson(true)
                 },
                 ctx: ctx);
@@ -147,11 +148,11 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<string> SaveAvatar(string avatarId)
         {
-            var response = await authorizedRequest.SendRequest(
+            var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}",
-                    Method = Method.PUT,
+                    Method = HttpMethod.PUT,
                 },
                 ctx: ctx);
 
@@ -161,11 +162,11 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task DeleteAvatar(string avatarId)
         {
-            var response = await authorizedRequest.SendRequest(
+            var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V1}/{avatarId}",
-                    Method = Method.DELETE,
+                    Method = HttpMethod.DELETE,
                 },
                 ctx: ctx);
 
