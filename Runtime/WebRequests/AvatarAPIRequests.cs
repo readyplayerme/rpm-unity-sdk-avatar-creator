@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReadyPlayerMe.Core;
-using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
