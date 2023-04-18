@@ -162,7 +162,6 @@ namespace ReadyPlayerMe
             assetTypeUICreator.CreateUI(bodyType, AssetTypeHelper.GetAssetTypeList(bodyType));
             assetButtonCreator.CreateAssetButtons(assets, UpdateAvatar);
             assetButtonCreator.CreateClearButton(UpdateAvatar);
-            Debug.Log(AvatarCreatorData.AvatarProperties.ToJson());
             assetButtonCreator.SetSelectedAssets(AvatarCreatorData.AvatarProperties.Assets);
             saveButton.gameObject.SetActive(true);
         }
