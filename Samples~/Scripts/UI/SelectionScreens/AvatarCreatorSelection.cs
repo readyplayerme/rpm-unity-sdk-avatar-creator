@@ -31,24 +31,16 @@ namespace ReadyPlayerMe
         private void OnEnable()
         {
             saveButton.onClick.AddListener(OnSave);
-            Initialize();
+            Setup();
         }
 
         private void OnDisable()
         {
             saveButton.onClick.RemoveListener(OnSave);
-
-            if (currentAvatar != null)
-            {
-                Destroy(currentAvatar);
-            }
-            saveButton.gameObject.SetActive(false);
-
-            Dispose();
-            assetTypeUICreator.ResetUI();
+            Cleanup();
         }
 
-        private async void Initialize()
+        private async void Setup()
         {
             LoadingManager.EnableLoading();
             ctxSource = new CancellationTokenSource();
@@ -67,11 +59,23 @@ namespace ReadyPlayerMe
             await LoadAssets();
             currentAvatar = await LoadAvatar();
 
-            if (string.IsNullOrEmpty(avatarManager.AvatarId)) 
+            if (string.IsNullOrEmpty(avatarManager.AvatarId))
                 return;
-            
+
             await LoadAvatarColors();
             LoadingManager.DisableLoading();
+        }
+
+        private void Cleanup()
+        {
+            if (currentAvatar != null)
+            {
+                Destroy(currentAvatar);
+            }
+            saveButton.gameObject.SetActive(false);
+
+            Dispose();
+            assetTypeUICreator.ResetUI();
         }
 
         private void OnErrorCallback(string error)
@@ -94,7 +98,7 @@ namespace ReadyPlayerMe
                 ctxSource.Token);
 
             partnerAssetManager.OnError = OnErrorCallback;
-            
+
             var assetIconDownloadTasks = await partnerAssetManager.GetAllAssets();
 
             CreateUI(AvatarCreatorData.AvatarProperties.BodyType, assetIconDownloadTasks);
@@ -131,7 +135,6 @@ namespace ReadyPlayerMe
             return avatar;
         }
 
-
         private async Task LoadAvatarColors()
         {
             var startTime = Time.time;
@@ -157,7 +160,10 @@ namespace ReadyPlayerMe
         private void CreateUI(BodyType bodyType, Dictionary<string, AssetType> assets)
         {
             assetTypeUICreator.CreateUI(bodyType, AssetTypeHelper.GetAssetTypeList(bodyType));
-            assetButtonCreator.CreateUI(assets, UpdateAvatar);
+            assetButtonCreator.CreateAssetButtons(assets, UpdateAvatar);
+            assetButtonCreator.CreateClearButton(UpdateAvatar);
+            Debug.Log(AvatarCreatorData.AvatarProperties.ToJson());
+            assetButtonCreator.SetSelectedAssets(AvatarCreatorData.AvatarProperties.Assets);
             saveButton.gameObject.SetActive(true);
         }
 
