@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ReadyPlayerMe
 {
-    [CreateAssetMenu(fileName = "AvatarCreatorData", menuName = "Scriptable Objects/Ready Player Me/Avatar Creator Data", order = 1)]
+    [CreateAssetMenu(fileName = "AvatarCreatorData", menuName = "Ready Player Me/Avatar Creator Data", order = 1)]
     public class AvatarCreatorData : ScriptableObject
     {
         public AvatarProperties AvatarProperties;
