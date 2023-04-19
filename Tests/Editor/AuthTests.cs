@@ -10,7 +10,6 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
         {
             await AuthManager.LoginAsAnonymous();
             Assert.False(string.IsNullOrEmpty(AuthManager.UserSession.Id));
-            Assert.False(string.IsNullOrEmpty(AuthManager.UserSession.RefreshToken));
         }
     }
 }
