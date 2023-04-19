@@ -37,7 +37,7 @@ Please visit the online documentation and join our public `discord` community.
 
 **4.** Paste in this url
 
-`https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator.git#v0.2.0`
+`https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator.git`
 
 ![paste-git-url](https://user-images.githubusercontent.com/7085672/206432731-f9e0d161-7843-4d6e-8851-47b1f3bfb3bc.png)
 
