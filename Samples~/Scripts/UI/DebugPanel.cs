@@ -16,7 +16,10 @@ namespace ReadyPlayerMe
 
         public static void AddLogWithDuration(string log, float time)
         {
-            text.text += $"{log} <b>[{time:F2}s]</b>  \n";
+            if (text != null)
+            {
+                text.text += $"{log} <b>[{time:F2}s]</b>  \n";
+            }
         }
     }
 }

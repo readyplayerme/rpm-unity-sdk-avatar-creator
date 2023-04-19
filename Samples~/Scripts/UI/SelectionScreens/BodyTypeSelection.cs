@@ -1,14 +1,16 @@
-﻿using ReadyPlayerMe.AvatarCreator;
-using ReadyPlayerMe.AvatarLoader;
+﻿using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace ReadyPlayerMe
 {
-    public class BodyTypeSelection : SelectionScreenBase
+    public class BodyTypeSelection : State
     {
         [SerializeField] private Button fullBody;
         [SerializeField] private Button halfBody;
+        public override StateType StateType => StateType.BodyTypeSelection;
+        public override StateType NextState => StateType.GenderSelection;
+
 
         private void OnEnable()
         {
@@ -24,14 +26,14 @@ namespace ReadyPlayerMe
 
         private void OnFullBodySelected()
         {
-            DataStore.AvatarProperties.BodyType = BodyType.FullBody;
-            IsSelected = true;
+            AvatarCreatorData.AvatarProperties.BodyType = BodyType.FullBody;
+            StateMachine.SetState(NextState);
         }
 
         private void OnHalfBodySelected()
         {
-            DataStore.AvatarProperties.BodyType = BodyType.HalfBody;
-            IsSelected = true;
+            AvatarCreatorData.AvatarProperties.BodyType = BodyType.HalfBody;
+            StateMachine.SetState(NextState);
         }
     }
 }

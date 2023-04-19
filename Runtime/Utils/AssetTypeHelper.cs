@@ -10,7 +10,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             return PartnerAssetTypeMap
                 .Select(a => a.Value)
-                .Where(assetType => IsCorrectAssetType(assetType, bodyType))
+                .Where(assetType => assetType.IsCompatibleAssetType(bodyType))
                 .ToList();
         }
         
@@ -36,7 +36,7 @@ namespace ReadyPlayerMe.AvatarCreator
             { "faceStyle", AssetType.FaceStyle },
         };
 
-        public static bool IsFaceAsset(AssetType assetType)
+        public static bool IsFaceAsset(this AssetType assetType)
         {
             switch (assetType)
             {
@@ -53,12 +53,9 @@ namespace ReadyPlayerMe.AvatarCreator
             }
         }
         
-        private static bool IsCorrectAssetType(AssetType assetType, BodyType bodyType)
+        private static bool IsCompatibleAssetType(this AssetType assetType, BodyType bodyType)
         {
-            if (assetType == AssetType.BeardColor ||
-                assetType == AssetType.EyebrowColor ||
-                assetType == AssetType.HairColor ||
-                assetType == AssetType.FaceStyle)
+            if (assetType == AssetType.FaceStyle)
             {
                 return false;
             }
@@ -69,6 +66,34 @@ namespace ReadyPlayerMe.AvatarCreator
                 return assetType != AssetType.Shirt;
             }
             return assetType != AssetType.Outfit;
+        }
+        
+        public static bool IsOptionalAsset(this AssetType assetType)
+        {
+            switch (assetType)
+            {
+                case AssetType.Outfit:
+                case AssetType.Shirt:
+                case AssetType.EyebrowStyle:
+                    return false;
+                default:
+                    return !assetType.IsColorAsset();
+            }
+        }
+        
+        public static bool IsColorAsset(this AssetType assetType)
+        {
+            switch (assetType)
+            {
+                case AssetType.EyeColor:
+                case AssetType.BeardColor:
+                case AssetType.EyebrowColor:
+                case AssetType.HairColor:
+                case AssetType.SkinColor:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }

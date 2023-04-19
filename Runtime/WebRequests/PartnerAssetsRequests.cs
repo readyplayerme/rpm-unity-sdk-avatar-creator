@@ -1,39 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
-    public static class PartnerAssetsRequests
+    public class PartnerAssetsRequests
     {
-        public static async Task<PartnerAsset[]> Get(string token, string domain)
-        {
-            var request = await WebRequestDispatcher.SendRequest(
-                Endpoints.ASSETS.Replace("[domain]", domain),
-                Method.GET,
-                new Dictionary<string, string>
-                {
-                    { "Authorization", $"Bearer {token}" }
-                });
+        private readonly string token;
+        private readonly string domain;
 
-            return JsonConvert.DeserializeObject<PartnerAsset[]>(request.Text);
+        private readonly AuthorizedRequest authorizedRequest;
+
+        public PartnerAssetsRequests(string domain)
+        {
+            this.domain = domain;
+            authorizedRequest = new AuthorizedRequest();
         }
 
-        public static async Task<Texture> GetAssetIcon(string token, string url)
+        public async Task<PartnerAsset[]> Get(CancellationToken ctx = new CancellationToken())
+        {
+            var response = await authorizedRequest.SendRequest<Response>(new RequestData
+            {
+                Url = Endpoints.ASSETS.Replace("[domain]", domain),
+                Method = HttpMethod.GET,
+            }, ctx: ctx);
+
+            response.ThrowIfError();
+            return JsonConvert.DeserializeObject<PartnerAsset[]>(response.Text);
+        }
+
+        public async Task<Texture> GetAssetIcon(string url, CancellationToken ctx = new CancellationToken())
         {
             var downloadHandler = new DownloadHandlerTexture();
-            var response = await WebRequestDispatcher.SendRequest(
-                url,
-                Method.GET,
-                new Dictionary<string, string>
+            var response = await authorizedRequest.SendRequest<ResponseTexture>(new RequestData
                 {
-                    { "Authorization", $"Bearer {token}" }
-                },
-                null,
-                downloadHandler);
+                    Url = url,
+                    Method = HttpMethod.GET,
+                    DownloadHandler = downloadHandler,
+                }, ctx: ctx);
 
+            response.ThrowIfError();
             return response.Texture;
         }
     }

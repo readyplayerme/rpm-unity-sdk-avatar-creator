@@ -6,6 +6,8 @@ namespace ReadyPlayerMe
 {
     public class AssetButton : MonoBehaviour
     {
+        private readonly Vector2 defaultEyeSize = new Vector2(210, 210);
+
         [SerializeField] private RawImage icon;
         [SerializeField] private GameObject selected;
         [SerializeField] private Button button;
@@ -17,12 +19,17 @@ namespace ReadyPlayerMe
             button.onClick.AddListener(action.Invoke);
         }
 
+        public void SetColor(string colorHex)
+        {
+            ColorUtility.TryParseHtmlString(colorHex, out var color);
+            icon.color = color;
+        }
+
         public void SetEyeColorConfig()
         {
-            mask.GetComponent<Image>().color = Color.white;
-            mask.GetComponent<Mask>().enabled = true;
+            EnableMask();
             icon.rectTransform.localPosition = Vector3.zero;
-            icon.rectTransform.sizeDelta = new Vector2(210, 210);
+            icon.rectTransform.sizeDelta = defaultEyeSize;
         }
 
         public void SetIcon(Texture texture)
@@ -35,6 +42,12 @@ namespace ReadyPlayerMe
         public void SetSelect(bool isSelected)
         {
             selected.SetActive(isSelected);
+        }
+
+        private void EnableMask()
+        {
+            mask.GetComponent<Mask>().enabled = true;
+            mask.GetComponent<Image>().color = Color.white;
         }
     }
 }

@@ -5,42 +5,65 @@ using UnityEngine.UI;
 
 namespace ReadyPlayerMe
 {
-    public class GenderSelection : SelectionScreenBase
+    public class GenderSelection : State
     {
         [SerializeField] private Button male;
         [SerializeField] private Button female;
         [SerializeField] private Button dontSpecify;
+        [SerializeField] private GameObject signInPanel;
+        [SerializeField] private Button signInButton;
+
+        public override StateType StateType => StateType.GenderSelection;
+        public override StateType NextState => StateType.SelfieSelection;
+
 
         private void OnEnable()
         {
             male.onClick.AddListener(OnMaleSelected);
             female.onClick.AddListener(OnFemaleSelected);
             dontSpecify.onClick.AddListener(OnGenderNotSpecifiedSelected);
+            signInButton.onClick.AddListener(OnSignButton);
+
+            if (AuthManager.IsSignedIn)
+            {
+                signInPanel.SetActive(false);
+            }
         }
+
 
         private void OnDisable()
         {
             male.onClick.RemoveListener(OnMaleSelected);
             female.onClick.RemoveListener(OnFemaleSelected);
             dontSpecify.onClick.RemoveListener(OnGenderNotSpecifiedSelected);
+            signInButton.onClick.RemoveListener(OnSignButton);
         }
 
         private void OnMaleSelected()
         {
-            DataStore.AvatarProperties.Gender = OutfitGender.Masculine;
-            IsSelected = true;
+            SetNextState(OutfitGender.Masculine);
         }
 
         private void OnFemaleSelected()
         {
-            DataStore.AvatarProperties.Gender = OutfitGender.Feminine;
-            IsSelected = true;
+            SetNextState(OutfitGender.Feminine);
         }
 
         private void OnGenderNotSpecifiedSelected()
         {
-            DataStore.AvatarProperties.Gender = OutfitGender.None;
-            IsSelected = true;
+            SetNextState(OutfitGender.None);
+        }
+
+        private void SetNextState(OutfitGender gender)
+        {
+            AvatarCreatorData.AvatarProperties.Gender = gender;
+            StateMachine.SetState(NextState);
+        }
+
+
+        private void OnSignButton()
+        {
+            StateMachine.SetState(StateType.LoginWithCodeFromEmail);
         }
     }
 }

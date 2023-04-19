@@ -3,13 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [x.xx.x] - yyyy.mm.dd
+## [0.1.4] - 2023.04.07
 
 ### Added
-- add Added items here
+- 
 
 ### Updated
-- add Updated items here
+- AvatarCreatorExample Sample project updated.
+- AvatarSelection, FullbodyButton, and DefaultAvatarButton prefabs are updated.
 
 ### Fixed
-- add Fixed items here
+- 
