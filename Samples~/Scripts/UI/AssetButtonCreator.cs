@@ -13,19 +13,22 @@ namespace ReadyPlayerMe
         [SerializeField] private GameObject colorAssetButtonPrefab;
 
         private Dictionary<AssetType, AssetButton> selectedAssetByTypeMap;
-        private Dictionary<string, AssetButton> assetMap;
+        private Dictionary<object, AssetButton> assetMap;
 
-        public void CreateUI(IEnumerable<KeyValuePair<string, AssetType>> assets, Action<string, AssetType> onClick)
+        public void CreateAssetButtons(IEnumerable<KeyValuePair<string, AssetType>> assets, Action<string, AssetType> onClick)
         {
             selectedAssetByTypeMap = new Dictionary<AssetType, AssetButton>();
-            assetMap = new Dictionary<string, AssetButton>();
+            assetMap = new Dictionary<object, AssetButton>();
             
             foreach (var asset in assets)
             {
                 var parent = PanelSwitcher.AssetTypePanelMap[asset.Value];
                 AddAssetButton(asset.Key, parent.transform, asset.Value, onClick);
             }
+        }
 
+        public void CreateClearButton(Action<string, AssetType> onClick)
+        {
             foreach (var assetTypePanelMap in PanelSwitcher.AssetTypePanelMap)
             {
                 var assetType = assetTypePanelMap.Key;
@@ -37,6 +40,25 @@ namespace ReadyPlayerMe
             }
         }
 
+        public void SetSelectedAssets(Dictionary<AssetType, object> selected)
+        {
+            foreach (var asset in selected)
+            {
+                var assetType = asset.Key;   
+                var assetId = asset.Value;
+                if (assetType.IsColorAsset() && assetType != AssetType.EyeColor)
+                {
+                    assetId = $"{assetType}_{assetId}";
+                }
+                
+                if(!assetMap.ContainsKey(assetId))
+                {
+                    continue;
+                }
+                SelectButton(assetType, assetMap[assetId]);
+            }
+        }
+        
         public void CreateColorUI(ColorPalette[] colorPalettes, Action<object, AssetType> onClick)
         {
             foreach (var colorPalette in colorPalettes)
@@ -63,9 +85,9 @@ namespace ReadyPlayerMe
         {
             foreach (var asset in assetIcons)
             {
-                if (assetMap.ContainsKey(asset.Key))
+                if (assetMap.TryGetValue(asset.Key, out AssetButton button))
                 {
-                    assetMap[asset.Key].SetIcon(asset.Value);
+                    button.SetIcon(asset.Value);
                 }
             }
         }
@@ -153,6 +175,7 @@ namespace ReadyPlayerMe
                 case AssetType.FaceShape:
                 case AssetType.LipShape:
                 case AssetType.NoseShape:
+                case AssetType.Glasses:
                     return true;
                 default:
                     return false;

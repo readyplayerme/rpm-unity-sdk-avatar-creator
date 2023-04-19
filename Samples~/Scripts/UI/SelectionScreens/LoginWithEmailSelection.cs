@@ -47,7 +47,6 @@ public class LoginWithEmailSelection : State
         codePanel.SetActive(true);
     }
 
-
     private void OnChangeEmail()
     {
         emailPanel.SetActive(true);
