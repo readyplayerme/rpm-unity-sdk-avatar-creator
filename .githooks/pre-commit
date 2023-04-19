@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Enforce Gitflow branching and naming strategy
+
+# Get the name of the current branch
+branch=$(git symbolic-ref --short HEAD)
+
+# Check if the branch name follows the Gitflow naming convention
+if ! [[ $branch =~ ^(feature|hotfix|release)\/[a-z0-9-]+$ ]]; then
+  echo "Error: Branch name does not follow Gitflow naming convention."
+  echo "Branch names should start with 'feature/', 'hotfix/', or 'release/', followed by a hyphen-separated name."
+  echo "Example: feature/async-mesh-loading"
+  exit 1
+fi
+
+# All checks passed, allow the commit to proceed
+exit 0

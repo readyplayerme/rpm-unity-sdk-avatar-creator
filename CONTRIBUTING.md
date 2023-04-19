@@ -83,6 +83,15 @@ Scan through our [existing issues](https://github.com/github/docs/issues) to fin
 
 ### Commit your update
 
+We encourage following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) format when it comes to writing commit messages. Our package repositories come with a .githooks folder that has a commit-msg file that can enforce this.
+To set this up you just need to configure git's hookspath folder to point there.
+
+You can do this by
+1. Open the terminal
+2. Navigate to the root folder of this repository
+3. Run the following command
+   `git config core.hooksPath .githooks`
+
 Commit the changes once you are happy with them. Don't forget to [self-review](#self-review) to speed up the review process:zap:.
 
 ### Self review
