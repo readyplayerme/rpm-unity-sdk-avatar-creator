@@ -3,7 +3,7 @@
 # Gitflow branching and naming strategy enforcement for Windows and Mac
 
 protected_branches="^(main|develop|hotfix/|release/|feature/)"
-current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+current_branch=$(git symbolic-ref HEAD | sed 's!refs/heads/!!')
 
 # Ensure the branch name adheres to the Gitflow naming strategy
 if ! [[ ${current_branch} =~ ${protected_branches} ]]; then
