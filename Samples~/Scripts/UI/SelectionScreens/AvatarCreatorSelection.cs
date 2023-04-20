@@ -54,7 +54,7 @@ namespace ReadyPlayerMe
                 AvatarCreatorData.AvatarProperties.Gender,
                 inCreatorConfig,
                 ctxSource.Token);
-            avatarManager.OnError = OnErrorCallback;
+            avatarManager.OnError += OnErrorCallback;
 
             await LoadAssets();
             currentAvatar = await LoadAvatar();
@@ -81,8 +81,8 @@ namespace ReadyPlayerMe
 
         private void OnErrorCallback(string error)
         {
-            avatarManager.OnError = null;
-            partnerAssetManager.OnError = null;
+            avatarManager.OnError -= OnErrorCallback;
+            partnerAssetManager.OnError -= OnErrorCallback;
 
             ctxSource?.Cancel();
             StateMachine.Back();
@@ -98,7 +98,7 @@ namespace ReadyPlayerMe
                 AvatarCreatorData.AvatarProperties.Gender,
                 ctxSource.Token);
 
-            partnerAssetManager.OnError = OnErrorCallback;
+            partnerAssetManager.OnError += OnErrorCallback;
 
             var assetIconDownloadTasks = await partnerAssetManager.GetAllAssets();
 

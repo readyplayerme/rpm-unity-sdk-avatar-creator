@@ -59,12 +59,12 @@ namespace ReadyPlayerMe.AvatarCreator
             catch (Exception e)
             {
                 OnError?.Invoke(e.Message);
-                return default;
+                return avatarProperties;
             }
 
             if (ctxSource.IsCancellationRequested)
             {
-                return default;
+                return avatarProperties;
             }
 
             return avatarProperties;
