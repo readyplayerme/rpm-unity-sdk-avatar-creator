@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -74,7 +75,7 @@ namespace ReadyPlayerMe.AvatarCreator
             return JsonConvert.DeserializeObject<AvatarProperties>(data);
         }
 
-        public async Task<string> CreateNewAvatar(AvatarProperties avatarProperties)
+        public async Task<AvatarProperties> CreateNewAvatar(AvatarProperties avatarProperties)
         {
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
@@ -86,11 +87,19 @@ namespace ReadyPlayerMe.AvatarCreator
                 ctx: ctx
             );
 
-            response.ThrowIfError();
+            if (!response.IsSuccess)
+            {
+                if (!string.IsNullOrEmpty(response.Text))
+                {
+                    var json = JObject.Parse(response.Text);
+                    throw new Exception(json["message"]!.ToString());
+                }
+                throw new Exception(response.Error);
+            }
 
             var metadata = JObject.Parse(response.Text);
-            var avatarId = metadata["data"]?["id"]?.ToString();
-            return avatarId;
+            var data = metadata["data"]!.ToString();
+            return JsonConvert.DeserializeObject<AvatarProperties>(data);
         }
 
         public async Task<byte[]> GetPreviewAvatar(string avatarId, string parameters = null)

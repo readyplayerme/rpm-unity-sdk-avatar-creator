@@ -49,22 +49,33 @@ namespace ReadyPlayerMe.AvatarCreator
         /// </summary>
         /// <param name="avatarProperties">Properties which describes avatar</param>
         /// <returns>Avatar gameObject</returns>
-        public async Task<GameObject> Create(AvatarProperties avatarProperties)
+        public async Task<AvatarProperties> CreateNewAvatar(AvatarProperties avatarProperties)
         {
             try
             {
-                avatarId = await avatarAPIRequests.CreateNewAvatar(avatarProperties);
+                avatarProperties = await avatarAPIRequests.CreateNewAvatar(avatarProperties);
+                avatarId = avatarProperties.Id;
             }
             catch (Exception e)
             {
                 OnError?.Invoke(e.Message);
-                return null;
+                return default;
             }
 
+            if (ctxSource.IsCancellationRequested)
+            {
+                return default;
+            }
+
+            return avatarProperties;
+        }
+
+        public async Task<GameObject> GetPreviewAvatar(string id)
+        {
             byte[] data;
             try
             {
-                data = await avatarAPIRequests.GetPreviewAvatar(avatarId, avatarConfigParameters);
+                data = await avatarAPIRequests.GetPreviewAvatar(id, avatarConfigParameters);
             }
             catch (Exception e)
             {
