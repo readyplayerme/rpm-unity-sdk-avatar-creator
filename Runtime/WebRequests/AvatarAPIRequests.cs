@@ -86,16 +86,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx
             );
-
-            if (!response.IsSuccess)
-            {
-                if (!string.IsNullOrEmpty(response.Text))
-                {
-                    var json = JObject.Parse(response.Text);
-                    throw new Exception(json["message"]!.ToString());
-                }
-                throw new Exception(response.Error);
-            }
+            response.ThrowIfError();
 
             var metadata = JObject.Parse(response.Text);
             var data = metadata["data"]!.ToString();
