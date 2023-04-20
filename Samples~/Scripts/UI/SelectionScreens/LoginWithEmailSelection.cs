@@ -56,9 +56,21 @@ public class LoginWithEmailSelection : State
     private async void OnLogin()
     {
         LoadingManager.EnableLoading("Signing In");
-        await AuthManager.LoginWithCode(codeField.text);
-        OnChangeEmail();
-        LoadingManager.DisableLoading();
-        StateMachine.SetState(StateType.AvatarSelection);
+
+        AuthManager.OnSignInError += OnSignInError;
+
+        if (await AuthManager.LoginWithCode(codeField.text))
+        {
+            Debug.Log("How");
+            OnChangeEmail();
+            LoadingManager.DisableLoading();
+            StateMachine.SetState(StateType.AvatarSelection);
+        }
+    }
+
+    private void OnSignInError(string error)
+    {
+        AuthManager.OnSignInError -= OnSignInError;
+        LoadingManager.EnableLoading(error, LoadingManager.LoadingType.Popup, false);
     }
 }
