@@ -61,7 +61,6 @@ public class LoginWithEmailSelection : State
 
         if (await AuthManager.LoginWithCode(codeField.text))
         {
-            Debug.Log("How");
             OnChangeEmail();
             LoadingManager.DisableLoading();
             StateMachine.SetState(StateType.AvatarSelection);
