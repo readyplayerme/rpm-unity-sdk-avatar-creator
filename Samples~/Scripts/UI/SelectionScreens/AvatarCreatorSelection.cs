@@ -54,7 +54,7 @@ namespace ReadyPlayerMe
                 AvatarCreatorData.AvatarProperties.Gender,
                 inCreatorConfig,
                 ctxSource.Token);
-            avatarManager.OnError = OnErrorCallback;
+            avatarManager.OnError += OnErrorCallback;
 
             await LoadAssets();
             currentAvatar = await LoadAvatar();
@@ -63,6 +63,7 @@ namespace ReadyPlayerMe
                 return;
 
             await LoadAvatarColors();
+            assetButtonCreator.SetSelectedAssets(AvatarCreatorData.AvatarProperties.Assets);
             LoadingManager.DisableLoading();
         }
 
@@ -80,8 +81,8 @@ namespace ReadyPlayerMe
 
         private void OnErrorCallback(string error)
         {
-            avatarManager.OnError = null;
-            partnerAssetManager.OnError = null;
+            avatarManager.OnError -= OnErrorCallback;
+            partnerAssetManager.OnError -= OnErrorCallback;
 
             ctxSource?.Cancel();
             StateMachine.Back();
@@ -97,7 +98,7 @@ namespace ReadyPlayerMe
                 AvatarCreatorData.AvatarProperties.Gender,
                 ctxSource.Token);
 
-            partnerAssetManager.OnError = OnErrorCallback;
+            partnerAssetManager.OnError += OnErrorCallback;
 
             var assetIconDownloadTasks = await partnerAssetManager.GetAllAssets();
 
@@ -115,7 +116,9 @@ namespace ReadyPlayerMe
             if (string.IsNullOrEmpty(AvatarCreatorData.AvatarProperties.Id))
             {
                 AvatarCreatorData.AvatarProperties.Assets ??= GetDefaultAssets();
-                avatar = await avatarManager.Create(AvatarCreatorData.AvatarProperties);
+
+                AvatarCreatorData.AvatarProperties = await avatarManager.CreateNewAvatar(AvatarCreatorData.AvatarProperties);
+                avatar = await avatarManager.GetPreviewAvatar(AvatarCreatorData.AvatarProperties.Id);
             }
             else
             {
@@ -126,8 +129,6 @@ namespace ReadyPlayerMe
             {
                 return null;
             }
-
-            AvatarCreatorData.AvatarProperties.Id = avatarManager.AvatarId;
 
             ProcessAvatar(avatar);
 
@@ -162,7 +163,6 @@ namespace ReadyPlayerMe
             assetTypeUICreator.CreateUI(bodyType, AssetTypeHelper.GetAssetTypeList(bodyType));
             assetButtonCreator.CreateAssetButtons(assets, UpdateAvatar);
             assetButtonCreator.CreateClearButton(UpdateAvatar);
-            assetButtonCreator.SetSelectedAssets(AvatarCreatorData.AvatarProperties.Assets);
             saveButton.gameObject.SetActive(true);
         }
 
