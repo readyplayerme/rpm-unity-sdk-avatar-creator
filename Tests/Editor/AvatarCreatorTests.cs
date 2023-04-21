@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
@@ -9,12 +10,15 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
     {
         private const string DOMAIN = "demo";
 
-        private GameObject avatar;
+        private readonly List<GameObject> avatars = new List<GameObject>();
 
         [TearDown]
         public void TearDown()
         {
-            Object.DestroyImmediate(avatar);
+            foreach (var avatar in avatars)
+            {
+                Object.DestroyImmediate(avatar);
+            }
         }
 
         [Test]
@@ -44,20 +48,22 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
             };
 
             var avatarManager = new AvatarManager(avatarProperties.BodyType, avatarProperties.Gender);
-            avatar = await avatarManager.Create(avatarProperties);
-
+            avatarProperties = await avatarManager.CreateNewAvatar(avatarProperties);
+            var avatar = await avatarManager.GetPreviewAvatar(avatarProperties.Id);
+            avatars.Add(avatar);
+            
             Assert.IsNotNull(avatar);
             Debug.Log("Avatar created with id: " + avatar.name);
-
+            
             avatar = await avatarManager.UpdateAsset(AssetType.SkinColor, 2.ToString());
             Assert.IsNotNull(avatar);
             Debug.Log("Avatar skinColor updated");
-
+            
             // Save Avatar
             var avatarId = await avatarManager.Save();
             Assert.IsNotNull(avatarId);
             Debug.Log("Avatar metadata saved to permanent storage on server.");
-
+            
             // Delete the Avatar
             await avatarManager.Delete();
             Debug.Log("Avatar deleted.");
@@ -80,9 +86,12 @@ namespace ReadyPlayerMe.AvatarCreator.Tests
             };
 
             var avatarManager = new AvatarManager(avatarProperties.BodyType, avatarProperties.Gender);
-            avatar = await avatarManager.Create(avatarProperties);
+            avatarProperties = await avatarManager.CreateNewAvatar(avatarProperties);
+            var avatar = await avatarManager.GetPreviewAvatar(avatarProperties.Id);
+            avatars.Add(avatar);
+            
             var avatarAPIRequests = new AvatarAPIRequests();
-            var colors = await avatarAPIRequests.GetAllAvatarColors(avatar.name);
+            var colors = await avatarAPIRequests.GetAllAvatarColors(avatarProperties.Id);
             Assert.IsNotNull(colors);
             Assert.Greater(colors.Length, 3);
         }

@@ -3,7 +3,7 @@
 
 <!-- Add link for the ticket here editing the TICKETID-->
 
-## [TICKETID](https://ready-player-me.monday.com/boards/2563815861/pulses/TICKETID)
+## [TICKETID](https://ready-player-me.atlassian.net/browse/TICKETID)
 
 ## Description
 
