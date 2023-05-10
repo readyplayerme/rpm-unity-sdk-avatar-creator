@@ -46,10 +46,6 @@ The plugin is currently in **alpha** stage. We recommend not to use it in the pr
 
 ## Note
 
-### Camera
-Webcam support is currently only available for PC using Unity’s native API.
-To add support for other platforms, you will need to implement it yourself.
-
-### File Picker
-Unity does not have a native file picker, so we have discontinued support for this feature.
-To add support for a file picker, you will need to implement it yourself.
+- Camera support is currently only available for PC using Unity’s webcam native API.
+- Unity does not have a native file picker, so we have discontinued support for this feature.
+- To add support for camera on other platforms and file picker, you will need to implement it yourself.
