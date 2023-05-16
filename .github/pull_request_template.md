@@ -39,15 +39,6 @@
 -   [ ] Tests written or updated for the changes.
 -   [ ] Documentation is updated.
 -   [ ] Changelog is updated.
--   [ ] QA Testing is updated.
-
-## QA Testing
-
--   Mention any useful test cases for this feature and add to QA Testing documentation.
-
-## Details
-
--   If more details are necessary to support the description with images and videos add them here.
 
 <!--- Remember to copy the Changes Section into the commit message when you close the PR -->
 
