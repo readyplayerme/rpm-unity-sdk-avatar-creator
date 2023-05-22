@@ -18,11 +18,14 @@ namespace ReadyPlayerMe
         [SerializeField] private Button saveButton;
         [SerializeField] private AvatarConfig inCreatorConfig;
         [SerializeField] private RuntimeAnimatorController animator;
+        [SerializeField] private AccountCreationPopup accountCreationPopup;
 
         private PartnerAssetsManager partnerAssetManager;
         private AvatarManager avatarManager;
+
         private GameObject currentAvatar;
         private Quaternion lastRotation;
+
         private CancellationTokenSource ctxSource;
 
         public override StateType StateType => StateType.Editor;
@@ -30,13 +33,17 @@ namespace ReadyPlayerMe
 
         private void OnEnable()
         {
-            saveButton.onClick.AddListener(OnSave);
+            saveButton.onClick.AddListener(OnSaveButton);
+            accountCreationPopup.OnSendEmail += OnSendEmail;
+            accountCreationPopup.OnContinueWithoutSignup += OnContinueWithoutSignup;
             Setup();
         }
 
         private void OnDisable()
         {
-            saveButton.onClick.RemoveListener(OnSave);
+            saveButton.onClick.RemoveListener(OnSaveButton);
+            accountCreationPopup.OnSendEmail -= OnSendEmail;
+            accountCreationPopup.OnContinueWithoutSignup -= OnContinueWithoutSignup;
             Cleanup();
         }
 
@@ -166,8 +173,33 @@ namespace ReadyPlayerMe
             saveButton.gameObject.SetActive(true);
         }
 
-        private async void OnSave()
+        private void OnSaveButton()
         {
+            if (AuthManager.IsSignedIn)
+            {
+                Save();
+            }
+            else
+            {
+                accountCreationPopup.gameObject.SetActive(true);
+            }
+
+        }
+
+        private void OnContinueWithoutSignup()
+        {
+            Save();
+        }
+
+        private void OnSendEmail(string email)
+        {
+            AuthManager.Signup(email);
+            Save();
+        }
+
+        private async void Save()
+        {
+            accountCreationPopup.gameObject.SetActive(true);
             var startTime = Time.time;
             var avatarId = await avatarManager.Save();
             AvatarCreatorData.AvatarProperties.Id = avatarId;
