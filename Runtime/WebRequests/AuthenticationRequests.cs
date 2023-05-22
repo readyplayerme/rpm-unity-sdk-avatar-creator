@@ -63,6 +63,18 @@ namespace ReadyPlayerMe.AvatarCreator
             var data = ParseResponse(response.Text);
             return JsonConvert.DeserializeObject<UserSession>(data!.ToString());
         }
+        
+        public async Task Signup(string email)
+        {
+            var url = GetUrl(Endpoints.AUTH_SIGNUP);
+            var payload = new JObject(new JProperty("data",
+                new JObject(
+                    new JProperty("email", email)
+                )
+            ));
+            var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload.ToString());
+            response.ThrowIfError();
+        }
 
         public async Task<(string,string)> RefreshToken(string token, string refreshToken)
         {

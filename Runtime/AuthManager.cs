@@ -58,6 +58,11 @@ namespace ReadyPlayerMe.AvatarCreator
             }
         }
 
+        public static async void Signup(string email)
+        {
+            await AuthenticationRequests.Signup(email);
+        }
+
         public static async Task RefreshToken()
         {
             var newTokens = await AuthenticationRequests.RefreshToken(userSession.Token, userSession.RefreshToken);
