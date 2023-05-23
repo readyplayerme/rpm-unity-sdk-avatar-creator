@@ -24,14 +24,14 @@ namespace ReadyPlayerMe
         {
             sendEmailButton.onClick.AddListener(OnSendEmailButton);
             continueWithoutSignupButton.onClick.AddListener(OnContinueWithoutSignupButton);
-            closeButton.onClick.AddListener(OnCloseButton);
+            closeButton.onClick.AddListener(OnContinueWithoutSignupButton);
         }
 
         private void OnDisable()
         {
             sendEmailButton.onClick.RemoveListener(OnSendEmailButton);
             continueWithoutSignupButton.onClick.RemoveListener(OnContinueWithoutSignupButton);
-            closeButton.onClick.RemoveListener(OnCloseButton);
+            closeButton.onClick.RemoveListener(OnContinueWithoutSignupButton);
         }
 
 
@@ -45,11 +45,6 @@ namespace ReadyPlayerMe
         private void OnContinueWithoutSignupButton()
         {
             OnContinueWithoutSignup?.Invoke();
-            gameObject.SetActive(false);
-        }
-
-        private void OnCloseButton()
-        {
             gameObject.SetActive(false);
         }
     }
