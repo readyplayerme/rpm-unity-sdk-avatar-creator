@@ -31,7 +31,7 @@ namespace ReadyPlayerMe
         public override StateType StateType => StateType.Editor;
         public override StateType NextState => StateType.End;
 
-        private void OnEnable()
+        public override void ActivateState()
         {
             saveButton.onClick.AddListener(OnSaveButton);
             accountCreationPopup.OnSendEmail += OnSendEmail;
@@ -39,7 +39,7 @@ namespace ReadyPlayerMe
             Setup();
         }
 
-        private void OnDisable()
+        public override void DeactivateState()
         {
             saveButton.onClick.RemoveListener(OnSaveButton);
             accountCreationPopup.OnSendEmail -= OnSendEmail;

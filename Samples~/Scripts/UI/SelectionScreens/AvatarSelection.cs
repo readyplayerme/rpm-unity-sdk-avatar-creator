@@ -19,7 +19,7 @@ namespace ReadyPlayerMe
         private Dictionary<string, GameObject> avatarButtonsMap;
         private AvatarAPIRequests avatarAPIRequests;
         
-        private void OnEnable()
+        public override void ActivateState()
         {
             partnerAvatarsButton.onClick.AddListener(OnPartnerAvatarsButton);
             allAvatarsButton.onClick.AddListener(OnAllAvatarsButton);
@@ -29,7 +29,7 @@ namespace ReadyPlayerMe
             CreateAvatarButtons();
         }
 
-        private void OnDisable()
+        public override void DeactivateState()
         {
             partnerAvatarsButton.onClick.RemoveListener(OnPartnerAvatarsButton);
             allAvatarsButton.onClick.RemoveListener(OnAllAvatarsButton);

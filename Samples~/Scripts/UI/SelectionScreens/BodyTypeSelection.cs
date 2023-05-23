@@ -11,14 +11,13 @@ namespace ReadyPlayerMe
         public override StateType StateType => StateType.BodyTypeSelection;
         public override StateType NextState => StateType.GenderSelection;
 
-
-        private void OnEnable()
+        public override void ActivateState()
         {
             fullBody.onClick.AddListener(OnFullBodySelected);
             halfBody.onClick.AddListener(OnHalfBodySelected);
         }
 
-        private void OnDisable()
+        public override void DeactivateState()
         {
             fullBody.onClick.RemoveListener(OnFullBodySelected);
             halfBody.onClick.RemoveListener(OnHalfBodySelected);
