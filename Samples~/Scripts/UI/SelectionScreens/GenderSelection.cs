@@ -16,8 +16,7 @@ namespace ReadyPlayerMe
         public override StateType StateType => StateType.GenderSelection;
         public override StateType NextState => StateType.SelfieSelection;
 
-
-        private void OnEnable()
+        public override void ActivateState()
         {
             male.onClick.AddListener(OnMaleSelected);
             female.onClick.AddListener(OnFemaleSelected);
@@ -30,8 +29,7 @@ namespace ReadyPlayerMe
             }
         }
 
-
-        private void OnDisable()
+        public override void DeactivateState()
         {
             male.onClick.RemoveListener(OnMaleSelected);
             female.onClick.RemoveListener(OnFemaleSelected);

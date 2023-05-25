@@ -14,13 +14,13 @@ namespace ReadyPlayerMe
 
         private WebCamTexture camTexture;
         
-        private void OnEnable()
+        public override void ActivateState()
         {
             cameraButton.onClick.AddListener(OnCameraButton);
             OpenCamera();
         }
 
-        private void OnDisable()
+        public override void DeactivateState()
         {
             cameraButton.onClick.RemoveListener(OnCameraButton);
             CloseCamera();

@@ -19,7 +19,7 @@ public class LoginWithEmailSelection : State
     public override StateType StateType => StateType.LoginWithCodeFromEmail;
     public override StateType NextState => StateType.BodyTypeSelection;
 
-    private void OnEnable()
+    public override void ActivateState()
     {
         sendActivationCodeButton.onClick.AddListener(OnSendActivationCode);
         haveCodeButton.onClick.AddListener(OnHaveCodeButton);
@@ -27,7 +27,7 @@ public class LoginWithEmailSelection : State
         loginButton.onClick.AddListener(OnLogin);
     }
 
-    private void OnDisable()
+    public override void DeactivateState()
     {
         sendActivationCodeButton.onClick.RemoveListener(OnSendActivationCode);
         haveCodeButton.onClick.RemoveListener(OnHaveCodeButton);

@@ -27,7 +27,7 @@ namespace ReadyPlayerMe
             var previousState = currentState; 
             if (previousState != StateType.None)
             {
-                stateTypeMap[previousState].gameObject.SetActive(false);
+                DeactivateState(stateTypeMap[previousState]);
 
                 if (statesToSkip.Contains(stateType))
                 {
@@ -41,7 +41,7 @@ namespace ReadyPlayerMe
             currentState = stateType;
             if (stateType != StateType.End)
             {
-                stateTypeMap[currentState].gameObject.SetActive(true);
+                ActivateState(stateTypeMap[currentState]);
             }
             StateChanged?.Invoke(currentState, previousState);
         }
@@ -54,13 +54,27 @@ namespace ReadyPlayerMe
         public void Back()
         {
             var previousState = currentState; 
-            stateTypeMap[previousState].gameObject.SetActive(false);
+
+            DeactivateState(stateTypeMap[previousState]);
+            
             currentState = previousStates.Pop();
             if (currentState != StateType.None)
             {
-                stateTypeMap[currentState].gameObject.SetActive(true);
+                ActivateState(stateTypeMap[currentState]);
                 StateChanged?.Invoke(currentState, previousState);
             }
+        }
+
+        private void ActivateState(State state)
+        {
+            state.gameObject.SetActive(true);
+            state.ActivateState();
+        }
+        
+        private void DeactivateState(State state)
+        {
+            state.gameObject.SetActive(false);
+            state.DeactivateState();
         }
     }
 }

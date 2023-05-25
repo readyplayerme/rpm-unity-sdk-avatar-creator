@@ -10,6 +10,8 @@ namespace ReadyPlayerMe
         [SerializeField] private AvatarCreatorStateMachine avatarCreatorStateMachine;
         [SerializeField] private AvatarConfig inGameConfig;
 
+        private AvatarObjectLoader avatarObjectLoader;
+
         private void OnEnable()
         {
             avatarCreatorStateMachine.AvatarSaved += OnAvatarSaved;
@@ -18,6 +20,7 @@ namespace ReadyPlayerMe
         private void OnDisable()
         {
             avatarCreatorStateMachine.AvatarSaved -= OnAvatarSaved;
+            avatarObjectLoader?.Cancel();
         }
 
         private void OnAvatarSaved(string avatarId)
@@ -25,7 +28,7 @@ namespace ReadyPlayerMe
             avatarCreatorStateMachine.gameObject.SetActive(false);
 
             var startTime = Time.time;
-            var avatarObjectLoader = new AvatarObjectLoader();
+            avatarObjectLoader = new AvatarObjectLoader();
             avatarObjectLoader.AvatarConfig = inGameConfig;
             avatarObjectLoader.OnCompleted += (sender, args) =>
             {
