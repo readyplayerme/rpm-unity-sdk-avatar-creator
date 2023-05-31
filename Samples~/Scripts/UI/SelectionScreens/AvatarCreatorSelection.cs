@@ -93,7 +93,7 @@ namespace ReadyPlayerMe
             partnerAssetManager.OnError -= OnErrorCallback;
 
             ctxSource?.Cancel();
-            StateMachine.Back();
+            StateMachine.GoToPreviousState();
             LoadingManager.EnableLoading(error, LoadingManager.LoadingType.Popup, false);
         }
 

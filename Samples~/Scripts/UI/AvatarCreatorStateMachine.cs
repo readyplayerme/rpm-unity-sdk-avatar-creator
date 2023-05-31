@@ -32,7 +32,7 @@ namespace ReadyPlayerMe
             AuthManager.OnSignedIn += OnSignedIn;
             AuthManager.OnSignedOut += OnSignedOut;
             AuthManager.OnSessionRefreshed += OnSessionRefreshed;
-            backButton.onClick.AddListener(Back);
+            backButton.onClick.AddListener(GoToPreviousState);
         }
 
         private void OnDisable()
@@ -41,7 +41,7 @@ namespace ReadyPlayerMe
             AuthManager.OnSignedIn -= OnSignedIn;
             AuthManager.OnSignedOut -= OnSignedOut;
             AuthManager.OnSessionRefreshed -= OnSessionRefreshed;
-            backButton.onClick.RemoveListener(Back);
+            backButton.onClick.RemoveListener(GoToPreviousState);
         }
         
         private void OnSignedIn(UserSession userSession)
