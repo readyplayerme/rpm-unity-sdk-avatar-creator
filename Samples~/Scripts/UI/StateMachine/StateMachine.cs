@@ -51,7 +51,7 @@ namespace ReadyPlayerMe
             previousStates.Clear();
         }
 
-        public void Back()
+        public void GoToPreviousState()
         {
             var previousState = currentState; 
 

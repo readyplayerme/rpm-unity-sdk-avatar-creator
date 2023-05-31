@@ -169,6 +169,21 @@ namespace ReadyPlayerMe.AvatarCreator
 
             return avatarId;
         }
+        
+        /// <summary>
+        /// This will delete the avatar draft which have not been saved. 
+        /// </summary>
+        public async void DeleteDraft()
+        {
+            try
+            {
+                await avatarAPIRequests.DeleteAvatarDraft(avatarId);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+            }
+        }
 
         /// <summary>
         /// This will delete the avatar completely even from database. 

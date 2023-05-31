@@ -13002,6 +13002,7 @@ MonoBehaviour:
   - {fileID: 78456335}
   - {fileID: 227468989}
   backButton: {fileID: 1540936656}
+  saveButton: {fileID: 854279430}
   loadingManager: {fileID: 1810997809}
   startingState: 3
   avatarCreatorData: {fileID: 11400000, guid: b641399742edb414380c1d690dbd37df, type: 2}

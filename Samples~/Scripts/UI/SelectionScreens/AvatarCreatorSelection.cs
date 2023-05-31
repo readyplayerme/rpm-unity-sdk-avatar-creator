@@ -80,7 +80,8 @@ namespace ReadyPlayerMe
             {
                 Destroy(currentAvatar);
             }
-            saveButton.gameObject.SetActive(false);
+
+            avatarManager.DeleteDraft();
 
             Dispose();
             assetTypeUICreator.ResetUI();
@@ -92,7 +93,7 @@ namespace ReadyPlayerMe
             partnerAssetManager.OnError -= OnErrorCallback;
 
             ctxSource?.Cancel();
-            StateMachine.Back();
+            StateMachine.GoToPreviousState();
             LoadingManager.EnableLoading(error, LoadingManager.LoadingType.Popup, false);
         }
 
@@ -199,12 +200,15 @@ namespace ReadyPlayerMe
 
         private async void Save()
         {
-            accountCreationPopup.gameObject.SetActive(true);
+            LoadingManager.EnableLoading("Saving avatar...", LoadingManager.LoadingType.Popup);
+
             var startTime = Time.time;
             var avatarId = await avatarManager.Save();
             AvatarCreatorData.AvatarProperties.Id = avatarId;
             DebugPanel.AddLogWithDuration("Avatar saved", Time.time - startTime);
             StateMachine.SetState(StateType.End);
+          
+            LoadingManager.DisableLoading();
         }
 
         private Dictionary<AssetType, object> GetDefaultAssets()
@@ -255,7 +259,10 @@ namespace ReadyPlayerMe
 
         public void Dispose()
         {
+            partnerAssetManager.OnError -= OnErrorCallback;
             partnerAssetManager?.Dispose();
+
+            avatarManager.OnError -= OnErrorCallback;
             avatarManager?.Dispose();
         }
     }
