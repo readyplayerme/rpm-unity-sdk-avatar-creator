@@ -258,7 +258,10 @@ namespace ReadyPlayerMe
 
         public void Dispose()
         {
+            partnerAssetManager.OnError -= OnErrorCallback;
             partnerAssetManager?.Dispose();
+
+            avatarManager.OnError -= OnErrorCallback;
             avatarManager?.Dispose();
         }
     }
