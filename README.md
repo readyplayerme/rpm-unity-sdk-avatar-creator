@@ -24,7 +24,7 @@ Please visit the online documentation and join our public `discord` community.
 
 ## Quick Start
 
-The installation steps can be found [here.](https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator/blob/main/Documentation~/QuickStart.md)
+The installation steps can be found [here.](Documentation~/QuickStart.md)
 
 ## Important
 
@@ -38,12 +38,10 @@ The plugin is currently in **alpha** stage. We recommend not to use it in the pr
 - API for color selection.
 - UI for the new APIs in the sample.
 
-## Extra
-![image](https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator/assets/1121080/f6d6d847-9244-41bc-a73c-770030ed075f)
-- **State To Skip**  Allows skipping state, eg. gender selection screen.
-- **Default Gender and BodyType** These will be used when gender selection or body type selection are skipped.
-- **Partner Domain**  This can be set using rpm settings menu,
-
+## Structure
+- The package contains APIs required for creating, customizing and loading the avatar. 
+- It also contains a sample which demonstrate the usage of the APIs and replicates RPM web avatar creator.
+- The documentation of provided sample can be found [here.](Documentation~/SampleStructure.md)
 ## Note
 
 - Camera support is currently only available for PC using Unity’s webcam native API.
