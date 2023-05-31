@@ -11,6 +11,7 @@ namespace ReadyPlayerMe
     {
         [SerializeField] private List<State> states;
         [SerializeField] private Button backButton;
+        [SerializeField] private Button saveButton;
         [SerializeField] private LoadingManager loadingManager;
         [SerializeField] private StateType startingState;
         [SerializeField] public AvatarCreatorData avatarCreatorData;
@@ -73,6 +74,7 @@ namespace ReadyPlayerMe
         private void OnStateChanged(StateType current, StateType previous)
         {
             backButton.gameObject.SetActive(!CanShowBackButton(current));
+            saveButton.gameObject.SetActive(current == StateType.Editor);
 
             if (current == StateType.End)
             {
