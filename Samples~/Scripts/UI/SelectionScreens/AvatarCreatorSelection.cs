@@ -80,7 +80,8 @@ namespace ReadyPlayerMe
             {
                 Destroy(currentAvatar);
             }
-            saveButton.gameObject.SetActive(false);
+
+            avatarManager.DeleteDraft();
 
             Dispose();
             assetTypeUICreator.ResetUI();
