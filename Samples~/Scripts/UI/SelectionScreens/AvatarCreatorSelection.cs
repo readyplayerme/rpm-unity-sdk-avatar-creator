@@ -199,12 +199,15 @@ namespace ReadyPlayerMe
 
         private async void Save()
         {
-            accountCreationPopup.gameObject.SetActive(true);
+            LoadingManager.EnableLoading("Saving avatar...", LoadingManager.LoadingType.Popup);
+
             var startTime = Time.time;
             var avatarId = await avatarManager.Save();
             AvatarCreatorData.AvatarProperties.Id = avatarId;
             DebugPanel.AddLogWithDuration("Avatar saved", Time.time - startTime);
             StateMachine.SetState(StateType.End);
+          
+            LoadingManager.DisableLoading();
         }
 
         private Dictionary<AssetType, object> GetDefaultAssets()
