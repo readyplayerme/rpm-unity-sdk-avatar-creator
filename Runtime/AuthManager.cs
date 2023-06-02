@@ -39,7 +39,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public static async void SendEmailCode(string email)
         {
-            await AuthenticationRequests.SendCodeToEmail(email);
+            await AuthenticationRequests.SendCodeToEmail(email, userSession.Id);
         }
 
         public static async Task<bool> LoginWithCode(string otp)
@@ -60,7 +60,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public static async void Signup(string email)
         {
-            await AuthenticationRequests.Signup(email);
+            await AuthenticationRequests.Signup(email, userSession.Id);
         }
 
         public static async Task RefreshToken()
