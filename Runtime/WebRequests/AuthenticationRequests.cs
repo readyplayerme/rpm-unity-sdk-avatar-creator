@@ -32,14 +32,21 @@ namespace ReadyPlayerMe.AvatarCreator
             return JsonConvert.DeserializeObject<UserSession>(data!.ToString());
         }
 
-        public async Task SendCodeToEmail(string email)
+        public async Task SendCodeToEmail(string email, string userId = "")
         {
             var url = GetUrl(Endpoints.AUTH_START);
-            var payload = AuthDataConverter.CreatePayload(new Dictionary<string, string>
-            {   
+            var data = new Dictionary<string, string>
+            {
                 { AuthConstants.EMAIL, email },
-                { AuthConstants.AUTH_TYPE, AuthConstants.CODE }
-            });
+                { AuthConstants.AUTH_TYPE, AuthConstants.AUTH_TYPE_CODE },
+            };
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                data.Add(AuthConstants.USER_ID, userId);
+            }
+
+            var payload = AuthDataConverter.CreatePayload(data);
 
             var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload);
             response.ThrowIfError();
@@ -49,8 +56,8 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             var url = GetUrl(Endpoints.AUTH_LOGIN);
             var payload = AuthDataConverter.CreatePayload(new Dictionary<string, string>
-            {   
-                { AuthConstants.CODE, code }
+            {
+                { AuthConstants.AUTH_TYPE_CODE, code }
             });
 
             var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload);
@@ -59,23 +66,27 @@ namespace ReadyPlayerMe.AvatarCreator
             var data = AuthDataConverter.ParseResponse(response.Text);
             return JsonConvert.DeserializeObject<UserSession>(data!.ToString());
         }
-        
-        public async Task Signup(string email)
+
+        public async Task Signup(string email, string userId)
         {
-            var url = GetUrl(Endpoints.AUTH_SIGNUP);
-            var payload = AuthDataConverter.CreatePayload(new Dictionary<string, string>
-            {   
-                { AuthConstants.EMAIL, email }
-            });
+            var url = GetUrl(Endpoints.AUTH_START);
+            var data = new Dictionary<string, string>
+            {
+                { AuthConstants.EMAIL, email },
+                { AuthConstants.AUTH_TYPE, AuthConstants.AUTH_TYPE_PASSWORD },
+                { AuthConstants.USER_ID, userId }
+            };
+
+            var payload = AuthDataConverter.CreatePayload(data);
             var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload);
             response.ThrowIfError();
         }
 
-        public async Task<(string,string)> RefreshToken(string token, string refreshToken)
+        public async Task<(string, string)> RefreshToken(string token, string refreshToken)
         {
             var url = GetUrl(Endpoints.AUTH_REFRESH);
             var payload = AuthDataConverter.CreatePayload(new Dictionary<string, string>
-            {   
+            {
                 { AuthConstants.TOKEN, token },
                 { AuthConstants.REFRESH_TOKEN, refreshToken }
             });
