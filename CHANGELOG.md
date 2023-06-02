@@ -3,11 +3,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0] - 2023 June 02
+
+### Added
+- Account creation popup.
+- Documentation for Sample structure.
+- Deletion of unsaved avatar.
+
+### Updated
+- Restructure documentation.
+
 ## [0.2.1] - 2023 Apr 21
 
 ### Updated
-- Better error handling for API requests
-- Fixed error with selfie selection
+- Better error handling for API requests.
+- Fixed error with selfie selection.
 
 ## [0.2.0] - 2023 Apr 19
 
@@ -27,14 +37,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.1.2] - 2023 Feb 17
 
 ### Updated
-- Adjusted API to according to according to RPM SDK 2.0.0 - v1.0.0
+- Adjusted API to according to according to RPM SDK 2.0.0 - v1.0.0.
 
 ## [0.1.1] - 2023 Feb 17
 
 ### Updated
-- Readme with correct release version
+- Readme with correct release version.
 ### Fixed
-- Saving avatar in sample throws an error
+- Saving avatar in sample throws an error.
 
 ## [0.1.0] - 2023 Feb 16
 

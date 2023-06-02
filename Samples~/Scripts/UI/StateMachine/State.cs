@@ -25,6 +25,9 @@ namespace ReadyPlayerMe
         public abstract StateType StateType { get; }
         public abstract StateType NextState { get; }
 
+        public abstract void ActivateState();
+        public abstract void DeactivateState();
+        
         public void Initialize(StateMachine stateMachine, AvatarCreatorData avatarCreatorData, LoadingManager loadingManager)
         {
             StateMachine = stateMachine;

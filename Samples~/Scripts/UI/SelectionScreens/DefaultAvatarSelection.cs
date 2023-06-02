@@ -56,7 +56,7 @@ namespace ReadyPlayerMe
         
         private CancellationTokenSource ctxSource;
 
-        private async void OnEnable()
+        public override async void ActivateState()
         {
             LoadingManager.EnableLoading(LOADING_MESSAGE);
 
@@ -83,7 +83,7 @@ namespace ReadyPlayerMe
             LoadingManager.DisableLoading();
         }
 
-        private void OnDisable()
+        public override void DeactivateState()
         {
             ctxSource?.Cancel();
             foreach (Transform child in parent)
@@ -97,7 +97,7 @@ namespace ReadyPlayerMe
             Texture2D renderImage;
             try
             {
-                 renderImage = await AvatarRenderHelper.GetPortrait(avatarId);
+                renderImage = await AvatarRenderHelper.GetPortrait(avatarId);
             }
             catch (Exception e)
             {

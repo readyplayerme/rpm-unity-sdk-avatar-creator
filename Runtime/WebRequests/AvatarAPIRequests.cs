@@ -15,6 +15,7 @@ namespace ReadyPlayerMe.AvatarCreator
         private const string RESPONSE_TYPE_PARAMETER = "responseType=glb";
         private const string COLOR_PARAMETERS = "colors?type=skin,beard,hair,eyebrow";
         private const string FETCH_AVATAR_PARAMETERS = "?select=id,partner&userId=";
+        private const string DRAFT_PARAMETER = "draft";
 
         private readonly AuthorizedRequest authorizedRequest;
         private readonly CancellationToken ctx;
@@ -159,12 +160,25 @@ namespace ReadyPlayerMe.AvatarCreator
             return response.Text;
         }
 
+        public async Task DeleteAvatarDraft(string avatarId)
+        {
+            var response = await authorizedRequest.SendRequest<Response>(
+                new RequestData
+                {
+                    Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}/{DRAFT_PARAMETER}",
+                    Method = HttpMethod.DELETE,
+                },
+                ctx: ctx);
+
+            response.ThrowIfError();
+        }
+
         public async Task DeleteAvatar(string avatarId)
         {
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = $"{Endpoints.AVATAR_API_V1}/{avatarId}",
+                    Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}",
                     Method = HttpMethod.DELETE,
                 },
                 ctx: ctx);

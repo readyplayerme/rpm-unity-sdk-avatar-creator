@@ -16,7 +16,7 @@ namespace ReadyPlayerMe
         public override StateType StateType => StateType.SelfieSelection;
         public override StateType NextState => StateType.Editor;
 
-        private void OnEnable()
+        public override void ActivateState()
         {
             photoButton.onClick.AddListener(OnPhotoButton);
             continueButton.onClick.AddListener(OnContinueButton);
@@ -24,7 +24,7 @@ namespace ReadyPlayerMe
             privacyButton.onClick.AddListener(OnPrivacyButton);
         }
         
-        private void OnDisable()
+        public override void DeactivateState()
         {
             photoButton.onClick.RemoveListener(OnPhotoButton);
             continueButton.onClick.RemoveListener(OnContinueButton);

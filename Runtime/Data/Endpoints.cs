@@ -8,6 +8,7 @@
         public const string AUTH_USERS = DOMAIN_URL + "/api/users";
         public const string AUTH_START = DOMAIN_URL + "/api/auth/start";
         public const string AUTH_LOGIN = DOMAIN_URL + "/api/auth/login";
+        public const string AUTH_SIGNUP = DOMAIN_URL + "/api/auth/signup";
         public const string AUTH_REFRESH = DOMAIN_URL + "/api/auth/refresh";
 
         public const string AVATAR_API_V1 = "https://api.readyplayer.me/v1/avatars";
