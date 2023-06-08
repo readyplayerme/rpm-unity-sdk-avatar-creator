@@ -130,7 +130,15 @@ namespace ReadyPlayerMe
             }
             else
             {
-                avatar = await avatarManager.GetAvatar(AvatarCreatorData.AvatarProperties.Id);
+                if (!AvatarCreatorData.IsExistingAvatar)
+                {
+                    AvatarCreatorData.AvatarProperties = await avatarManager.CreateFromTemplateAvatar(AvatarCreatorData.AvatarProperties);
+                    avatar = await avatarManager.GetPreviewAvatar(AvatarCreatorData.AvatarProperties.Id);
+                }
+                else
+                {
+                    avatar = await avatarManager.GetAvatar(AvatarCreatorData.AvatarProperties.Id);
+                }
             }
 
             if (avatar == null)

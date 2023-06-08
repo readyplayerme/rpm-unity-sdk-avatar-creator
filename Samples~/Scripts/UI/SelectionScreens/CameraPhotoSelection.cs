@@ -75,7 +75,8 @@ namespace ReadyPlayerMe
             
             AvatarCreatorData.AvatarProperties.Id = string.Empty;
             AvatarCreatorData.AvatarProperties.Base64Image = Convert.ToBase64String(bytes);
-
+            AvatarCreatorData.IsExistingAvatar = false;
+            
             StateMachine.SetState(StateType.Editor);
         }
     }

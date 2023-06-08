@@ -47,7 +47,7 @@ namespace ReadyPlayerMe
             LoadingManager.EnableLoading();
 
             avatarAPIRequests = new AvatarAPIRequests();
-            avatarPartnerMap = await avatarAPIRequests.FetchUserAvatars(AuthManager.UserSession.Id);
+            avatarPartnerMap = await avatarAPIRequests.GetUserAvatars(AuthManager.UserSession.Id);
 
             avatarButtonsMap = new Dictionary<string, GameObject>();
             foreach (var avatar in avatarPartnerMap)
@@ -103,6 +103,7 @@ namespace ReadyPlayerMe
         {
             AvatarCreatorData.AvatarProperties.Id = avatarId;
             AvatarCreatorData.AvatarProperties = await avatarAPIRequests.GetAvatarMetadata(avatarId);
+            AvatarCreatorData.IsExistingAvatar = true;
             StateMachine.SetState(StateType.Editor);
         }
         
