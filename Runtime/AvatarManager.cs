@@ -44,6 +44,31 @@ namespace ReadyPlayerMe.AvatarCreator
             avatarAPIRequests = new AvatarAPIRequests(ctxSource.Token);
         }
 
+        public async Task<AvatarProperties> CreateFromTemplateAvatar(AvatarProperties avatarProperties)
+        {
+            try
+            {
+                avatarProperties = await avatarAPIRequests.GetTemplateAvatarMetadata(
+                    avatarProperties.Id,
+                    avatarProperties.Partner,
+                    bodyType == BodyType.FullBody ? "fullbody" : "halfbody"
+                );
+                avatarId = avatarProperties.Id;
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                return avatarProperties;
+            }
+            
+            if (ctxSource.IsCancellationRequested)
+            {
+                return avatarProperties;
+            }
+
+            return avatarProperties;
+        }
+
         /// <summary>
         /// Create a new avatar.
         /// </summary>
