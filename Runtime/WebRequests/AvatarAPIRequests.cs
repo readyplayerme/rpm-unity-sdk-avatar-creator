@@ -20,6 +20,13 @@ namespace ReadyPlayerMe.AvatarCreator
         private const string FETCH_AVATAR_PARAMETERS = "?select=id,partner&userId=";
         private const string DRAFT_PARAMETER = "draft";
         private const string TEMPLATE = "templates";
+        private const string FULL_BODY = "fullbody";
+        private const string HALF_BODY = "halfbody";
+        private const string MALE = "male";
+        private const string FEMALE = "female";
+        private const string IMAGE_URL = "imageUrl";
+        private const string PARTNER = "partner";
+        private const string DATA = "data";
 
         private readonly AuthorizedRequest authorizedRequest;
         private readonly CancellationToken ctx;
@@ -43,8 +50,8 @@ namespace ReadyPlayerMe.AvatarCreator
             response.ThrowIfError();
 
             var json = JObject.Parse(response.Text);
-            var data = json["data"]!;
-            return data.ToDictionary(element => element["id"]!.ToString(), element => element["partner"]!.ToString());
+            var data = json[DATA]!;
+            return data.ToDictionary(element => element["id"]!.ToString(), element => element[PARTNER]!.ToString());
         }
 
         public async Task<Dictionary<string, string>> GetTemplates(OutfitGender gender)
@@ -52,7 +59,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = $"{Endpoints.AVATAR_API_V2}/{TEMPLATE}?gender=" + (gender == OutfitGender.Masculine ? "male" : "female"),
+                    Url = $"{Endpoints.AVATAR_API_V2}/{TEMPLATE}?gender=" + (gender == OutfitGender.Masculine ? MALE : FEMALE),
                     Method = HttpMethod.GET,
                 },
                 ctx: ctx
@@ -60,8 +67,8 @@ namespace ReadyPlayerMe.AvatarCreator
             response.ThrowIfError();
 
             var json = JObject.Parse(response.Text);
-            var data = json["data"]!;
-            return data.ToDictionary(element => element["id"]!.ToString(), element => element["imageUrl"]!.ToString());
+            var data = json[DATA]!;
+            return data.ToDictionary(element => element["id"]!.ToString(), element => element[IMAGE_URL]!.ToString());
         }
 
         public async Task<Texture> GetTemplateAvatarImage(string url)
@@ -74,12 +81,12 @@ namespace ReadyPlayerMe.AvatarCreator
             return response.Texture;
         }
 
-        public async Task<AvatarProperties> GetTemplateAvatarMetadata(string avatarId, string partner, string bodyType)
+        public async Task<AvatarProperties> CreateFromTemplateAvatar(string avatarId, string partner, BodyType bodyType)
         {
             var payloadData = new Dictionary<string, string>
             {
-                { "partner", partner },
-                { "bodyType", bodyType },
+                { nameof(partner), partner },
+                { nameof(bodyType), bodyType == BodyType.FullBody ? FULL_BODY : HALF_BODY },
             };
 
             var payload = AuthDataConverter.CreatePayload(payloadData);
@@ -97,7 +104,7 @@ namespace ReadyPlayerMe.AvatarCreator
             response.ThrowIfError();
 
             var json = JObject.Parse(response.Text);
-            var data = json["data"]!.ToString();
+            var data = json[DATA]!.ToString();
             return JsonConvert.DeserializeObject<AvatarProperties>(data);
         }
 
@@ -130,7 +137,7 @@ namespace ReadyPlayerMe.AvatarCreator
             response.ThrowIfError();
             
             var json = JObject.Parse(response.Text);
-            var data = json["data"]!.ToString();
+            var data = json[DATA]!.ToString();
             return JsonConvert.DeserializeObject<AvatarProperties>(data);
         }
 
@@ -148,7 +155,7 @@ namespace ReadyPlayerMe.AvatarCreator
             response.ThrowIfError();
 
             var metadata = JObject.Parse(response.Text);
-            var data = metadata["data"]!.ToString();
+            var data = metadata[DATA]!.ToString();
             return JsonConvert.DeserializeObject<AvatarProperties>(data);
         }
 

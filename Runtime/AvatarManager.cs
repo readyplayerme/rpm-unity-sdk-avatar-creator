@@ -43,15 +43,20 @@ namespace ReadyPlayerMe.AvatarCreator
             inCreatorAvatarLoader = new InCreatorAvatarLoader();
             avatarAPIRequests = new AvatarAPIRequests(ctxSource.Token);
         }
-
+        
+        /// <summary>
+        /// Create a new avatar from a provided template.
+        /// </summary>
+        /// <param name="avatarProperties">Properties which describes avatar</param>
+        /// <returns>Avatar gameObject</returns>
         public async Task<AvatarProperties> CreateFromTemplateAvatar(AvatarProperties avatarProperties)
         {
             try
             {
-                avatarProperties = await avatarAPIRequests.GetTemplateAvatarMetadata(
+                avatarProperties = await avatarAPIRequests.CreateFromTemplateAvatar(
                     avatarProperties.Id,
                     avatarProperties.Partner,
-                    bodyType == BodyType.FullBody ? "fullbody" : "halfbody"
+                    bodyType 
                 );
                 avatarId = avatarProperties.Id;
             }
