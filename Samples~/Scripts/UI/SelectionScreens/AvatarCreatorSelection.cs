@@ -109,7 +109,11 @@ namespace ReadyPlayerMe
             partnerAssetManager.OnError += OnErrorCallback;
 
             var assetIconDownloadTasks = await partnerAssetManager.GetAllAssets();
-
+            if (assetIconDownloadTasks == null)
+            {
+                return;
+            }
+            
             CreateUI(AvatarCreatorData.AvatarProperties.BodyType, assetIconDownloadTasks);
             partnerAssetManager.DownloadAssetsIcon(assetButtonCreator.SetAssetIcons);
             DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
