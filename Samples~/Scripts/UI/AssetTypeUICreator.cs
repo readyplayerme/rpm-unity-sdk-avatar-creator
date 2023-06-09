@@ -47,7 +47,6 @@ namespace ReadyPlayerMe
             cameraZoom = FindObjectOfType<CameraZoom>();
         }
 
-
         public void CreateUI(BodyType bodyType, IEnumerable<AssetType> assetTypes)
         {
             this.bodyType = bodyType;
@@ -92,6 +91,11 @@ namespace ReadyPlayerMe
         {
             PanelSwitcher.Clear();
             DefaultZoom();
+
+            if (assetTypeButtonsMap == null)
+            {
+                return;
+            }
 
             foreach (var assetTypeButton in assetTypeButtonsMap)
             {

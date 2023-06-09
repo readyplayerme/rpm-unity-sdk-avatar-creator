@@ -43,6 +43,36 @@ namespace ReadyPlayerMe.AvatarCreator
             inCreatorAvatarLoader = new InCreatorAvatarLoader();
             avatarAPIRequests = new AvatarAPIRequests(ctxSource.Token);
         }
+        
+        /// <summary>
+        /// Create a new avatar from a provided template.
+        /// </summary>
+        /// <param name="avatarProperties">Properties which describes avatar</param>
+        /// <returns>Avatar gameObject</returns>
+        public async Task<AvatarProperties> CreateFromTemplateAvatar(AvatarProperties avatarProperties)
+        {
+            try
+            {
+                avatarProperties = await avatarAPIRequests.CreateFromTemplateAvatar(
+                    avatarProperties.Id,
+                    avatarProperties.Partner,
+                    bodyType 
+                );
+                avatarId = avatarProperties.Id;
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                return avatarProperties;
+            }
+            
+            if (ctxSource.IsCancellationRequested)
+            {
+                return avatarProperties;
+            }
+
+            return avatarProperties;
+        }
 
         /// <summary>
         /// Create a new avatar.

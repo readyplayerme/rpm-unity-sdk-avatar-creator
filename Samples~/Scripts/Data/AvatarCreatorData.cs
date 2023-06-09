@@ -7,6 +7,7 @@ namespace ReadyPlayerMe
     public class AvatarCreatorData : ScriptableObject
     {
         public AvatarProperties AvatarProperties;
+        public bool IsExistingAvatar;
         
         public void Awake()
         {

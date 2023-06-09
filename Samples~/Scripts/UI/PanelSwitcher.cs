@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
 
@@ -16,14 +15,15 @@ namespace ReadyPlayerMe
         public static void AddPanel(AssetType assetType, GameObject widget)
         {
             AssetTypePanelMap ??= new Dictionary<AssetType, GameObject>();
-            if(!AssetTypePanelMap.ContainsKey(assetType))
-            {
-                AssetTypePanelMap.Add(assetType, widget);
-            }
+            AssetTypePanelMap.TryAdd(assetType, widget);
         }
 
         public static void Clear()
         {
+            if (AssetTypePanelMap == null)
+            {
+                return;
+            }
             foreach (var assetTypePanels in AssetTypePanelMap)
             {
                 Object.Destroy(assetTypePanels.Value);
@@ -85,11 +85,12 @@ namespace ReadyPlayerMe
             SetActivePanel(AssetType.HairColor, false);
             SetActivePanel(AssetType.EyebrowColor, false);
         }
+
         private static void SetActivePanel(AssetType assetType, bool enable)
         {
             if (AssetTypePanelMap.ContainsKey(assetType))
             {
-                AssetTypePanelMap[assetType].SetActive(enable); 
+                AssetTypePanelMap[assetType].SetActive(enable);
             }
         }
     }
