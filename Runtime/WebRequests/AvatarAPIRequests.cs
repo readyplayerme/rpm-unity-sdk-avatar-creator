@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +26,7 @@ namespace ReadyPlayerMe.AvatarCreator
         private const string IMAGE_URL = "imageUrl";
         private const string PARTNER = "partner";
         private const string DATA = "data";
+        private const string ID = "id";
 
         private readonly AuthorizedRequest authorizedRequest;
         private readonly CancellationToken ctx;
@@ -51,7 +51,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
             var json = JObject.Parse(response.Text);
             var data = json[DATA]!;
-            return data.ToDictionary(element => element["id"]!.ToString(), element => element[PARTNER]!.ToString());
+            return data.ToDictionary(element => element[ID]!.ToString(), element => element[PARTNER]!.ToString());
         }
 
         public async Task<Dictionary<string, string>> GetTemplates(OutfitGender gender)
@@ -68,7 +68,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
             var json = JObject.Parse(response.Text);
             var data = json[DATA]!;
-            return data.ToDictionary(element => element["id"]!.ToString(), element => element[IMAGE_URL]!.ToString());
+            return data.ToDictionary(element => element[ID]!.ToString(), element => element[IMAGE_URL]!.ToString());
         }
 
         public async Task<Texture> GetTemplateAvatarImage(string url)
