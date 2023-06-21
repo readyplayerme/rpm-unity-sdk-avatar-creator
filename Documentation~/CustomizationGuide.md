@@ -24,4 +24,8 @@ https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator/assets/1121080/ae4
 ### Adapting UI according to portrait mode
 A small demonstration on how to change avatar creation selection panels according to portrait mode.
 
-https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator/assets/1121080/b18c6d3a-497e-4a30-b66d-1ed0c99fe3ab
+https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator/assets/1121080/f706e33d-8fb8-4226-8d3c-3e5b6bb17026
+
+
+
+
