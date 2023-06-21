@@ -42,6 +42,11 @@ The plugin is currently in **alpha** stage. We recommend not to use it in the pr
 - The package contains APIs required for creating, customizing and loading the avatar. 
 - It also contains a sample which demonstrate the usage of the APIs and replicates RPM web avatar creator.
 - The documentation of provided sample can be found [here.](Documentation~/SampleStructure.md)
+
+## Customization
+
+The documentation for customization can be found [here.](Documentation~/CustomizationGuide.md)
+
 ## Note
 
 - Camera support is currently only available for PC using Unity’s webcam native API.
