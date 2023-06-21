@@ -19,6 +19,9 @@ All required APIs are provided in the package. They can be used to create a new 
 ### Changing background color
 A small demonstration on how to change the background color of different screens. 
 
+https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator/assets/1121080/ae412932-1bd9-4d00-b6b5-6525adecf9c7
+
 ### Adapting UI according to portrait mode
 A small demonstration on how to change avatar creation selection panels according to portrait mode.
 
+https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator/assets/1121080/b18c6d3a-497e-4a30-b66d-1ed0c99fe3ab
