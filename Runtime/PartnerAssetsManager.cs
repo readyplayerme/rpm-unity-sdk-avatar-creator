@@ -38,13 +38,6 @@ namespace ReadyPlayerMe.AvatarCreator
             try
             {
                 assets = await partnerAssetsRequests.Get(ctxSource.Token);
-                foreach (PartnerAsset a in assets)
-                {
-                    if (a.LockedCategories != null && a.LockedCategories.Length > 0)
-                    {
-                        Debug.Log(a.LockedCategories[0].Name);
-                    }
-                }
             }
             catch (Exception e)
             {
@@ -88,7 +81,6 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             var asset = assets.FirstOrDefault(x => x.Id == id);
             return asset.LockedCategories != null && asset.LockedCategories.Length > 0;
-
         }
 
         private async Task<Dictionary<string, Texture>> DownloadIcons(List<PartnerAsset> chunk)
