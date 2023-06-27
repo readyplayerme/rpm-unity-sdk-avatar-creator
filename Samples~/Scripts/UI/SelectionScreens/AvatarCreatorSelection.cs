@@ -71,6 +71,20 @@ namespace ReadyPlayerMe
 
             await LoadAvatarColors();
             assetButtonCreator.SetSelectedAssets(AvatarCreatorData.AvatarProperties.Assets);
+            var assets = AvatarCreatorData.AvatarProperties.Assets;
+            if (assets.TryGetValue(AssetType.Outfit, out var outfitId))
+            {
+                if (partnerAssetManager.IsLockedAssetCategories(outfitId.ToString()))
+                {
+                    assetTypeUICreator.SetActiveAssetTypeButtons(false);
+                    assetTypeUICreator.SetDefaultSelection(AssetType.Outfit);
+                }
+                else
+                {
+                    assetTypeUICreator.SetActiveAssetTypeButtons(true);
+                }
+            }
+
             LoadingManager.DisableLoading();
         }
 
@@ -188,20 +202,8 @@ namespace ReadyPlayerMe
 
         private void OnAssetButtonClicked(string id, AssetType assetType)
         {
-            SetActiveAssetTypeButtons(!partnerAssetManager.IsLockedAssetCategories(id));
-            UpdateAvatar(id,assetType);
-        }
-
-        private void SetActiveAssetTypeButtons(bool enable)
-        {
-            assetTypeUICreator.FaceAssetTypeButton.SetInteractable(enable);
-            foreach (var assetTypeButton in assetTypeUICreator.AssetTypeButtonsMap)
-            {
-                if (assetTypeButton.Key != AssetType.Outfit)
-                {
-                    assetTypeButton.Value.SetInteractable(enable);
-                }
-            }
+            assetTypeUICreator.SetActiveAssetTypeButtons(!partnerAssetManager.IsLockedAssetCategories(id));
+            UpdateAvatar(id, assetType);
         }
 
         private void OnSaveButton()
