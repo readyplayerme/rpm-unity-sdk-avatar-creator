@@ -181,9 +181,27 @@ namespace ReadyPlayerMe
         private void CreateUI(BodyType bodyType, Dictionary<string, AssetType> assets)
         {
             assetTypeUICreator.CreateUI(bodyType, AssetTypeHelper.GetAssetTypeList(bodyType));
-            assetButtonCreator.CreateAssetButtons(assets, UpdateAvatar);
+            assetButtonCreator.CreateAssetButtons(assets, OnAssetButtonClicked);
             assetButtonCreator.CreateClearButton(UpdateAvatar);
             saveButton.gameObject.SetActive(true);
+        }
+
+        private void OnAssetButtonClicked(string id, AssetType assetType)
+        {
+            SetActiveAssetTypeButtons(!partnerAssetManager.IsLockedAssetCategories(id));
+            UpdateAvatar(id,assetType);
+        }
+
+        private void SetActiveAssetTypeButtons(bool enable)
+        {
+            assetTypeUICreator.FaceAssetTypeButton.SetInteractable(enable);
+            foreach (var assetTypeButton in assetTypeUICreator.AssetTypeButtonsMap)
+            {
+                if (assetTypeButton.Key != AssetType.Outfit)
+                {
+                    assetTypeButton.Value.SetInteractable(enable);
+                }
+            }
         }
 
         private void OnSaveButton()

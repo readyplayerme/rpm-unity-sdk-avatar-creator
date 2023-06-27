@@ -36,7 +36,8 @@ namespace ReadyPlayerMe
         [SerializeField] private GameObject leftSidePanelPrefab;
         [SerializeField] private List<AssetTypeIcon> assetTypeIcons;
 
-        private Dictionary<AssetType, AssetTypeButton> assetTypeButtonsMap;
+        public AssetTypeButton FaceAssetTypeButton => faceAssetTypeButton;
+        public Dictionary<AssetType, AssetTypeButton> AssetTypeButtonsMap { get; private set; }
         private AssetTypeButton selectedAssetTypeButton;
 
         private CameraZoom cameraZoom;
@@ -52,7 +53,7 @@ namespace ReadyPlayerMe
             this.bodyType = bodyType;
             DefaultZoom();
 
-            assetTypeButtonsMap = new Dictionary<AssetType, AssetTypeButton>();
+            AssetTypeButtonsMap = new Dictionary<AssetType, AssetTypeButton>();
             PanelSwitcher.FaceTypePanel = faceAssetTypePanel;
             CreateAssetTypePanel(AssetType.SkinColor, leftSidePanelPrefab, assetTypeUI.panelParent);
             foreach (var assetType in assetTypes)
@@ -92,18 +93,18 @@ namespace ReadyPlayerMe
             PanelSwitcher.Clear();
             DefaultZoom();
 
-            if (assetTypeButtonsMap == null)
+            if (AssetTypeButtonsMap == null)
             {
                 return;
             }
 
-            foreach (var assetTypeButton in assetTypeButtonsMap)
+            foreach (var assetTypeButton in AssetTypeButtonsMap)
             {
                 Destroy(assetTypeButton.Value.gameObject);
             }
 
             faceAssetTypeButton.RemoveListener();
-            assetTypeButtonsMap.Clear();
+            AssetTypeButtonsMap.Clear();
         }
 
         private void CreateAssetTypePanel(AssetType assetType, GameObject panelPrefab, Transform parent)
@@ -135,15 +136,15 @@ namespace ReadyPlayerMe
                 selectedAssetTypeButton = assetTypeButton;
                 onClick?.Invoke();
             });
-            assetTypeButtonsMap.Add(assetType, assetTypeButton);
+            AssetTypeButtonsMap.Add(assetType, assetTypeButton);
         }
 
         private void DefaultSelection()
         {
             faceAssetTypeButton.SetSelect(true);
-            assetTypeButtonsMap[AssetType.FaceShape].SetSelect(true);
+            AssetTypeButtonsMap[AssetType.FaceShape].SetSelect(true);
             PanelSwitcher.Switch(AssetType.FaceShape);
-            selectedAssetTypeButton = assetTypeButtonsMap[AssetType.FaceShape];
+            selectedAssetTypeButton = AssetTypeButtonsMap[AssetType.FaceShape];
         }
 
         private void DefaultZoom()

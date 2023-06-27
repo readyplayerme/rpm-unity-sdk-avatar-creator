@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using ReadyPlayerMe.AvatarLoader;
 
 namespace ReadyPlayerMe.AvatarCreator
@@ -12,5 +13,12 @@ namespace ReadyPlayerMe.AvatarCreator
         public OutfitGender Gender;
         public string Icon;
         public string Mask;
+        public LockedCategories[] LockedCategories;
+    }
+
+    public struct LockedCategories
+    {
+        public string Name;
+        public KeyValuePair<string, string>[] CustomizationCategories;
     }
 }
