@@ -12,19 +12,6 @@
 <!-- Fill the section below with Added, Updated and Removed information. -->
 <!-- If there is no item under one of the lists remove it's title. -->
 
-## Changes
-
-#### Added
-
--   List your additions and new features here.
-
-#### Updated
-
--   List your updates and changes here.
-
-#### Removed
-
--   List what is removed here.
 
 <!-- Testability -->
 
