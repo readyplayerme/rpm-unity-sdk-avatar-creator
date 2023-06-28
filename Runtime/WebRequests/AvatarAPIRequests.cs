@@ -21,9 +21,6 @@ namespace ReadyPlayerMe.AvatarCreator
         private const string TEMPLATE = "templates";
         private const string FULL_BODY = "fullbody";
         private const string HALF_BODY = "halfbody";
-        private const string MALE = "male";
-        private const string FEMALE = "female";
-        private const string IMAGE_URL = "imageUrl";
         private const string PARTNER = "partner";
         private const string DATA = "data";
         private const string ID = "id";
@@ -54,12 +51,12 @@ namespace ReadyPlayerMe.AvatarCreator
             return data.ToDictionary(element => element[ID]!.ToString(), element => element[PARTNER]!.ToString());
         }
 
-        public async Task<Dictionary<string, string>> GetTemplates(OutfitGender gender)
+        public async Task<TemplateData[]> GetTemplates()
         {
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = $"{Endpoints.AVATAR_API_V2}/{TEMPLATE}?gender=" + (gender == OutfitGender.Masculine ? MALE : FEMALE),
+                    Url = $"{Endpoints.AVATAR_API_V2}/{TEMPLATE}",
                     Method = HttpMethod.GET,
                 },
                 ctx: ctx
@@ -68,7 +65,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
             var json = JObject.Parse(response.Text);
             var data = json[DATA]!;
-            return data.ToDictionary(element => element[ID]!.ToString(), element => element[IMAGE_URL]!.ToString());
+            return JsonConvert.DeserializeObject<TemplateData[]>(data.ToString());
         }
 
         public async Task<Texture> GetTemplateAvatarImage(string url)

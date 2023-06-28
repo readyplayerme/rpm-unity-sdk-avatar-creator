@@ -15,7 +15,7 @@ namespace ReadyPlayerMe
         public static void AddPanel(AssetType assetType, GameObject widget)
         {
             AssetTypePanelMap ??= new Dictionary<AssetType, GameObject>();
-            AssetTypePanelMap.TryAdd(assetType, widget);
+            AssetTypePanelMap.Add(assetType, widget);
         }
 
         public static void Clear()

@@ -77,6 +77,12 @@ namespace ReadyPlayerMe.AvatarCreator
             }
         }
 
+        public bool IsLockedAssetCategories(string id)
+        {
+            var asset = assets.FirstOrDefault(x => x.Id == id);
+            return asset.LockedCategories != null && asset.LockedCategories.Length > 0;
+        }
+
         private async Task<Dictionary<string, Texture>> DownloadIcons(List<PartnerAsset> chunk)
         {
             var assetIconMap = new Dictionary<string, Task<Texture>>();

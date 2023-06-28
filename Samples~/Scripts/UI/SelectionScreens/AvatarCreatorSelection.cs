@@ -71,9 +71,30 @@ namespace ReadyPlayerMe
 
             await LoadAvatarColors();
             assetButtonCreator.SetSelectedAssets(AvatarCreatorData.AvatarProperties.Assets);
+            ToggleAssetTypeButtons();
+
             LoadingManager.DisableLoading();
         }
 
+        private void ToggleAssetTypeButtons()
+        {
+            var assets = AvatarCreatorData.AvatarProperties.Assets;
+            if (!assets.TryGetValue(AssetType.Outfit, out var outfitId))
+            {
+                return;
+            }
+            
+            if (partnerAssetManager.IsLockedAssetCategories(outfitId.ToString()))
+            {
+                assetTypeUICreator.SetActiveAssetTypeButtons(false);
+                assetTypeUICreator.SetDefaultSelection(AssetType.Outfit);
+            }
+            else
+            {
+                assetTypeUICreator.SetActiveAssetTypeButtons(true);
+            }
+        }
+        
         private void Cleanup()
         {
             if (currentAvatar != null)
@@ -181,9 +202,15 @@ namespace ReadyPlayerMe
         private void CreateUI(BodyType bodyType, Dictionary<string, AssetType> assets)
         {
             assetTypeUICreator.CreateUI(bodyType, AssetTypeHelper.GetAssetTypeList(bodyType));
-            assetButtonCreator.CreateAssetButtons(assets, UpdateAvatar);
+            assetButtonCreator.CreateAssetButtons(assets, OnAssetButtonClicked);
             assetButtonCreator.CreateClearButton(UpdateAvatar);
             saveButton.gameObject.SetActive(true);
+        }
+
+        private void OnAssetButtonClicked(string id, AssetType assetType)
+        {
+            assetTypeUICreator.SetActiveAssetTypeButtons(!partnerAssetManager.IsLockedAssetCategories(id));
+            UpdateAvatar(id, assetType);
         }
 
         private void OnSaveButton()

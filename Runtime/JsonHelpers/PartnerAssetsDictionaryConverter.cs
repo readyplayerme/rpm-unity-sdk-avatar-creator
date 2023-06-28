@@ -35,6 +35,10 @@ namespace ReadyPlayerMe.AvatarCreator
                     }
 
                     var pascalCaseKey = char.ToUpperInvariant(element.Key[0]) + element.Key.Substring(1);
+                    if(!Enum.IsDefined(typeof(AssetType), pascalCaseKey))
+                    {
+                        continue;
+                    }
                     var assetType = (AssetType) Enum.Parse(typeof(AssetType), pascalCaseKey);
                     assets.Add(assetType, element.Value);
                 }

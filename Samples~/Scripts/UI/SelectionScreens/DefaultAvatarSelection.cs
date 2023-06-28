@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
-using ReadyPlayerMe.AvatarLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,49 +13,41 @@ namespace ReadyPlayerMe
     {
         private const string LOADING_MESSAGE = "Fetching default avatars";
 
-        private readonly Dictionary<string, GameObject> avatarRenderMap = new Dictionary<string, GameObject>();
-
         [SerializeField] private Transform parent;
         [SerializeField] private GameObject buttonPrefab;
 
         public override StateType StateType => StateType.DefaultAvatarSelection;
         public override StateType NextState => StateType.Editor;
 
+        private Dictionary<TemplateData, GameObject> avatarRenderMap;
         private AvatarAPIRequests avatarAPIRequests;
         private CancellationTokenSource ctxSource;
 
+        private void Awake()
+        {
+            avatarRenderMap = new Dictionary<TemplateData, GameObject>();
+        }
+
         public override async void ActivateState()
         {
-            LoadingManager.EnableLoading(LOADING_MESSAGE);
-            if (!AuthManager.IsSignedIn)
+            if (avatarRenderMap.Count == 0)
             {
-                await AuthManager.LoginAsAnonymous();
-            }
+                LoadingManager.EnableLoading(LOADING_MESSAGE);
 
-            avatarAPIRequests = new AvatarAPIRequests();
-            var templateAvatars = await avatarAPIRequests.GetTemplates(AvatarCreatorData.AvatarProperties.Gender);
-
-            ctxSource = new CancellationTokenSource();
-
-            var downloadRenderTasks = new List<Task>();
-
-            foreach (var template in templateAvatars)
-            {
-                if (!avatarRenderMap.ContainsKey(template.Key))
+                if (!AuthManager.IsSignedIn)
                 {
-                    downloadRenderTasks.Add(CreateAvatarRender(template.Key, template.Value));
+                    await AuthManager.LoginAsAnonymous();
                 }
-                else
-                {
-                    avatarRenderMap[template.Key].SetActive(true);
-                }
+
+                await FetchTemplates();
+               
+                LoadingManager.DisableLoading();
             }
 
-            while (!downloadRenderTasks.All(x => x.IsCompleted) && !ctxSource.IsCancellationRequested)
+            foreach (var template in avatarRenderMap)
             {
-                await Task.Yield();
+                avatarRenderMap[template.Key].SetActive(template.Key.Gender == AvatarCreatorData.AvatarProperties.Gender);
             }
-            LoadingManager.DisableLoading();
         }
 
         public override void DeactivateState()
@@ -68,12 +59,33 @@ namespace ReadyPlayerMe
             }
         }
 
-        private async Task CreateAvatarRender(string id, string url)
+        private async Task FetchTemplates()
+        {
+            var downloadRenderTasks = new List<Task>();
+            ctxSource = new CancellationTokenSource();
+
+            avatarAPIRequests = new AvatarAPIRequests();
+            var templateAvatars = await avatarAPIRequests.GetTemplates();
+            foreach (var template in templateAvatars)
+            {
+                if (!avatarRenderMap.ContainsKey(template))
+                {
+                    downloadRenderTasks.Add(CreateAvatarRender(template));
+                }
+            }
+
+            while (!downloadRenderTasks.All(x => x.IsCompleted) && !ctxSource.IsCancellationRequested)
+            {
+                await Task.Yield();
+            }
+        }
+
+        private async Task CreateAvatarRender(TemplateData templateData)
         {
             Texture renderImage;
             try
             {
-                renderImage = await avatarAPIRequests.GetTemplateAvatarImage(url);
+                renderImage = await avatarAPIRequests.GetTemplateAvatarImage(templateData.ImageUrl);
             }
             catch (Exception e)
             {
@@ -83,10 +95,10 @@ namespace ReadyPlayerMe
 
             var button = Instantiate(buttonPrefab, parent);
             var rawImage = button.GetComponentInChildren<RawImage>();
-            button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(id));
+            button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(templateData.Id));
             rawImage.texture = renderImage;
             rawImage.SizeToParent();
-            avatarRenderMap.Add(id, button);
+            avatarRenderMap.Add(templateData, button);
         }
 
         private void OnAvatarSelected(string avatarId)
