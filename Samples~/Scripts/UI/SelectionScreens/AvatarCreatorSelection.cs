@@ -71,23 +71,30 @@ namespace ReadyPlayerMe
 
             await LoadAvatarColors();
             assetButtonCreator.SetSelectedAssets(AvatarCreatorData.AvatarProperties.Assets);
-            var assets = AvatarCreatorData.AvatarProperties.Assets;
-            if (assets.TryGetValue(AssetType.Outfit, out var outfitId))
-            {
-                if (partnerAssetManager.IsLockedAssetCategories(outfitId.ToString()))
-                {
-                    assetTypeUICreator.SetActiveAssetTypeButtons(false);
-                    assetTypeUICreator.SetDefaultSelection(AssetType.Outfit);
-                }
-                else
-                {
-                    assetTypeUICreator.SetActiveAssetTypeButtons(true);
-                }
-            }
+            ToggleAssetTypeButtons();
 
             LoadingManager.DisableLoading();
         }
 
+        private void ToggleAssetTypeButtons()
+        {
+            var assets = AvatarCreatorData.AvatarProperties.Assets;
+            if (!assets.TryGetValue(AssetType.Outfit, out var outfitId))
+            {
+                return;
+            }
+            
+            if (partnerAssetManager.IsLockedAssetCategories(outfitId.ToString()))
+            {
+                assetTypeUICreator.SetActiveAssetTypeButtons(false);
+                assetTypeUICreator.SetDefaultSelection(AssetType.Outfit);
+            }
+            else
+            {
+                assetTypeUICreator.SetActiveAssetTypeButtons(true);
+            }
+        }
+        
         private void Cleanup()
         {
             if (currentAvatar != null)
