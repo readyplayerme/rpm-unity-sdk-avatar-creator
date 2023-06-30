@@ -38,5 +38,10 @@ namespace ReadyPlayerMe
         {
             icon.color = isSelected ? selectedColor : defaultColor;
         }
+
+        public void SetInteractable(bool isInteractable)
+        {
+            button.interactable = isInteractable;
+        }
     }
 }

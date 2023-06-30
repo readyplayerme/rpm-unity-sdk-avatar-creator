@@ -36,7 +36,7 @@ namespace ReadyPlayerMe
         [SerializeField] private GameObject leftSidePanelPrefab;
         [SerializeField] private List<AssetTypeIcon> assetTypeIcons;
 
-        private Dictionary<AssetType, AssetTypeButton> assetTypeButtonsMap;
+        public Dictionary<AssetType, AssetTypeButton> assetTypeButtonsMap;
         private AssetTypeButton selectedAssetTypeButton;
 
         private CameraZoom cameraZoom;
@@ -46,7 +46,6 @@ namespace ReadyPlayerMe
         {
             cameraZoom = FindObjectOfType<CameraZoom>();
         }
-
 
         public void CreateUI(BodyType bodyType, IEnumerable<AssetType> assetTypes)
         {
@@ -65,14 +64,12 @@ namespace ReadyPlayerMe
                 else if (assetType.IsFaceAsset())
                 {
                     CreateAssetTypePanel(assetType, faceAssetPanelPrefab, assetTypeUI.panelParent);
-                    CreateAssetTypeButton(assetType, faceAssetTypePanel.GetComponent<ScrollRect>().content.transform, () =>
-                        PanelSwitcher.Switch(assetType));
+                    CreateAssetTypeButton(assetType, faceAssetTypePanel.GetComponent<ScrollRect>().content.transform);
                 }
                 else
                 {
                     CreateAssetTypePanel(assetType, assetTypeUI.panelPrefab, assetTypeUI.panelParent);
-                    CreateAssetTypeButton(assetType, assetTypeUI.buttonParent, () =>
-                        PanelSwitcher.Switch(assetType));
+                    CreateAssetTypeButton(assetType, assetTypeUI.buttonParent);
                 }
             }
 
@@ -88,10 +85,37 @@ namespace ReadyPlayerMe
             });
         }
 
+        public void SetDefaultSelection(AssetType assetType)
+        {
+            SwitchZoomByAssetType(assetType);
+            assetTypeButtonsMap[assetType].SetSelect(true);
+            selectedAssetTypeButton.SetSelect(false);
+            faceAssetTypeButton.SetSelect(assetType.IsFaceAsset());
+            selectedAssetTypeButton = assetTypeButtonsMap[assetType];
+            PanelSwitcher.Switch(assetType);
+        }
+        
+        public void SetActiveAssetTypeButtons(bool enable)
+        {
+            faceAssetTypeButton.SetInteractable(enable);
+            foreach (var assetTypeButton in assetTypeButtonsMap)
+            {
+                if (assetTypeButton.Key != AssetType.Outfit)
+                {
+                    assetTypeButton.Value.SetInteractable(enable);
+                }
+            }
+        }
+
         public void ResetUI()
         {
             PanelSwitcher.Clear();
             DefaultZoom();
+
+            if (assetTypeButtonsMap == null)
+            {
+                return;
+            }
 
             foreach (var assetTypeButton in assetTypeButtonsMap)
             {
@@ -111,7 +135,7 @@ namespace ReadyPlayerMe
             PanelSwitcher.AddPanel(assetType, assetTypePanel);
         }
 
-        private void CreateAssetTypeButton(AssetType assetType, Transform parent, Action onClick)
+        private void CreateAssetTypeButton(AssetType assetType, Transform parent)
         {
             var assetTypeButtonGameObject = Instantiate(assetTypeUI.buttonPrefab, parent);
             var assetTypeButton = assetTypeButtonGameObject.GetComponent<AssetTypeButton>();
@@ -124,12 +148,7 @@ namespace ReadyPlayerMe
 
             assetTypeButton.AddListener(() =>
             {
-                SwitchZoomByAssetType(assetType);
-                assetTypeButton.SetSelect(true);
-                selectedAssetTypeButton.SetSelect(false);
-                faceAssetTypeButton.SetSelect(assetType.IsFaceAsset());
-                selectedAssetTypeButton = assetTypeButton;
-                onClick?.Invoke();
+                SetDefaultSelection(assetType);
             });
             assetTypeButtonsMap.Add(assetType, assetTypeButton);
         }

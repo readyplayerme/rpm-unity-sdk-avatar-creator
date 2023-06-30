@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ReadyPlayerMe.AvatarLoader;
 using ReadyPlayerMe.Core;
+using UnityEngine;
+using UnityEngine.Networking;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -16,6 +18,12 @@ namespace ReadyPlayerMe.AvatarCreator
         private const string COLOR_PARAMETERS = "colors?type=skin,beard,hair,eyebrow";
         private const string FETCH_AVATAR_PARAMETERS = "?select=id,partner&userId=";
         private const string DRAFT_PARAMETER = "draft";
+        private const string TEMPLATE = "templates";
+        private const string FULL_BODY = "fullbody";
+        private const string HALF_BODY = "halfbody";
+        private const string PARTNER = "partner";
+        private const string DATA = "data";
+        private const string ID = "id";
 
         private readonly AuthorizedRequest authorizedRequest;
         private readonly CancellationToken ctx;
@@ -26,7 +34,7 @@ namespace ReadyPlayerMe.AvatarCreator
             authorizedRequest = new AuthorizedRequest();
         }
 
-        public async Task<Dictionary<string, string>> FetchUserAvatars(string userId)
+        public async Task<Dictionary<string, string>> GetUserAvatars(string userId)
         {
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
@@ -39,8 +47,62 @@ namespace ReadyPlayerMe.AvatarCreator
             response.ThrowIfError();
 
             var json = JObject.Parse(response.Text);
-            var data = json["data"]!;
-            return data.ToDictionary(element => element["id"]!.ToString(), element => element["partner"]!.ToString());
+            var data = json[DATA]!;
+            return data.ToDictionary(element => element[ID]!.ToString(), element => element[PARTNER]!.ToString());
+        }
+
+        public async Task<TemplateData[]> GetTemplates()
+        {
+            var response = await authorizedRequest.SendRequest<Response>(
+                new RequestData
+                {
+                    Url = $"{Endpoints.AVATAR_API_V2}/{TEMPLATE}",
+                    Method = HttpMethod.GET,
+                },
+                ctx: ctx
+            );
+            response.ThrowIfError();
+
+            var json = JObject.Parse(response.Text);
+            var data = json[DATA]!;
+            return JsonConvert.DeserializeObject<TemplateData[]>(data.ToString());
+        }
+
+        public async Task<Texture> GetTemplateAvatarImage(string url)
+        {
+            var downloadHandler = new DownloadHandlerTexture();
+            var webRequestDispatcher = new WebRequestDispatcher();
+            var response = await webRequestDispatcher.SendRequest<ResponseTexture>(url, HttpMethod.GET, downloadHandler: downloadHandler, ctx: ctx);
+
+            response.ThrowIfError();
+            return response.Texture;
+        }
+
+        public async Task<AvatarProperties> CreateFromTemplateAvatar(string avatarId, string partner, BodyType bodyType)
+        {
+            var payloadData = new Dictionary<string, string>
+            {
+                { nameof(partner), partner },
+                { nameof(bodyType), bodyType == BodyType.FullBody ? FULL_BODY : HALF_BODY },
+            };
+
+            var payload = AuthDataConverter.CreatePayload(payloadData);
+
+            var response = await authorizedRequest.SendRequest<Response>(
+                new RequestData
+                {
+                    Url = $"{Endpoints.AVATAR_API_V2}/templates/{avatarId}",
+                    Method = HttpMethod.POST,
+                    Payload = payload
+                },
+                ctx: ctx
+            );
+
+            response.ThrowIfError();
+
+            var json = JObject.Parse(response.Text);
+            var data = json[DATA]!.ToString();
+            return JsonConvert.DeserializeObject<AvatarProperties>(data);
         }
 
         public async Task<ColorPalette[]> GetAllAvatarColors(string avatarId)
@@ -72,7 +134,7 @@ namespace ReadyPlayerMe.AvatarCreator
             response.ThrowIfError();
             
             var json = JObject.Parse(response.Text);
-            var data = json["data"]!.ToString();
+            var data = json[DATA]!.ToString();
             return JsonConvert.DeserializeObject<AvatarProperties>(data);
         }
 
@@ -90,7 +152,7 @@ namespace ReadyPlayerMe.AvatarCreator
             response.ThrowIfError();
 
             var metadata = JObject.Parse(response.Text);
-            var data = metadata["data"]!.ToString();
+            var data = metadata[DATA]!.ToString();
             return JsonConvert.DeserializeObject<AvatarProperties>(data);
         }
 
