@@ -37,10 +37,12 @@ namespace ReadyPlayerMe
             rawImage.color = Color.white;
             foreach (var device in devices)
             {
+#if UNITY_EDITOR || !UNITY_WEBGL // WebGL builds do not support front facing camera
                 if (!device.isFrontFacing)
                 {
                     continue;
                 }
+#endif
                 
                 var size = rawImage.rectTransform.sizeDelta;
                 camTexture = new WebCamTexture(device.name, (int) size.x, (int) size.y);
