@@ -14,7 +14,7 @@ namespace ReadyPlayerMe
         public override StateType NextState => StateType.Editor;
 
         private WebCamTexture camTexture;
-        
+
         public override void ActivateState()
         {
             cameraButton.onClick.AddListener(OnCameraButton);
@@ -29,14 +29,20 @@ namespace ReadyPlayerMe
 
         private void OpenCamera()
         {
-            var devices = WebCamTexture.devices;
+            WebCamDevice[] devices = WebCamTexture.devices;
             if (devices.Length == 0)
             {
                 return;
             }
 
             rawImage.color = Color.white;
-            var webCamDevice = devices.FirstOrDefault((device) => device.isFrontFacing);
+
+            WebCamDevice webCamDevice = devices.FirstOrDefault(device => device.isFrontFacing);
+            if (webCamDevice.Equals(default(WebCamDevice)))
+            {
+                webCamDevice = devices[0];
+            }
+
             Vector2 size = rawImage.rectTransform.sizeDelta;
             camTexture = new WebCamTexture(webCamDevice.name, (int) size.x, (int) size.y);
             camTexture.Play();
@@ -65,11 +71,11 @@ namespace ReadyPlayerMe
             texture.Apply();
 
             var bytes = texture.EncodeToPNG();
-            
+
             AvatarCreatorData.AvatarProperties.Id = string.Empty;
             AvatarCreatorData.AvatarProperties.Base64Image = Convert.ToBase64String(bytes);
             AvatarCreatorData.IsExistingAvatar = false;
-            
+
             StateMachine.SetState(StateType.Editor);
         }
     }
