@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,22 +36,12 @@ namespace ReadyPlayerMe
             }
 
             rawImage.color = Color.white;
-            foreach (var device in devices)
-            {
-#if UNITY_EDITOR || !UNITY_WEBGL // WebGL builds do not support front facing camera
-                if (!device.isFrontFacing)
-                {
-                    continue;
-                }
-#endif
-                
-                var size = rawImage.rectTransform.sizeDelta;
-                camTexture = new WebCamTexture(device.name, (int) size.x, (int) size.y);
-                camTexture.Play();
-                rawImage.texture = camTexture;
-                rawImage.SizeToParent();
-                return;
-            }
+            var webCamDevice = devices.FirstOrDefault((device) => device.isFrontFacing);
+            Vector2 size = rawImage.rectTransform.sizeDelta;
+            camTexture = new WebCamTexture(webCamDevice.name, (int) size.x, (int) size.y);
+            camTexture.Play();
+            rawImage.texture = camTexture;
+            rawImage.SizeToParent();
         }
 
         private void CloseCamera()
