@@ -25,7 +25,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(new RequestData
             {
                 Url = Endpoints.ASSETS.Replace("[domain]", domain),
-                Method = HttpMethod.GET,
+                Method = HttpMethod.GET
             }, ctx: ctx);
 
             response.ThrowIfError();
@@ -36,11 +36,11 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             var downloadHandler = new DownloadHandlerTexture();
             var response = await authorizedRequest.SendRequest<ResponseTexture>(new RequestData
-                {
-                    Url = url,
-                    Method = HttpMethod.GET,
-                    DownloadHandler = downloadHandler,
-                }, ctx: ctx);
+            {
+                Url = url,
+                Method = HttpMethod.GET,
+                DownloadHandler = downloadHandler
+            }, ctx: ctx);
 
             response.ThrowIfError();
             return response.Texture;

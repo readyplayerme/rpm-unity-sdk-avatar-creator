@@ -19,7 +19,7 @@ namespace ReadyPlayerMe
 
         private void Awake()
         {
-            directoryPath = $"{Application.persistentDataPath}/{DIRECTORY_NAME}"; 
+            directoryPath = $"{Application.persistentDataPath}/{DIRECTORY_NAME}";
             filePath = $"{directoryPath}/{FILE_NAME}";
         }
 

@@ -2,8 +2,8 @@
     "name": "ReadyPlayerMe.AvatarCreator.Editor.Tests",
     "rootNamespace": "",
     "references": [
-        "ReadyPlayerMe.AvatarLoader",
-        "ReadyPlayerMe.AvatarCreator"
+        "ReadyPlayerMe.AvatarCreator",
+        "ReadyPlayerMe.Core"
     ],
     "includePlatforms": [
         "Editor"

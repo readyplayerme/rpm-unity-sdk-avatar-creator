@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ReadyPlayerMe.AvatarLoader;
+using ReadyPlayerMe.Core;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -33,7 +33,7 @@ namespace ReadyPlayerMe.AvatarCreator
             { "hairColor", AssetType.HairColor },
             { "eyebrowColor", AssetType.EyebrowColor },
             { "beardColor", AssetType.BeardColor },
-            { "faceStyle", AssetType.FaceStyle },
+            { "faceStyle", AssetType.FaceStyle }
         };
 
         public static bool IsFaceAsset(this AssetType assetType)

@@ -10,7 +10,7 @@ namespace ReadyPlayerMe.AvatarCreator
         private readonly string domain;
         private readonly Dictionary<string, string> headers = new Dictionary<string, string>
         {
-            { "Content-Type", "application/json" },
+            { "Content-Type", "application/json" }
         };
 
         private readonly WebRequestDispatcher webRequestDispatcher;
@@ -38,7 +38,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var data = new Dictionary<string, string>
             {
                 { AuthConstants.EMAIL, email },
-                { AuthConstants.AUTH_TYPE, AuthConstants.AUTH_TYPE_CODE },
+                { AuthConstants.AUTH_TYPE, AuthConstants.AUTH_TYPE_CODE }
             };
 
             if (!string.IsNullOrEmpty(userId))
@@ -51,7 +51,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload);
             response.ThrowIfError();
         }
-    
+
         public async Task<UserSession> LoginWithCode(string code)
         {
             var url = GetUrl(Endpoints.AUTH_LOGIN);

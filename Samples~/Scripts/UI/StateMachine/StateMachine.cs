@@ -24,7 +24,7 @@ namespace ReadyPlayerMe
 
         public void SetState(StateType stateType)
         {
-            var previousState = currentState; 
+            var previousState = currentState;
             if (previousState != StateType.None)
             {
                 DeactivateState(stateTypeMap[previousState]);
@@ -53,7 +53,7 @@ namespace ReadyPlayerMe
 
         public void GoToPreviousState()
         {
-            var previousState = currentState; 
+            var previousState = currentState;
 
             DeactivateState(stateTypeMap[previousState]);
             

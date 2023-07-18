@@ -15,7 +15,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var settings = new JsonSerializerSettings
             {
                 ContractResolver = contractResolver,
-                Formatting = Formatting.Indented,
+                Formatting = Formatting.Indented
             };
 
             var data = new Dictionary<string, AvatarProperties>

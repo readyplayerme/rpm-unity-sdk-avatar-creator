@@ -20,6 +20,6 @@
         HairColor,
         EyebrowColor,
         BeardColor,
-        FaceStyle,
+        FaceStyle
     }
 }
