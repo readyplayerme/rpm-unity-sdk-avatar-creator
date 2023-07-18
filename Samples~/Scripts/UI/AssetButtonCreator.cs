@@ -44,14 +44,14 @@ namespace ReadyPlayerMe
         {
             foreach (var asset in selected)
             {
-                var assetType = asset.Key;   
+                var assetType = asset.Key;
                 var assetId = asset.Value;
                 if (assetType.IsColorAsset() && assetType != AssetType.EyeColor)
                 {
                     assetId = $"{assetType}_{assetId}";
                 }
-                
-                if(!assetMap.ContainsKey(assetId))
+
+                if (!assetMap.ContainsKey(assetId))
                 {
                     continue;
                 }

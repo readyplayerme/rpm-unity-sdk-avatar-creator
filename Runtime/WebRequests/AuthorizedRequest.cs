@@ -41,10 +41,10 @@ namespace ReadyPlayerMe.AvatarCreator
             return await webRequestDispatcher.SendRequest<T>(
                 requestData.Url,
                 requestData.Method,
-                headers, 
+                headers,
                 requestData.Payload,
                 requestData.DownloadHandler,
-                ctx:ctx
+                ctx: ctx
             );
         }
 

@@ -1,4 +1,4 @@
-﻿using ReadyPlayerMe.AvatarLoader;
+﻿using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.UI;
 

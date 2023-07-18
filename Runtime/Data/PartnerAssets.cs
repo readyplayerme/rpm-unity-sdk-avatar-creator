@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using ReadyPlayerMe.AvatarLoader;
+using ReadyPlayerMe.Core;
 
 namespace ReadyPlayerMe.AvatarCreator
 {

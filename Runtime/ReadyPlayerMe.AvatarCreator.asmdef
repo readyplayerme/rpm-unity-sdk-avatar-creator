@@ -2,8 +2,7 @@
     "name": "ReadyPlayerMe.AvatarCreator",
     "rootNamespace": "",
     "references": [
-        "GUID:69ab3f10cf42d0b42a6cd1353c374377",
-        "GUID:96af4ea235d92d245a095007c6ca3701"
+        "ReadyPlayerMe.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
