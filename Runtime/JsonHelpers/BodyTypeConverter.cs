@@ -1,7 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ReadyPlayerMe.AvatarLoader;
+using ReadyPlayerMe.Core;
 
 namespace ReadyPlayerMe.AvatarCreator
 {

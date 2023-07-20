@@ -14,7 +14,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 { AssetType.Outfit, "109373713" },
                 { AssetType.HairColor, 0 },
                 { AssetType.EyebrowColor, 0 },
-                { AssetType.BeardColor, 0 },
+                { AssetType.BeardColor, 0 }
             };
             
         public static readonly Dictionary<AssetType, object> FemaleDefaultAssets =
@@ -27,7 +27,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 { AssetType.Outfit, "109376347" },
                 { AssetType.HairColor, 0 },
                 { AssetType.EyebrowColor, 0 },
-                { AssetType.BeardColor, 0 },
+                { AssetType.BeardColor, 0 }
             };
     }
 }

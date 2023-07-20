@@ -10,11 +10,12 @@ namespace ReadyPlayerMe
         private float lastPosX;
         private bool rotate;
         private const int MOUSE_BUTTON_INDEX = 0;
+
         private void Update()
         {
             if (EventSystem.current.IsPointerOverGameObject() && !rotate)
             {
-               return;
+                return;
             }
             
             if (Input.GetMouseButtonDown(MOUSE_BUTTON_INDEX))

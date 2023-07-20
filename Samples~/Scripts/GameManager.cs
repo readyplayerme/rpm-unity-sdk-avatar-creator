@@ -1,6 +1,5 @@
-﻿using System;
-using ReadyPlayerMe.AvatarCreator;
-using ReadyPlayerMe.AvatarLoader;
+﻿using ReadyPlayerMe.AvatarCreator;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 
 namespace ReadyPlayerMe

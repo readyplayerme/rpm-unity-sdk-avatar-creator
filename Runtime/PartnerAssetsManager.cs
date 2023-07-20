@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ReadyPlayerMe.AvatarLoader;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NUnit.Framework;
-using ReadyPlayerMe.AvatarLoader;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator.Tests

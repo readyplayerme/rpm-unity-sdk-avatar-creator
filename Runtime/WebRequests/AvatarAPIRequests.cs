@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ReadyPlayerMe.AvatarLoader;
 using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -27,7 +26,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private readonly AuthorizedRequest authorizedRequest;
         private readonly CancellationToken ctx;
-        
+
         public AvatarAPIRequests(CancellationToken ctx = default)
         {
             this.ctx = ctx;
@@ -40,7 +39,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V1}{FETCH_AVATAR_PARAMETERS}{userId}",
-                    Method = HttpMethod.GET,
+                    Method = HttpMethod.GET
                 },
                 ctx: ctx
             );
@@ -57,7 +56,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V2}/{TEMPLATE}",
-                    Method = HttpMethod.GET,
+                    Method = HttpMethod.GET
                 },
                 ctx: ctx
             );
@@ -83,7 +82,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var payloadData = new Dictionary<string, string>
             {
                 { nameof(partner), partner },
-                { nameof(bodyType), bodyType == BodyType.FullBody ? FULL_BODY : HALF_BODY },
+                { nameof(bodyType), bodyType == BodyType.FullBody ? FULL_BODY : HALF_BODY }
             };
 
             var payload = AuthDataConverter.CreatePayload(payloadData);
@@ -111,7 +110,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}/{COLOR_PARAMETERS}",
-                    Method = HttpMethod.GET,
+                    Method = HttpMethod.GET
                 },
                 ctx: ctx
             );
@@ -126,13 +125,13 @@ namespace ReadyPlayerMe.AvatarCreator
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}.json",
-                    Method = HttpMethod.GET,
+                    Method = HttpMethod.GET
                 },
                 ctx: ctx
             );
 
             response.ThrowIfError();
-            
+
             var json = JObject.Parse(response.Text);
             var data = json[DATA]!.ToString();
             return JsonConvert.DeserializeObject<AvatarProperties>(data);
@@ -166,7 +165,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 new RequestData
                 {
                     Url = url,
-                    Method = HttpMethod.GET,
+                    Method = HttpMethod.GET
                 },
                 ctx: ctx);
 
@@ -181,7 +180,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}",
-                    Method = HttpMethod.GET,
+                    Method = HttpMethod.GET
                 },
                 ctx: ctx);
 
@@ -214,7 +213,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}",
-                    Method = HttpMethod.PUT,
+                    Method = HttpMethod.PUT
                 },
                 ctx: ctx);
 
@@ -228,7 +227,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}/{DRAFT_PARAMETER}",
-                    Method = HttpMethod.DELETE,
+                    Method = HttpMethod.DELETE
                 },
                 ctx: ctx);
 
@@ -241,7 +240,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 new RequestData
                 {
                     Url = $"{Endpoints.AVATAR_API_V2}/{avatarId}",
-                    Method = HttpMethod.DELETE,
+                    Method = HttpMethod.DELETE
                 },
                 ctx: ctx);
 

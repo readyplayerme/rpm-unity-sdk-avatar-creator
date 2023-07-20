@@ -85,6 +85,6 @@ namespace ReadyPlayerMe
         private bool CanShowBackButton(StateType current)
         {
             return current == StateType.BodyTypeSelection || current == StateType.LoginWithCodeFromEmail || current == StateType.AvatarSelection;
-        } 
+        }
     }
 }

@@ -5,7 +5,7 @@ namespace ReadyPlayerMe.AvatarCreator
 {
     public static class ListExtensions
     {
-        public static List<List<T>> ChunkBy<T>(this IEnumerable<T> source, int chunkSize) 
+        public static List<List<T>> ChunkBy<T>(this IEnumerable<T> source, int chunkSize)
         {
             return source
                 .Select((x, i) => new { Index = i, Value = x })
