@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,7 @@ namespace ReadyPlayerMe
         public override StateType NextState => StateType.Editor;
 
         private WebCamTexture camTexture;
-        
+
         public override void ActivateState()
         {
             cameraButton.onClick.AddListener(OnCameraButton);
@@ -28,27 +29,25 @@ namespace ReadyPlayerMe
 
         private void OpenCamera()
         {
-            var devices = WebCamTexture.devices;
+            WebCamDevice[] devices = WebCamTexture.devices;
             if (devices.Length == 0)
             {
                 return;
             }
 
             rawImage.color = Color.white;
-            foreach (var device in devices)
+
+            WebCamDevice webCamDevice = devices.FirstOrDefault(device => device.isFrontFacing);
+            if (webCamDevice.Equals(default(WebCamDevice)))
             {
-                if (!device.isFrontFacing)
-                {
-                    continue;
-                }
-                
-                var size = rawImage.rectTransform.sizeDelta;
-                camTexture = new WebCamTexture(device.name, (int) size.x, (int) size.y);
-                camTexture.Play();
-                rawImage.texture = camTexture;
-                rawImage.SizeToParent();
-                return;
+                webCamDevice = devices[0];
             }
+
+            Vector2 size = rawImage.rectTransform.sizeDelta;
+            camTexture = new WebCamTexture(webCamDevice.name, (int) size.x, (int) size.y);
+            camTexture.Play();
+            rawImage.texture = camTexture;
+            rawImage.SizeToParent();
         }
 
         private void CloseCamera()
@@ -72,11 +71,11 @@ namespace ReadyPlayerMe
             texture.Apply();
 
             var bytes = texture.EncodeToPNG();
-            
+
             AvatarCreatorData.AvatarProperties.Id = string.Empty;
             AvatarCreatorData.AvatarProperties.Base64Image = Convert.ToBase64String(bytes);
             AvatarCreatorData.IsExistingAvatar = false;
-            
+
             StateMachine.SetState(StateType.Editor);
         }
     }
