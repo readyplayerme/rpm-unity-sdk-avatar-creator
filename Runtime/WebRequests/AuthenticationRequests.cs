@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ReadyPlayerMe.Core;
@@ -91,7 +92,10 @@ namespace ReadyPlayerMe.AvatarCreator
                 { AuthConstants.REFRESH_TOKEN, refreshToken }
             });
 
-            var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload);
+            // var response = await webRequestDispatcher.SendRequest<Response>(url, HttpMethod.POST, headers, payload);
+            var response = new Response();
+            response.IsSuccess = false;
+            response.Text = "{\"type\":\"BadRequestError\",\"message\":\"refresh token: The refresh token was not found or expired\",\"status\":400}";
             response.ThrowIfError();
 
             var data = AuthDataConverter.ParseResponse(response.Text);

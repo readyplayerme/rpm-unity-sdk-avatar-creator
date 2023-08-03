@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ReadyPlayerMe.Core;
+using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -65,7 +66,17 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public static async Task RefreshToken()
         {
-            var newTokens = await AuthenticationRequests.RefreshToken(userSession.Token, userSession.RefreshToken);
+            (string, string) newTokens;
+            try
+            {
+                newTokens = await AuthenticationRequests.RefreshToken(userSession.Token, userSession.RefreshToken);
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Refreshing token failed with error: " + e.Message);
+                throw;
+            }
+
             userSession.Token = newTokens.Item1;
             userSession.RefreshToken = newTokens.Item2;
             OnSessionRefreshed?.Invoke(userSession);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
@@ -47,7 +48,16 @@ namespace ReadyPlayerMe
             LoadingManager.EnableLoading();
 
             avatarAPIRequests = new AvatarAPIRequests();
-            avatarPartnerMap = await avatarAPIRequests.GetUserAvatars(AuthManager.UserSession.Id);
+            try
+            {
+                avatarPartnerMap = await avatarAPIRequests.GetUserAvatars(AuthManager.UserSession.Id);
+            }
+            catch (Exception e)
+            {
+                AuthManager.Logout();
+                LoadingManager.DisableLoading();
+                return;
+            }
 
             avatarButtonsMap = new Dictionary<string, GameObject>();
             foreach (var avatar in avatarPartnerMap)
@@ -83,6 +93,7 @@ namespace ReadyPlayerMe
 
         private void OnSignedOut()
         {
+            if (avatarButtonsMap == null) return;
             foreach (var avatars in avatarButtonsMap)
             {
                 Destroy(avatars.Value);
