@@ -21,7 +21,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             var response = await Send<T>(requestData, ctx);
 
-            // if (response is { IsSuccess: false, ResponseCode: 401 })
+            if (response is { IsSuccess: false, ResponseCode: 401 })
             {
                 try
                 {
