@@ -53,7 +53,7 @@ namespace ReadyPlayerMe
         private void OnSignedOut()
         {
             avatarCreatorData.AvatarProperties.Id = string.Empty;
-            SetState(StateType.BodyTypeSelection);
+            SetState(startingState);
             ClearPreviousStates();
         }
         
