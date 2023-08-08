@@ -16,7 +16,7 @@ namespace ReadyPlayerMe.AvatarCreator
         public LockedCategories[] LockedCategories;
     }
 
-    public struct LockedCategories
+    public class LockedCategories
     {
         public string Name;
         public KeyValuePair<string, string>[] CustomizationCategories;

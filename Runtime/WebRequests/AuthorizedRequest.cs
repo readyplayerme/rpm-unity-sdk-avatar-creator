@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ReadyPlayerMe.Core;
@@ -22,7 +23,15 @@ namespace ReadyPlayerMe.AvatarCreator
 
             if (response is { IsSuccess: false, ResponseCode: 401 })
             {
-                await RefreshTokens();
+                try
+                {
+                    await AuthManager.RefreshToken();
+                }
+                catch (Exception e)
+                {
+                    throw;
+                }
+                
                 response = await Send<T>(requestData, ctx);
             }
 
@@ -46,11 +55,6 @@ namespace ReadyPlayerMe.AvatarCreator
                 requestData.DownloadHandler,
                 ctx: ctx
             );
-        }
-
-        private async Task RefreshTokens()
-        {
-            await AuthManager.RefreshToken();
         }
     }
 }

@@ -21,6 +21,11 @@ Please visit the online documentation and join our public `discord` community.
 - [Ready Player Me WebView](https://github.com/readyplayerme/rpm-unity-sdk-webview) - v1.2.0
 - [glTFast](https://github.com/atteneder/glTFast) - v5.0.0
 
+## Supported Platforms
+- Windows/Mac/Linux Standalone
+- Android*
+- iOS*
+
 ## Quick Start
 
 The installation steps can be found [here.](Documentation~/QuickStart.md)
@@ -48,6 +53,6 @@ The documentation for customization can be found [here.](Documentation~/Customiz
 
 ## Note
 
-- Camera support is currently only available for PC using Unity’s webcam native API.
+- [*]Camera support is currently only available for PC using Unity’s webcam native API.
 - Unity does not have a native file picker, so we have discontinued support for this feature.
 - To add support for camera on other platforms and file picker, you will need to implement it yourself.
