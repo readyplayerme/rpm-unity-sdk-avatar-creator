@@ -12,5 +12,7 @@
 
         public const string AVATAR_API_V1 = "https://api.readyplayer.me/v1/avatars";
         public const string AVATAR_API_V2 = "https://api.readyplayer.me/v2/avatars";
+
+        public const string ASSET_API_V2 = "https://api.readyplayer.me/v1/assets";
     }
 }

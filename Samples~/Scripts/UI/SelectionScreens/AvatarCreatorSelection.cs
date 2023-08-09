@@ -122,7 +122,6 @@ namespace ReadyPlayerMe
         {
             var startTime = Time.time;
             partnerAssetManager = new PartnerAssetsManager(
-                AvatarCreatorData.AvatarProperties.Partner,
                 AvatarCreatorData.AvatarProperties.BodyType,
                 AvatarCreatorData.AvatarProperties.Gender,
                 ctxSource.Token);
