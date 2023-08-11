@@ -53,7 +53,7 @@ namespace ReadyPlayerMe
         private void OnSignedOut()
         {
             avatarCreatorData.AvatarProperties.Id = string.Empty;
-            SetState(StateType.LoginWithCodeFromEmail);
+            SetState(startingState);
             ClearPreviousStates();
         }
         
@@ -85,6 +85,6 @@ namespace ReadyPlayerMe
         private bool CanShowBackButton(StateType current)
         {
             return current == StateType.BodyTypeSelection || current == StateType.LoginWithCodeFromEmail || current == StateType.AvatarSelection;
-        } 
+        }
     }
 }

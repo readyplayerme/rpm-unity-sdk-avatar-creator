@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using ReadyPlayerMe.AvatarLoader;
+using ReadyPlayerMe.Core;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -16,7 +16,7 @@ namespace ReadyPlayerMe.AvatarCreator
         public LockedCategories[] LockedCategories;
     }
 
-    public struct LockedCategories
+    public class LockedCategories
     {
         public string Name;
         public KeyValuePair<string, string>[] CustomizationCategories;

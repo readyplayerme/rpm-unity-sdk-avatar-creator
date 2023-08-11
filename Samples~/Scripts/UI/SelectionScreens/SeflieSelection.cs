@@ -14,7 +14,7 @@ namespace ReadyPlayerMe
         [SerializeField] private Button privacyButton;
 
         public override StateType StateType => StateType.SelfieSelection;
-        public override StateType NextState => StateType.Editor;
+        public override StateType NextState => StateType.DefaultAvatarSelection;
 
         public override void ActivateState()
         {

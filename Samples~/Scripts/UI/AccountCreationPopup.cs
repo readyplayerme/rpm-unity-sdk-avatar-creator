@@ -17,7 +17,7 @@ namespace ReadyPlayerMe
         private void Update()
         {
             var email = emailField.text;
-            sendEmailButton.interactable = !string.IsNullOrEmpty(email) &&  ValidatorUtil.IsValidEmail(email);
+            sendEmailButton.interactable = !string.IsNullOrEmpty(email) && ValidatorUtil.IsValidEmail(email);
         }
 
         private void OnEnable()

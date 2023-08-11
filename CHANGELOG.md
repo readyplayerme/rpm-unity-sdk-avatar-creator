@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.5.0] - 2023 August 11
+
+### Updated
+- Adjusted API according to RPM SDK 3.0.0
+- Fixed camera not working in WebGl builds
+- Fixed template error for WebGL builds
+
+## [0.4.0] - 2023 July 03
+
+- Add avatar template requests for default avatars
+- Add customization guide
+- Add full body outfits
+
 ## [0.3.0] - 2023 June 02
 
 ### Added

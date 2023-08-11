@@ -19,18 +19,21 @@ namespace ReadyPlayerMe
 
         private void Awake()
         {
-            directoryPath = $"{Application.persistentDataPath}/{DIRECTORY_NAME}"; 
+            directoryPath = $"{Application.persistentDataPath}/{DIRECTORY_NAME}";
             filePath = $"{directoryPath}/{FILE_NAME}";
         }
 
         private void OnEnable()
         {
-            profileUI.SignedOut += OnSignOut;
+            profileUI.SignedOut += AuthManager.Logout;
+            AuthManager.OnSignedOut += DeleteSession;
         }
+
 
         private void OnDisable()
         {
-            profileUI.SignedOut -= OnSignOut;
+            profileUI.SignedOut -= AuthManager.Logout;
+            AuthManager.OnSignedOut -= DeleteSession;
         }
 
         public bool LoadSession()
@@ -39,7 +42,6 @@ namespace ReadyPlayerMe
             {
                 return false;
             }
-           
             var bytes = File.ReadAllBytes(filePath);
             var json = Encoding.UTF8.GetString(bytes);
             var userSession = JsonConvert.DeserializeObject<UserSession>(json);
@@ -65,14 +67,14 @@ namespace ReadyPlayerMe
                 char.ToUpperInvariant(userSession.Name[0]).ToString()
             );
         }
-
-        private void OnSignOut()
+        
+        private void DeleteSession()
         {
-            AuthManager.Logout();
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
             }
+            profileUI.ClearProfile();
         }
 
     }

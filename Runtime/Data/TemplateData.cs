@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
-using ReadyPlayerMe.AvatarLoader;
+﻿using System;
+using Newtonsoft.Json;
+using ReadyPlayerMe.Core;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
+    [Serializable]
     public struct TemplateData
     {
         public string ImageUrl;
