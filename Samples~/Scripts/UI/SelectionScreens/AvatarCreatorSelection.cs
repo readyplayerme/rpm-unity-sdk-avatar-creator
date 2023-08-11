@@ -32,11 +32,17 @@ namespace ReadyPlayerMe
         public override StateType StateType => StateType.Editor;
         public override StateType NextState => StateType.End;
 
+        private void Start()
+        {
+            partnerAssetManager = new PartnerAssetsManager();
+        }
+
         public override void ActivateState()
         {
             saveButton.onClick.AddListener(OnSaveButton);
             accountCreationPopup.OnSendEmail += OnSendEmail;
             accountCreationPopup.OnContinueWithoutSignup += Save;
+            assetTypeUICreator.OnCategorySelected += OnCategorySelected;
             Setup();
         }
 
@@ -45,6 +51,7 @@ namespace ReadyPlayerMe
             saveButton.onClick.RemoveListener(OnSaveButton);
             accountCreationPopup.OnSendEmail -= OnSendEmail;
             accountCreationPopup.OnContinueWithoutSignup -= Save;
+            assetTypeUICreator.OnCategorySelected -= OnCategorySelected;
             Cleanup();
         }
 
@@ -99,6 +106,7 @@ namespace ReadyPlayerMe
             }
 
             avatarManager.DeleteDraft();
+            partnerAssetManager.DeleteAssets();
 
             Dispose();
             assetTypeUICreator.ResetUI();
@@ -106,6 +114,7 @@ namespace ReadyPlayerMe
 
         private void OnErrorCallback(string error)
         {
+            Debug.Log(error);
             avatarManager.OnError -= OnErrorCallback;
             partnerAssetManager.OnError -= OnErrorCallback;
 
@@ -117,7 +126,7 @@ namespace ReadyPlayerMe
         private async Task LoadAssets()
         {
             var startTime = Time.time;
-            partnerAssetManager = new PartnerAssetsManager(
+            partnerAssetManager.SetAvatarProperties(
                 AvatarCreatorData.AvatarProperties.BodyType,
                 AvatarCreatorData.AvatarProperties.Gender,
                 ctxSource.Token);
@@ -127,7 +136,6 @@ namespace ReadyPlayerMe
 
             CreateUI(AvatarCreatorData.AvatarProperties.BodyType);
 
-            assetTypeUICreator.OnCategorySelected += OnCategorySelected;
             await CreateAssetsByCategory(AssetType.FaceShape);
 
             DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
@@ -195,7 +203,7 @@ namespace ReadyPlayerMe
         private async Task CreateAssetsByCategory(AssetType assetType)
         {
             var assets = await partnerAssetManager.GetAssetsByCategory(assetType);
-            if (assets == null)
+            if (assets == null || assets.Count == 0)
             {
                 return;
             }

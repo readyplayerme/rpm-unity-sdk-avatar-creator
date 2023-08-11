@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,10 +17,13 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private readonly AuthorizedRequest authorizedRequest;
         private string appId = "645b4dd53aef3a0696a2b32c";
-        
+
+        private readonly Dictionary<string, Texture> icons;
+
         public PartnerAssetsRequests()
         {
             authorizedRequest = new AuthorizedRequest();
+            icons = new Dictionary<string, Texture>();
         }
 
         public async Task<PartnerAsset[]> Get(CancellationToken ctx = new CancellationToken())
@@ -46,7 +48,7 @@ namespace ReadyPlayerMe.AvatarCreator
             return assetData.Assets;
         }
 
-        public async Task<AssetData> GetRequest(int limit, int pageNumber, AssetType? assetType = null, CancellationToken ctx = new CancellationToken())
+        private async Task<AssetData> GetRequest(int limit, int pageNumber, AssetType? assetType = null, CancellationToken ctx = new CancellationToken())
         {
             var url = $"{Endpoints.ASSET_API_V2}?filter=viewable-by-user-and-app&filterUserId={AuthManager.UserSession.Id}&filterApplicationId={appId}";
             url += $"&limit={limit}&page={pageNumber}&";
@@ -63,12 +65,12 @@ namespace ReadyPlayerMe.AvatarCreator
                 Method = HttpMethod.GET
             }, ctx: ctx);
             response.ThrowIfError();
-            
+
             var json = JObject.Parse(response.Text);
             var partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
             var pagination = JsonConvert.DeserializeObject<Pagination>(json["pagination"]!.ToString());
-            
-            return new AssetData()
+
+            return new AssetData
             {
                 Assets = partnerAssets,
                 Pagination = pagination
@@ -77,6 +79,12 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<Texture> GetAssetIcon(string url, Action<Texture> completed, CancellationToken ctx = new CancellationToken())
         {
+            if (icons.ContainsKey(url))
+            {
+                completed?.Invoke(icons[url]);
+                return icons[url];
+            }
+
             var downloadHandler = new DownloadHandlerTexture();
             var response = await authorizedRequest.SendRequest<ResponseTexture>(new RequestData
             {
@@ -86,6 +94,8 @@ namespace ReadyPlayerMe.AvatarCreator
             }, ctx: ctx);
 
             response.ThrowIfError();
+            
+            icons.Add(url, response.Texture);
             completed?.Invoke(response.Texture);
             return response.Texture;
         }

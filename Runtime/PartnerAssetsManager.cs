@@ -15,28 +15,38 @@ namespace ReadyPlayerMe.AvatarCreator
     {
         private const string EYE_MASK_SIZE_PARAM = "?w=256";
 
-        private readonly BodyType bodyType;
-        private readonly OutfitGender gender;
-
         private readonly PartnerAssetsRequests partnerAssetsRequests;
-        private readonly CancellationTokenSource ctxSource;
         private readonly Dictionary<AssetType, List<PartnerAsset>> assetsByType;
         public Action<string> OnError { get; set; }
 
+        private BodyType bodyType;
+        private OutfitGender gender;
         private PartnerAsset[] assets;
+        private CancellationTokenSource ctxSource;
 
-        public PartnerAssetsManager(BodyType bodyType, OutfitGender gender, CancellationToken token = default)
+        public PartnerAssetsManager()
         {
-            this.bodyType = bodyType;
-            this.gender = gender;
-            ctxSource = CancellationTokenSource.CreateLinkedTokenSource(token);
             partnerAssetsRequests = new PartnerAssetsRequests();
             assetsByType = new Dictionary<AssetType, List<PartnerAsset>>();
         }
 
+        public void SetAvatarProperties(BodyType assetBodyType, OutfitGender assetGender, CancellationToken token = default)
+        {
+            bodyType = assetBodyType;
+            gender = assetGender;
+            ctxSource = CancellationTokenSource.CreateLinkedTokenSource(token);
+        }
+
         public async Task<List<string>> GetAssetsByCategory(AssetType type)
         {
+            var startTime = Time.time;
+            if (assetsByType.TryGetValue(type, out List<PartnerAsset> _))
+            {
+                return new List<string>();
+            }
+
             assets = await partnerAssetsRequests.Get(type, ctxSource.Token);
+            Debug.Log($"Asset by category {type} received: {Time.time - startTime}s");
             if (assetsByType.TryGetValue(type, out List<PartnerAsset> value))
             {
                 value.AddRange(assets);
@@ -49,22 +59,6 @@ namespace ReadyPlayerMe.AvatarCreator
             return assets.Select(x => x.Id).ToList();
         }
 
-        public async Task<Dictionary<string, AssetType>> GetAllAssets()
-        {
-            try
-            {
-                assets = await partnerAssetsRequests.Get(ctxSource.Token);
-            }
-            catch (Exception e)
-            {
-                OnError?.Invoke(e.Message);
-                return null;
-            }
-
-            assets = assets.Where(FilterAssets).ToArray();
-            return assets.ToDictionary(asset => asset.Id, asset => asset.AssetType);
-        }
-
         public async void DownloadAssetsIcon(AssetType assetType, Action<string, Texture> onDownload)
         {
             var startTime = Time.time;
@@ -75,7 +69,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 try
                 {
                     await DownloadIcons(list, onDownload);
-                    Debug.Log("Download first chunk of icons: " + (Time.time - startTime) + "s");
+                    Debug.Log($"Download chunk of {assetType} icons: " + (Time.time - startTime) + "s");
                 }
                 catch (Exception e)
                 {
@@ -105,12 +99,11 @@ namespace ReadyPlayerMe.AvatarCreator
             {
                 var url = asset.AssetType == AssetType.EyeColor ? asset.Mask + EYE_MASK_SIZE_PARAM : asset.Icon + "?w=64";
                 var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(ctxSource.Token);
-                var iconTask = partnerAssetsRequests.GetAssetIcon(url,icon =>
-                {
-                    onDownload?.Invoke(asset.Id, icon);
-                },
-                    
-                linkedTokenSource.Token);
+                var iconTask = partnerAssetsRequests.GetAssetIcon(url, icon =>
+                    {
+                        onDownload?.Invoke(asset.Id, icon);
+                    },
+                    linkedTokenSource.Token);
                 assetIconMap.Add(asset.Id, iconTask);
             }
 
@@ -120,27 +113,12 @@ namespace ReadyPlayerMe.AvatarCreator
             }
         }
 
-        private bool FilterAssets(PartnerAsset asset)
+        public void DeleteAssets()
         {
-            // Outfit is only for full body and Shirt is only for half body.
-            // Both outfit and shirt are gender specific.
-            if (bodyType == BodyType.HalfBody)
-            {
-                if (asset.AssetType == AssetType.Shirt)
-                    return asset.Gender == gender;
-
-                return asset.AssetType != AssetType.Outfit;
-            }
-
-            if (asset.AssetType == AssetType.Outfit)
-                return asset.Gender == gender;
-
-            return asset.AssetType != AssetType.Shirt;
-        }
-
-        public void Dispose()
-        {
+            assetsByType.Clear();
             ctxSource?.Cancel();
         }
+        
+        public void Dispose() => DeleteAssets();
     }
 }
