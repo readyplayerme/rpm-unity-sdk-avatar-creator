@@ -10,7 +10,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             if (!response.IsSuccess)
             {
-                throw new Exception(response.Error + "\n" + response.Url);
+                throw new Exception(response.Error);
             }
         }
         

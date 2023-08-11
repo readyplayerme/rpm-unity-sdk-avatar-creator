@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
@@ -35,7 +36,7 @@ namespace ReadyPlayerMe
         {
             saveButton.onClick.AddListener(OnSaveButton);
             accountCreationPopup.OnSendEmail += OnSendEmail;
-            accountCreationPopup.OnContinueWithoutSignup += OnContinueWithoutSignup;
+            accountCreationPopup.OnContinueWithoutSignup += Save;
             Setup();
         }
 
@@ -43,7 +44,7 @@ namespace ReadyPlayerMe
         {
             saveButton.onClick.RemoveListener(OnSaveButton);
             accountCreationPopup.OnSendEmail -= OnSendEmail;
-            accountCreationPopup.OnContinueWithoutSignup -= OnContinueWithoutSignup;
+            accountCreationPopup.OnContinueWithoutSignup -= Save;
             Cleanup();
         }
 
@@ -51,10 +52,6 @@ namespace ReadyPlayerMe
         {
             LoadingManager.EnableLoading();
             ctxSource = new CancellationTokenSource();
-            if (!AuthManager.IsSignedIn)
-            {
-                await AuthManager.LoginAsAnonymous();
-            }
 
             avatarManager = new AvatarManager(
                 AvatarCreatorData.AvatarProperties.BodyType,
@@ -63,14 +60,13 @@ namespace ReadyPlayerMe
                 ctxSource.Token);
             avatarManager.OnError += OnErrorCallback;
 
-            await LoadAssets();
             currentAvatar = await LoadAvatar();
 
             if (string.IsNullOrEmpty(avatarManager.AvatarId))
                 return;
 
+            await LoadAssets();
             await LoadAvatarColors();
-            assetButtonCreator.SetSelectedAssets(AvatarCreatorData.AvatarProperties.Assets);
             ToggleAssetTypeButtons();
 
             LoadingManager.DisableLoading();
@@ -127,16 +123,20 @@ namespace ReadyPlayerMe
                 ctxSource.Token);
 
             partnerAssetManager.OnError += OnErrorCallback;
+            Debug.Log("Getting all partner assets");
 
-            var assetIconDownloadTasks = await partnerAssetManager.GetAllAssets();
-            if (assetIconDownloadTasks == null)
-            {
-                return;
-            }
-            
-            CreateUI(AvatarCreatorData.AvatarProperties.BodyType, assetIconDownloadTasks);
-            partnerAssetManager.DownloadAssetsIcon(assetButtonCreator.SetAssetIcons);
+            CreateUI(AvatarCreatorData.AvatarProperties.BodyType);
+
+            assetTypeUICreator.OnCategorySelected += OnCategorySelected;
+            await CreateAssetsByCategory(AssetType.FaceShape);
+
             DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
+        }
+
+        private async void OnCategorySelected(AssetType category)
+        {
+            Debug.Log(category);
+            await CreateAssetsByCategory(category);
         }
 
         private async Task<GameObject> LoadAvatar()
@@ -179,32 +179,35 @@ namespace ReadyPlayerMe
         private async Task LoadAvatarColors()
         {
             var startTime = Time.time;
-            var avatarAPIRequests = new AvatarAPIRequests();
-            ColorPalette[] colors = null;
-            try
-            {
-                colors = await avatarAPIRequests.GetAllAvatarColors(AvatarCreatorData.AvatarProperties.Id);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-            }
-
-            if (colors == null)
-            {
-                return;
-            }
+            var colors = await avatarManager.LoadAvatarColors();
             assetButtonCreator.CreateColorUI(colors, UpdateAvatar);
             DebugPanel.AddLogWithDuration("All colors loaded", Time.time - startTime);
         }
 
-        private void CreateUI(BodyType bodyType, Dictionary<string, AssetType> assets)
+        private void CreateUI(BodyType bodyType)
         {
             assetTypeUICreator.CreateUI(bodyType, AssetTypeHelper.GetAssetTypeList(bodyType));
-            assetButtonCreator.CreateAssetButtons(assets, OnAssetButtonClicked);
+            assetButtonCreator.SetSelectedAssets(AvatarCreatorData.AvatarProperties.Assets);
             assetButtonCreator.CreateClearButton(UpdateAvatar);
             saveButton.gameObject.SetActive(true);
         }
+
+        private async Task CreateAssetsByCategory(AssetType assetType)
+        {
+            var assets = await partnerAssetManager.GetAssetsByCategory(assetType);
+            if (assets == null)
+            {
+                return;
+            }
+            assetButtonCreator.CreateAssetButtons(assets, assetType, OnAssetButtonClicked);
+            partnerAssetManager.DownloadAssetsIcon(assetType, assetButtonCreator.SetAssetIcon);
+
+            if (assetType == AssetType.EyeShape)
+            {
+                await CreateAssetsByCategory(AssetType.EyeColor);
+            }
+        }
+        
 
         private void OnAssetButtonClicked(string id, AssetType assetType)
         {
@@ -223,11 +226,6 @@ namespace ReadyPlayerMe
                 accountCreationPopup.gameObject.SetActive(true);
             }
 
-        }
-
-        private void OnContinueWithoutSignup()
-        {
-            Save();
         }
 
         private void OnSendEmail(string email)

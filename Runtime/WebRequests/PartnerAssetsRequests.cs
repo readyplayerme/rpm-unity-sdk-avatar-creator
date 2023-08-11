@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -26,22 +27,36 @@ namespace ReadyPlayerMe.AvatarCreator
         public async Task<PartnerAsset[]> Get(CancellationToken ctx = new CancellationToken())
         {
             var assets = new HashSet<PartnerAsset>();
-            var assetData = await GetRequest(100,1, ctx);
-            
+            var assetData = await GetRequest(100, 1, ctx: ctx);
+
             assets.UnionWith(assetData.Assets);
 
             for (int i = 2; i <= assetData.Pagination.TotalPages; i++)
             {
-                assetData =  await GetRequest(100,i, ctx);
+                assetData = await GetRequest(100, i, ctx: ctx);
                 assets.UnionWith(assetData.Assets);
             }
 
             return assets.ToArray();
         }
 
-        public async Task<AssetData> GetRequest(int limit,int pageNumber, CancellationToken ctx)
+        public async Task<PartnerAsset[]> Get(AssetType assetType, CancellationToken ctx = new CancellationToken())
         {
-            var url = $"{Endpoints.ASSET_API_V2}?limit={limit}&page={pageNumber}&filter=viewable-by-user-and-app&filterUserId={AuthManager.UserSession.Id}&filterApplicationId={appId}";
+            var assetData = await GetRequest(100, 1, assetType, ctx);
+            return assetData.Assets;
+        }
+
+        public async Task<AssetData> GetRequest(int limit, int pageNumber, AssetType? assetType = null, CancellationToken ctx = new CancellationToken())
+        {
+            var url = $"{Endpoints.ASSET_API_V2}?filter=viewable-by-user-and-app&filterUserId={AuthManager.UserSession.Id}&filterApplicationId={appId}";
+            url += $"&limit={limit}&page={pageNumber}&";
+
+            if (assetType != null)
+            {
+                var type = AssetTypeHelper.PartnerAssetTypeMap.First(x => x.Value == assetType).Key;
+                url += $"&type={type}";
+            }
+
             var response = await authorizedRequest.SendRequest<Response>(new RequestData
             {
                 Url = url,
@@ -60,7 +75,7 @@ namespace ReadyPlayerMe.AvatarCreator
             };
         }
 
-        public async Task<Texture> GetAssetIcon(string url, CancellationToken ctx = new CancellationToken())
+        public async Task<Texture> GetAssetIcon(string url, Action<Texture> completed, CancellationToken ctx = new CancellationToken())
         {
             var downloadHandler = new DownloadHandlerTexture();
             var response = await authorizedRequest.SendRequest<ResponseTexture>(new RequestData
@@ -71,6 +86,7 @@ namespace ReadyPlayerMe.AvatarCreator
             }, ctx: ctx);
 
             response.ThrowIfError();
+            completed?.Invoke(response.Texture);
             return response.Texture;
         }
     }

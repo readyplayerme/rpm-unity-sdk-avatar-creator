@@ -36,12 +36,13 @@ namespace ReadyPlayerMe
         [SerializeField] private GameObject leftSidePanelPrefab;
         [SerializeField] private List<AssetTypeIcon> assetTypeIcons;
 
-        public Dictionary<AssetType, AssetTypeButton> assetTypeButtonsMap;
+        private Dictionary<AssetType, AssetTypeButton> assetTypeButtonsMap;
+        public Action<AssetType> OnCategorySelected;
         private AssetTypeButton selectedAssetTypeButton;
 
         private CameraZoom cameraZoom;
         private BodyType bodyType;
-
+        
         private void Awake()
         {
             cameraZoom = FindObjectOfType<CameraZoom>();
@@ -149,6 +150,7 @@ namespace ReadyPlayerMe
             assetTypeButton.AddListener(() =>
             {
                 SetDefaultSelection(assetType);
+                OnCategorySelected?.Invoke(assetType);
             });
             assetTypeButtonsMap.Add(assetType, assetTypeButton);
         }

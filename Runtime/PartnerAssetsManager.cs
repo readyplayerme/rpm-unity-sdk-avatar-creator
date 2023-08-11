@@ -20,7 +20,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private readonly PartnerAssetsRequests partnerAssetsRequests;
         private readonly CancellationTokenSource ctxSource;
-
+        private readonly Dictionary<AssetType, List<PartnerAsset>> assetsByType;
         public Action<string> OnError { get; set; }
 
         private PartnerAsset[] assets;
@@ -31,6 +31,22 @@ namespace ReadyPlayerMe.AvatarCreator
             this.gender = gender;
             ctxSource = CancellationTokenSource.CreateLinkedTokenSource(token);
             partnerAssetsRequests = new PartnerAssetsRequests();
+            assetsByType = new Dictionary<AssetType, List<PartnerAsset>>();
+        }
+
+        public async Task<List<string>> GetAssetsByCategory(AssetType type)
+        {
+            assets = await partnerAssetsRequests.Get(type, ctxSource.Token);
+            if (assetsByType.TryGetValue(type, out List<PartnerAsset> value))
+            {
+                value.AddRange(assets);
+            }
+            else
+            {
+                assetsByType.Add(type, assets.ToList());
+            }
+
+            return assets.Select(x => x.Id).ToList();
         }
 
         public async Task<Dictionary<string, AssetType>> GetAllAssets()
@@ -49,17 +65,17 @@ namespace ReadyPlayerMe.AvatarCreator
             return assets.ToDictionary(asset => asset.Id, asset => asset.AssetType);
         }
 
-        public async void DownloadAssetsIcon(Action<Dictionary<string, Texture>> onDownload)
+        public async void DownloadAssetsIcon(AssetType assetType, Action<string, Texture> onDownload)
         {
-            var ordererAssets = assets.OrderByDescending(x => x.AssetType == AssetType.FaceShape);
-            var chunkList = ordererAssets.ChunkBy(20);
+            var startTime = Time.time;
+            var chunkList = assetsByType[assetType].ChunkBy(20);
 
             foreach (var list in chunkList)
             {
-                Dictionary<string, Texture> assetIdTextureMap;
                 try
                 {
-                    assetIdTextureMap = await DownloadIcons(list);
+                    await DownloadIcons(list, onDownload);
+                    Debug.Log("Download first chunk of icons: " + (Time.time - startTime) + "s");
                 }
                 catch (Exception e)
                 {
@@ -71,8 +87,6 @@ namespace ReadyPlayerMe.AvatarCreator
                 {
                     return;
                 }
-
-                onDownload?.Invoke(assetIdTextureMap);
                 await Task.Yield();
             }
         }
@@ -83,15 +97,20 @@ namespace ReadyPlayerMe.AvatarCreator
             return asset.LockedCategories != null && asset.LockedCategories.Length > 0;
         }
 
-        private async Task<Dictionary<string, Texture>> DownloadIcons(List<PartnerAsset> chunk)
+        private async Task DownloadIcons(List<PartnerAsset> chunk, Action<string, Texture> onDownload)
         {
             var assetIconMap = new Dictionary<string, Task<Texture>>();
 
             foreach (var asset in chunk)
             {
-                var url = asset.AssetType == AssetType.EyeColor ? asset.Mask + EYE_MASK_SIZE_PARAM : asset.Icon;
+                var url = asset.AssetType == AssetType.EyeColor ? asset.Mask + EYE_MASK_SIZE_PARAM : asset.Icon + "?w=64";
                 var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(ctxSource.Token);
-                var iconTask = partnerAssetsRequests.GetAssetIcon(url, linkedTokenSource.Token);
+                var iconTask = partnerAssetsRequests.GetAssetIcon(url,icon =>
+                {
+                    onDownload?.Invoke(asset.Id, icon);
+                },
+                    
+                linkedTokenSource.Token);
                 assetIconMap.Add(asset.Id, iconTask);
             }
 
@@ -99,8 +118,6 @@ namespace ReadyPlayerMe.AvatarCreator
             {
                 await Task.Yield();
             }
-
-            return assetIconMap.ToDictionary(a => a.Key, a => a.Value.Result);
         }
 
         private bool FilterAssets(PartnerAsset asset)
