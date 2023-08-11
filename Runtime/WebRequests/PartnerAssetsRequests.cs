@@ -13,6 +13,8 @@ namespace ReadyPlayerMe.AvatarCreator
 {
     public class PartnerAssetsRequests
     {
+        private const int LIMIT = 100;
+
         private readonly string token;
 
         private readonly AuthorizedRequest authorizedRequest;
@@ -26,26 +28,19 @@ namespace ReadyPlayerMe.AvatarCreator
             icons = new Dictionary<string, Texture>();
         }
 
-        public async Task<PartnerAsset[]> Get(CancellationToken ctx = new CancellationToken())
+        public async Task<PartnerAsset[]> Get(AssetType assetType, CancellationToken ctx = new CancellationToken())
         {
             var assets = new HashSet<PartnerAsset>();
-            var assetData = await GetRequest(100, 1, ctx: ctx);
-
+            var assetData = await GetRequest(LIMIT, 1, assetType, ctx: ctx);
             assets.UnionWith(assetData.Assets);
 
             for (int i = 2; i <= assetData.Pagination.TotalPages; i++)
             {
-                assetData = await GetRequest(100, i, ctx: ctx);
+                assetData = await GetRequest(LIMIT, i, assetType, ctx: ctx);
                 assets.UnionWith(assetData.Assets);
             }
 
             return assets.ToArray();
-        }
-
-        public async Task<PartnerAsset[]> Get(AssetType assetType, CancellationToken ctx = new CancellationToken())
-        {
-            var assetData = await GetRequest(100, 1, assetType, ctx);
-            return assetData.Assets;
         }
 
         private async Task<AssetData> GetRequest(int limit, int pageNumber, AssetType? assetType = null, CancellationToken ctx = new CancellationToken())
