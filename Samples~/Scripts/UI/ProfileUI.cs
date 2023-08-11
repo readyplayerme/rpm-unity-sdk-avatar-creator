@@ -32,10 +32,16 @@ namespace ReadyPlayerMe
             profileText.text = profileButtonText;
             profileButton.gameObject.SetActive(true);
         }
+        
+        public void ClearProfile()
+        {
+            username.text = string.Empty;
+            profileText.text = string.Empty;
+            profileButton.gameObject.SetActive(false);
+        }
 
         private void OnSignOutButton()
         {
-            profileButton.gameObject.SetActive(false);
             ToggleProfilePanel();
             SignedOut?.Invoke();
         }
