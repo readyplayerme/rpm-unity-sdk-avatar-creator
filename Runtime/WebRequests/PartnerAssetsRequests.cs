@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -46,25 +46,25 @@ namespace ReadyPlayerMe.AvatarCreator
         private async Task<AssetData> GetRequest(int limit, int pageNumber, AssetType? assetType = null, CancellationToken ctx = new CancellationToken())
         {
             var url = $"{Endpoints.ASSET_API_V2}?filter=viewable-by-user-and-app&filterUserId={AuthManager.UserSession.Id}&filterApplicationId={appId}";
-            url += $"&limit={limit}&page={pageNumber}&";
+            url += $"&limit={limit}&page={pageNumber}";
 
             if (assetType != null)
             {
                 var type = AssetTypeHelper.PartnerAssetTypeMap.First(x => x.Value == assetType).Key;
                 url += $"&type={type}";
             }
-
+            Debug.Log($"url: {url}");
             var response = await authorizedRequest.SendRequest<Response>(new RequestData
             {
                 Url = url,
                 Method = HttpMethod.GET
-            }, ctx: ctx);
+            }, ctx);
             response.ThrowIfError();
 
-            var json = JObject.Parse(response.Text);
-            var partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
+            JObject json = JObject.Parse(response.Text);
+            PartnerAsset[] partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
             var pagination = JsonConvert.DeserializeObject<Pagination>(json["pagination"]!.ToString());
-
+            Debug.Log($"Deserialized");
             return new AssetData
             {
                 Assets = partnerAssets,
