@@ -18,42 +18,46 @@ namespace ReadyPlayerMe.AvatarCreator
         private readonly string token;
 
         private readonly AuthorizedRequest authorizedRequest;
-        private string appId = "645b4dd53aef3a0696a2b32c";
+        private readonly string appId;
 
         private readonly Dictionary<string, Texture> icons;
 
-        public PartnerAssetsRequests()
+        public PartnerAssetsRequests(string appId)
         {
             authorizedRequest = new AuthorizedRequest();
             icons = new Dictionary<string, Texture>();
+            this.appId = appId;
         }
 
-        public async Task<PartnerAsset[]> Get(AssetType assetType, CancellationToken ctx = new CancellationToken())
+        public async Task<PartnerAsset[]> Get(Category category, BodyType bodyType, OutfitGender gender, CancellationToken ctx = new CancellationToken())
         {
             var assets = new HashSet<PartnerAsset>();
-            var assetData = await GetRequest(LIMIT, 1, assetType, ctx: ctx);
+            var assetData = await GetRequest(LIMIT, 1, category, gender, bodyType, ctx: ctx);
             assets.UnionWith(assetData.Assets);
 
             for (int i = 2; i <= assetData.Pagination.TotalPages; i++)
             {
-                assetData = await GetRequest(LIMIT, i, assetType, ctx: ctx);
+                assetData = await GetRequest(LIMIT, i, category, gender, bodyType, ctx: ctx);
                 assets.UnionWith(assetData.Assets);
             }
 
             return assets.ToArray();
         }
 
-        private async Task<AssetData> GetRequest(int limit, int pageNumber, AssetType? assetType = null, CancellationToken ctx = new CancellationToken())
+        private async Task<AssetData> GetRequest(int limit, int pageNumber, Category category, OutfitGender gender, BodyType bodyType, CancellationToken ctx = new CancellationToken())
         {
-            var url = $"{Endpoints.ASSET_API_V2}?filter=viewable-by-user-and-app&filterUserId={AuthManager.UserSession.Id}&filterApplicationId={appId}";
-            url += $"&limit={limit}&page={pageNumber}";
+            var url = $"{Endpoints.ASSET_API_V2}?" +
+                      $"filter=viewable-by-user-and-app&" +
+                      $"filterUserId={AuthManager.UserSession.Id}&" +
+                      $"filterApplicationId={appId}&" +
+                      $"bodyType={bodyType.ToString().ToLower()}&" +
+                      $"gender={(gender == OutfitGender.Masculine ? "male" : "female")}&" +
+                      $"gender=neutral&" +
+                      $"&limit={limit}&page={pageNumber}&";
 
-            if (assetType != null)
-            {
-                var type = AssetTypeHelper.PartnerAssetTypeMap.First(x => x.Value == assetType).Key;
-                url += $"&type={type}";
-            }
-            Debug.Log($"url: {url}");
+            var type = CategoryHelper.PartnerCategoryMap.First(x => x.Value == category).Key;
+            url += $"type={type}";
+
             var response = await authorizedRequest.SendRequest<Response>(new RequestData
             {
                 Url = url,

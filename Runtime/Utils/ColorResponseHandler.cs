@@ -24,10 +24,10 @@ namespace ReadyPlayerMe.AvatarCreator
         private static ColorPalette[] ResponseToColorPalettes(ColorResponse colorResponse)
         {
             var colorPalettes = new ColorPalette[4];
-            colorPalettes[0] = new ColorPalette(AssetType.SkinColor, colorResponse.skin);
-            colorPalettes[1] = new ColorPalette(AssetType.EyebrowColor, colorResponse.eyebrow);
-            colorPalettes[2] = new ColorPalette(AssetType.BeardColor, colorResponse.beard);
-            colorPalettes[3] = new ColorPalette(AssetType.HairColor, colorResponse.hair);
+            colorPalettes[0] = new ColorPalette(Category.SkinColor, colorResponse.skin);
+            colorPalettes[1] = new ColorPalette(Category.EyebrowColor, colorResponse.eyebrow);
+            colorPalettes[2] = new ColorPalette(Category.BeardColor, colorResponse.beard);
+            colorPalettes[3] = new ColorPalette(Category.HairColor, colorResponse.hair);
             return colorPalettes;
         }
     }
