@@ -15,51 +15,61 @@ namespace ReadyPlayerMe.AvatarCreator
     {
         private const string EYE_MASK_SIZE_PARAM = "?w=256";
 
-        private readonly BodyType bodyType;
-        private readonly OutfitGender gender;
-
         private readonly PartnerAssetsRequests partnerAssetsRequests;
-        private readonly CancellationTokenSource ctxSource;
-
+        private readonly Dictionary<AssetType, List<PartnerAsset>> assetsByType;
         public Action<string> OnError { get; set; }
 
+        private BodyType bodyType;
+        private OutfitGender gender;
         private PartnerAsset[] assets;
+        private CancellationTokenSource ctxSource;
 
-        public PartnerAssetsManager(string partner, BodyType bodyType, OutfitGender gender, CancellationToken token = default)
+        public PartnerAssetsManager()
         {
-            this.bodyType = bodyType;
-            this.gender = gender;
+            partnerAssetsRequests = new PartnerAssetsRequests();
+            assetsByType = new Dictionary<AssetType, List<PartnerAsset>>();
+        }
+
+        public void SetAvatarProperties(BodyType assetBodyType, OutfitGender assetGender, CancellationToken token = default)
+        {
+            bodyType = assetBodyType;
+            gender = assetGender;
             ctxSource = CancellationTokenSource.CreateLinkedTokenSource(token);
-            partnerAssetsRequests = new PartnerAssetsRequests(partner);
         }
 
-        public async Task<Dictionary<string, AssetType>> GetAllAssets()
+        public async Task<List<string>> GetAssetsByCategory(AssetType type)
         {
-            try
+            var startTime = Time.time;
+            if (assetsByType.TryGetValue(type, out List<PartnerAsset> _))
             {
-                assets = await partnerAssetsRequests.Get(ctxSource.Token);
-            }
-            catch (Exception e)
-            {
-                OnError?.Invoke(e.Message);
-                return null;
+                return new List<string>();
             }
 
-            assets = assets.Where(FilterAssets).ToArray();
-            return assets.ToDictionary(asset => asset.Id, asset => asset.AssetType);
+            assets = await partnerAssetsRequests.Get(type, ctxSource.Token);
+            Debug.Log($"Asset by category {type} received: {Time.time - startTime}s");
+            if (assetsByType.TryGetValue(type, out List<PartnerAsset> value))
+            {
+                value.AddRange(assets);
+            }
+            else
+            {
+                assetsByType.Add(type, assets.ToList());
+            }
+
+            return assets.Select(x => x.Id).ToList();
         }
 
-        public async void DownloadAssetsIcon(Action<Dictionary<string, Texture>> onDownload)
+        public async void DownloadAssetsIcon(AssetType assetType, Action<string, Texture> onDownload)
         {
-            var ordererAssets = assets.OrderByDescending(x => x.AssetType == AssetType.FaceShape);
-            var chunkList = ordererAssets.ChunkBy(20);
+            var startTime = Time.time;
+            var chunkList = assetsByType[assetType].ChunkBy(20);
 
             foreach (var list in chunkList)
             {
-                Dictionary<string, Texture> assetIdTextureMap;
                 try
                 {
-                    assetIdTextureMap = await DownloadIcons(list);
+                    await DownloadIcons(list, onDownload);
+                    Debug.Log($"Download chunk of {assetType} icons: " + (Time.time - startTime) + "s");
                 }
                 catch (Exception e)
                 {
@@ -71,8 +81,6 @@ namespace ReadyPlayerMe.AvatarCreator
                 {
                     return;
                 }
-
-                onDownload?.Invoke(assetIdTextureMap);
                 await Task.Yield();
             }
         }
@@ -83,15 +91,19 @@ namespace ReadyPlayerMe.AvatarCreator
             return asset.LockedCategories != null && asset.LockedCategories.Length > 0;
         }
 
-        private async Task<Dictionary<string, Texture>> DownloadIcons(List<PartnerAsset> chunk)
+        private async Task DownloadIcons(List<PartnerAsset> chunk, Action<string, Texture> onDownload)
         {
             var assetIconMap = new Dictionary<string, Task<Texture>>();
 
             foreach (var asset in chunk)
             {
-                var url = asset.AssetType == AssetType.EyeColor ? asset.Mask + EYE_MASK_SIZE_PARAM : asset.Icon;
+                var url = asset.AssetType == AssetType.EyeColor ? asset.Mask + EYE_MASK_SIZE_PARAM : asset.Icon + "?w=64";
                 var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(ctxSource.Token);
-                var iconTask = partnerAssetsRequests.GetAssetIcon(url, linkedTokenSource.Token);
+                var iconTask = partnerAssetsRequests.GetAssetIcon(url, icon =>
+                    {
+                        onDownload?.Invoke(asset.Id, icon);
+                    },
+                    linkedTokenSource.Token);
                 assetIconMap.Add(asset.Id, iconTask);
             }
 
@@ -99,31 +111,14 @@ namespace ReadyPlayerMe.AvatarCreator
             {
                 await Task.Yield();
             }
-
-            return assetIconMap.ToDictionary(a => a.Key, a => a.Value.Result);
         }
 
-        private bool FilterAssets(PartnerAsset asset)
+        public void DeleteAssets()
         {
-            // Outfit is only for full body and Shirt is only for half body.
-            // Both outfit and shirt are gender specific.
-            if (bodyType == BodyType.HalfBody)
-            {
-                if (asset.AssetType == AssetType.Shirt)
-                    return asset.Gender == gender;
-
-                return asset.AssetType != AssetType.Outfit;
-            }
-
-            if (asset.AssetType == AssetType.Outfit)
-                return asset.Gender == gender;
-
-            return asset.AssetType != AssetType.Shirt;
-        }
-
-        public void Dispose()
-        {
+            assetsByType.Clear();
             ctxSource?.Cancel();
         }
+        
+        public void Dispose() => DeleteAssets();
     }
 }

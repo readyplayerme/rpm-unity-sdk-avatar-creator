@@ -229,6 +229,21 @@ namespace ReadyPlayerMe.AvatarCreator
                 OnError?.Invoke(e.Message);
             }
         }
+        
+        public async Task<ColorPalette[]> LoadAvatarColors()
+        {
+            ColorPalette[] colors = null;
+            try
+            {
+                colors = await avatarAPIRequests.GetAllAvatarColors(avatarId);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+            }
+
+            return colors;
+        }
 
         public void Dispose()
         {
