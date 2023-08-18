@@ -111,7 +111,7 @@ MonoBehaviour:
   leftSidePanelPrefab: {fileID: 4402133207387872789, guid: e6d11b2f2e2f50947811d484e5a858f3,
     type: 3}
   categoryIcons:
-  - category: 2
+  - category: 3
     icon: {fileID: 21300000, guid: 95540537d5e0151449fe796b65d1f97b, type: 3}
   - category: 4
     icon: {fileID: 21300000, guid: c643763b367cd9241b1baf154364ec0a, type: 3}

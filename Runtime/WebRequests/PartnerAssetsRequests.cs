@@ -53,7 +53,7 @@ namespace ReadyPlayerMe.AvatarCreator
                       $"bodyType={bodyType.ToString().ToLower()}&" +
                       $"gender={(gender == OutfitGender.Masculine ? "male" : "female")}&" +
                       $"gender=neutral&" +
-                      $"&limit={limit}&page={pageNumber}";
+                      $"&limit={limit}&page={pageNumber}&";
 
             var type = CategoryHelper.PartnerCategoryMap.First(x => x.Value == category).Key;
             url += $"type={type}";
