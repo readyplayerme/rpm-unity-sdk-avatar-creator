@@ -53,7 +53,7 @@ namespace ReadyPlayerMe.AvatarCreator
                       $"bodyType={bodyType.ToString().ToLower()}&" +
                       $"gender={(gender == OutfitGender.Masculine ? "male" : "female")}&" +
                       $"gender=neutral&" +
-                      $"&limit={limit}&page={pageNumber}&";
+                      $"&limit={limit}&page={pageNumber}";
 
             var type = CategoryHelper.PartnerCategoryMap.First(x => x.Value == category).Key;
             url += $"type={type}";
@@ -65,10 +65,9 @@ namespace ReadyPlayerMe.AvatarCreator
             }, ctx);
             response.ThrowIfError();
 
-            JObject json = JObject.Parse(response.Text);
-            PartnerAsset[] partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
+            var json = JObject.Parse(response.Text);
+            var partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
             var pagination = JsonConvert.DeserializeObject<Pagination>(json["pagination"]!.ToString());
-            Debug.Log($"Deserialized");
             return new AssetData
             {
                 Assets = partnerAssets,
