@@ -14,7 +14,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 .ToList();
         }
 
-        public static readonly Category[] AssetEndpointSupportedCategory = {
+        public static readonly Category[] AssetAPISupportedCategory = {
             Category.FaceShape,
             Category.EyeShape,
             Category.EyeColor,
@@ -51,7 +51,6 @@ namespace ReadyPlayerMe.AvatarCreator
             { "hairColor", Category.HairColor },
             { "eyebrowColor", Category.EyebrowColor },
             { "beardColor", Category.BeardColor },
-            { "faceStyle", Category.FaceStyle }
         };
 
         public static bool IsFaceAsset(this Category category)
@@ -73,11 +72,6 @@ namespace ReadyPlayerMe.AvatarCreator
         
         private static bool IsCompatibleCategory(this Category category, BodyType bodyType)
         {
-            if (category == Category.FaceStyle)
-            {
-                return false;
-            }
-
             // Filter asset type based on body type.
             if (bodyType == BodyType.FullBody)
             {

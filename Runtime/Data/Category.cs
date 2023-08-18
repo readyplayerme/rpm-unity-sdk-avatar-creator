@@ -20,6 +20,5 @@
         HairColor,
         EyebrowColor,
         BeardColor,
-        FaceStyle
     }
 }

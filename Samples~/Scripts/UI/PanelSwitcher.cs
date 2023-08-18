@@ -6,7 +6,7 @@ namespace ReadyPlayerMe
 {
     public static class PanelSwitcher
     {
-        public static Dictionary<Category, GameObject> AssetTypePanelMap { get; private set; }
+        public static Dictionary<Category, GameObject> CategoryPanelMap { get; private set; }
 
         public static GameObject FaceTypePanel;
 
@@ -14,21 +14,21 @@ namespace ReadyPlayerMe
 
         public static void AddPanel(Category category, GameObject widget)
         {
-            AssetTypePanelMap ??= new Dictionary<Category, GameObject>();
-            AssetTypePanelMap.Add(category, widget);
+            CategoryPanelMap ??= new Dictionary<Category, GameObject>();
+            CategoryPanelMap.Add(category, widget);
         }
 
         public static void Clear()
         {
-            if (AssetTypePanelMap == null)
+            if (CategoryPanelMap == null)
             {
                 return;
             }
-            foreach (var assetTypePanels in AssetTypePanelMap)
+            foreach (var assetTypePanels in CategoryPanelMap)
             {
                 Object.Destroy(assetTypePanels.Value);
             }
-            AssetTypePanelMap.Clear();
+            CategoryPanelMap.Clear();
         }
 
         public static void Switch(Category category)
@@ -88,9 +88,9 @@ namespace ReadyPlayerMe
 
         private static void SetActivePanel(Category category, bool enable)
         {
-            if (AssetTypePanelMap.ContainsKey(category))
+            if (CategoryPanelMap.ContainsKey(category))
             {
-                AssetTypePanelMap[category].SetActive(enable);
+                CategoryPanelMap[category].SetActive(enable);
             }
         }
     }

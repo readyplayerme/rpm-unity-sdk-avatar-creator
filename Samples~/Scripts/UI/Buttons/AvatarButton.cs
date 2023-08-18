@@ -67,9 +67,9 @@ namespace ReadyPlayerMe
                 ctxSource = new CancellationTokenSource();
                 image.texture = await AvatarRenderHelper.GetPortrait(avatarId, ctxSource.Token);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Debug.Log(e);
+                // ignored
             }
 
             if (ctxSource.IsCancellationRequested)

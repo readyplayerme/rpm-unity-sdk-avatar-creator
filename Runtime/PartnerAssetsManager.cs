@@ -42,7 +42,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             var startTime = Time.time;
 
-            foreach (var category in CategoryHelper.AssetEndpointSupportedCategory)
+            foreach (var category in CategoryHelper.AssetAPISupportedCategory)
             {
                 assets = await partnerAssetsRequests.Get(category, bodyType, gender, ctxSource.Token);
                 if (assetsByCategory.TryGetValue(category, out List<PartnerAsset> value))

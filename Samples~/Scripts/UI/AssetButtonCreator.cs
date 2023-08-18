@@ -27,7 +27,7 @@ namespace ReadyPlayerMe
             selectedButtonsByCategory = new Dictionary<Category, AssetButton>();
             buttonsById = new Dictionary<object, AssetButton>();
 
-            var parentPanel = PanelSwitcher.AssetTypePanelMap[category];
+            var parentPanel = PanelSwitcher.CategoryPanelMap[category];
             foreach (var asset in assets)
             {
                 AddAssetButton(asset, parentPanel.transform, category, onClick);
@@ -40,7 +40,7 @@ namespace ReadyPlayerMe
 
         public void CreateClearButton(Action<string, Category> onClick)
         {
-            foreach (var categoryPanelMap in PanelSwitcher.AssetTypePanelMap)
+            foreach (var categoryPanelMap in PanelSwitcher.CategoryPanelMap)
             {
                 var category = categoryPanelMap.Key;
                 if (category.IsOptionalAsset())
@@ -69,7 +69,7 @@ namespace ReadyPlayerMe
         {
             foreach (var colorPalette in colorPalettes)
             {
-                var parent = PanelSwitcher.AssetTypePanelMap[colorPalette.category];
+                var parent = PanelSwitcher.CategoryPanelMap[colorPalette.category];
                 var assetIndex = 0;
                 foreach (var color in colorPalette.hexColors)
                 {
