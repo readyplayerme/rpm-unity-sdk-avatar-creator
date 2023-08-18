@@ -13,7 +13,8 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public class PartnerAssetsManager : IDisposable
     {
-        private const string EYE_MASK_SIZE_PARAM = "?w=256";
+        private const string EYE_MASK_SIZE_SIZE = "?w=256";
+        private const string ASSET_ICON_SIZE = "?w=64";
 
         private readonly PartnerAssetsRequests partnerAssetsRequests;
         private readonly Dictionary<Category, List<PartnerAsset>> assetsByCategory;
@@ -24,9 +25,9 @@ namespace ReadyPlayerMe.AvatarCreator
         private PartnerAsset[] assets;
         private CancellationTokenSource ctxSource;
 
-        public PartnerAssetsManager(string appId)
+        public PartnerAssetsManager()
         {
-            partnerAssetsRequests = new PartnerAssetsRequests(appId);
+            partnerAssetsRequests = new PartnerAssetsRequests(CoreSettingsHandler.CoreSettings.AppId);
             assetsByCategory = new Dictionary<Category, List<PartnerAsset>>();
         }
 
@@ -41,7 +42,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             var startTime = Time.time;
 
-            foreach (var category in CategoryHelper.SupportedCategory)
+            foreach (var category in CategoryHelper.AssetEndpointSupportedCategory)
             {
                 assets = await partnerAssetsRequests.Get(category, bodyType, gender, ctxSource.Token);
                 if (assetsByCategory.TryGetValue(category, out List<PartnerAsset> value))
@@ -52,8 +53,9 @@ namespace ReadyPlayerMe.AvatarCreator
                 {
                     assetsByCategory.Add(category, assets.ToList());
                 }
-                Debug.Log($"Asset by category {category} received: {Time.time - startTime}s");
             }
+            
+            Debug.Log($"All asset received: {Time.time - startTime}s");
         }
 
         public List<string> GetAssetsByCategory(Category category)
@@ -99,7 +101,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
             foreach (var asset in chunk)
             {
-                var url = asset.Category == Category.EyeColor ? asset.Mask + EYE_MASK_SIZE_PARAM : asset.Icon + "?w=64";
+                var url = asset.Category == Category.EyeColor ? asset.Mask + EYE_MASK_SIZE_SIZE : asset.Icon + ASSET_ICON_SIZE;
                 var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(ctxSource.Token);
                 var iconTask = partnerAssetsRequests.GetAssetIcon(url, icon =>
                     {

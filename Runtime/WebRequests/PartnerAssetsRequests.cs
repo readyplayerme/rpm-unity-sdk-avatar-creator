@@ -15,11 +15,8 @@ namespace ReadyPlayerMe.AvatarCreator
     {
         private const int LIMIT = 100;
 
-        private readonly string token;
-
         private readonly AuthorizedRequest authorizedRequest;
         private readonly string appId;
-
         private readonly Dictionary<string, Texture> icons;
 
         public PartnerAssetsRequests(string appId)
@@ -46,6 +43,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private async Task<AssetData> GetRequest(int limit, int pageNumber, Category category, OutfitGender gender, BodyType bodyType, CancellationToken ctx = new CancellationToken())
         {
+            var startTime = Time.time;
             var url = $"{Endpoints.ASSET_API_V2}?" +
                       $"filter=viewable-by-user-and-app&" +
                       $"filterUserId={AuthManager.UserSession.Id}&" +
@@ -68,6 +66,9 @@ namespace ReadyPlayerMe.AvatarCreator
             var json = JObject.Parse(response.Text);
             var partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
             var pagination = JsonConvert.DeserializeObject<Pagination>(json["pagination"]!.ToString());
+            
+            Debug.Log($"Asset by category {category} with page {pageNumber} received: {Time.time - startTime}s");
+
             return new AssetData
             {
                 Assets = partnerAssets,

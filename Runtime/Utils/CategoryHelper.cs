@@ -14,7 +14,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 .ToList();
         }
 
-        public static readonly Category[] SupportedCategory = {
+        public static readonly Category[] AssetEndpointSupportedCategory = {
             Category.FaceShape,
             Category.EyeShape,
             Category.EyeColor,

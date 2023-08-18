@@ -34,7 +34,7 @@ namespace ReadyPlayerMe
 
         private void Start()
         {
-            partnerAssetManager = new PartnerAssetsManager( "645b4dd53aef3a0696a2b32c");
+            partnerAssetManager = new PartnerAssetsManager();
         }
 
         public override void ActivateState()
