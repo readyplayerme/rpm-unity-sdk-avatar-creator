@@ -10,6 +10,7 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public static class AuthManager
     {
+        private const string TAG = nameof(AuthManager);
         private static readonly AuthenticationRequests AuthenticationRequests;
         private static UserSession userSession;
         public static UserSession UserSession => userSession;
@@ -73,7 +74,7 @@ namespace ReadyPlayerMe.AvatarCreator
             }
             catch (Exception e)
             {
-                Debug.Log("Refreshing token failed with error: " + e.Message);
+                SDKLogger.Log(TAG, "Refreshing token failed with error: " + e.Message);
                 throw;
             }
 

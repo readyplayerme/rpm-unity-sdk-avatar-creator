@@ -13,6 +13,7 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public class PartnerAssetsManager : IDisposable
     {
+        private const string TAG = nameof(PartnerAssetsManager);
         private const string EYE_MASK_SIZE_SIZE = "?w=256";
         private const string ASSET_ICON_SIZE = "?w=64";
 
@@ -55,7 +56,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 }
             }
             
-            Debug.Log($"All asset received: {Time.time - startTime}s");
+            SDKLogger.Log(TAG,$"All asset received: {Time.time - startTime}s");
         }
 
         public List<string> GetAssetsByCategory(Category category)
@@ -73,7 +74,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 try
                 {
                     await DownloadIcons(list, onDownload);
-                    Debug.Log($"Download chunk of {category} icons: " + (Time.time - startTime) + "s");
+                    SDKLogger.Log(TAG,$"Download chunk of {category} icons: " + (Time.time - startTime) + "s");
                 }
                 catch (Exception e)
                 {

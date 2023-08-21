@@ -13,6 +13,7 @@ namespace ReadyPlayerMe.AvatarCreator
 {
     public class PartnerAssetsRequests
     {
+        private const string TAG = nameof(PartnerAssetsRequests);
         private const int LIMIT = 100;
 
         private readonly AuthorizedRequest authorizedRequest;
@@ -67,7 +68,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
             var pagination = JsonConvert.DeserializeObject<Pagination>(json["pagination"]!.ToString());
             
-            Debug.Log($"Asset by category {category} with page {pageNumber} received: {Time.time - startTime}s");
+            SDKLogger.Log(TAG,$"Asset by category {category} with page {pageNumber} received: {Time.time - startTime}s");
 
             return new AssetData
             {
