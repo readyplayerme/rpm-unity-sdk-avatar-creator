@@ -21,13 +21,8 @@ namespace ReadyPlayerMe.AvatarCreator
         public string Icon;
         [JsonProperty("maskUrl")]
         public string Mask;
-        public LockedCategories[] LockedCategories;
-    }
-
-    public class LockedCategories
-    {
-        public string Name;
-        public KeyValuePair<string, string>[] CustomizationCategories;
+        [JsonProperty("lockedCategories")]
+        public string[] LockedCategories;
     }
 
     public struct Pagination

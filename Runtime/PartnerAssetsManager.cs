@@ -23,7 +23,6 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private BodyType bodyType;
         private OutfitGender gender;
-        private PartnerAsset[] assets;
         private CancellationTokenSource ctxSource;
 
         public PartnerAssetsManager()
@@ -45,7 +44,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
             foreach (var category in CategoryHelper.AssetAPISupportedCategory)
             {
-                assets = await partnerAssetsRequests.Get(category, bodyType, gender, ctxSource.Token);
+                var assets = await partnerAssetsRequests.Get(category, bodyType, gender, ctxSource.Token);
                 if (assetsByCategory.TryGetValue(category, out List<PartnerAsset> value))
                 {
                     value.AddRange(assets);
@@ -90,9 +89,9 @@ namespace ReadyPlayerMe.AvatarCreator
             }
         }
 
-        public bool IsLockedAssetCategories(string id)
+        public bool IsLockedAssetCategories(Category category,string id)
         {
-            var asset = assets.FirstOrDefault(x => x.Id == id);
+            var asset = assetsByCategory[category].FirstOrDefault(x => x.Id == id);
             return asset.LockedCategories != null && asset.LockedCategories.Length > 0;
         }
 

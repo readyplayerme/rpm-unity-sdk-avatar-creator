@@ -33,7 +33,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var assetData = await GetRequest(LIMIT, 1, category, gender, bodyType, ctx: ctx);
             assets.UnionWith(assetData.Assets);
 
-            for (int i = 2; i <= assetData.Pagination.TotalPages; i++)
+            for (var i = 2; i <= assetData.Pagination.TotalPages; i++)
             {
                 assetData = await GetRequest(LIMIT, i, category, gender, bodyType, ctx: ctx);
                 assets.UnionWith(assetData.Assets);
@@ -67,8 +67,8 @@ namespace ReadyPlayerMe.AvatarCreator
             var json = JObject.Parse(response.Text);
             var partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
             var pagination = JsonConvert.DeserializeObject<Pagination>(json["pagination"]!.ToString());
-            
-            SDKLogger.Log(TAG,$"Asset by category {category} with page {pageNumber} received: {Time.time - startTime}s");
+
+            SDKLogger.Log(TAG, $"Asset by category {category} with page {pageNumber} received: {Time.time - startTime}s");
 
             return new AssetData
             {
@@ -94,8 +94,13 @@ namespace ReadyPlayerMe.AvatarCreator
             }, ctx: ctx);
 
             response.ThrowIfError();
-            
-            icons.Add(url, response.Texture);
+
+            // This check is needed because the same url can be requested multiple times
+            if (!icons.ContainsKey(url))
+            {
+                icons.Add(url, response.Texture);
+            }
+
             completed?.Invoke(response.Texture);
             return response.Texture;
         }
