@@ -167,11 +167,11 @@ namespace ReadyPlayerMe
         {
             if (bodyType == BodyType.HalfBody)
             {
-                cameraZoom.MoveToHalfBody();
+                cameraZoom.ToHalfBody();
             }
             else
             {
-                cameraZoom.MoveToFar();
+                cameraZoom.ToFullbodyView();
             }
         }
 
@@ -181,11 +181,11 @@ namespace ReadyPlayerMe
             {
                 if (category == Category.Outfit)
                 {
-                    cameraZoom.MoveToFar();
+                    cameraZoom.ToFullbodyView();
                 }
                 else
                 {
-                    cameraZoom.MoveToNear();
+                    cameraZoom.ToFaceView();
                 }
             }
         }

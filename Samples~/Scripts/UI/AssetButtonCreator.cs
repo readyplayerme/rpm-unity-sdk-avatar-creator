@@ -162,9 +162,9 @@ namespace ReadyPlayerMe
 
         private bool IsSelectedAssetNotPresentForCategory(Category category)
         {
-            return !selectedAssets.ContainsKey(category) || 
-                   selectedAssets[category] is int intValue && intValue == 0 || 
-                   selectedAssets[category] is string strValue && string.IsNullOrEmpty(strValue);
+            return !selectedAssets.ContainsKey(category) ||
+                   selectedAssets[category] as int? == 0 ||
+                   string.IsNullOrEmpty(selectedAssets[category] as string);
         }
     }
 }
