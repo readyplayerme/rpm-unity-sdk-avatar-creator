@@ -166,6 +166,36 @@ namespace ReadyPlayerMe.AvatarCreator
             byte[] data;
             try
             {
+                
+                data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                return null;
+            }
+
+            if (ctxSource.IsCancellationRequested)
+            {
+                return null;
+            }
+
+            return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
+        }
+        
+        public async Task<GameObject> UpdateMultipleAsset(Dictionary<Category, object> assets)
+        {
+            var payload = new AvatarProperties
+            {
+                Assets = new Dictionary<Category, object>()
+            };
+
+            payload.Assets = assets;
+
+            byte[] data;
+            try
+            {
+                
                 data = await avatarAPIRequests.UpdateAvatar(avatarId, payload, avatarConfigParameters);
             }
             catch (Exception e)

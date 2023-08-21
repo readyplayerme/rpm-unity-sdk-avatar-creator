@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ReadyPlayerMe.Core;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -22,7 +23,6 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private BodyType bodyType;
         private OutfitGender gender;
-        private PartnerAsset[] assets;
         private CancellationTokenSource ctxSource;
 
         public PartnerAssetsManager()
@@ -38,13 +38,58 @@ namespace ReadyPlayerMe.AvatarCreator
             ctxSource = CancellationTokenSource.CreateLinkedTokenSource(token);
         }
 
+
+        public Dictionary<Category, float> probabilityToChangeByCategory = new Dictionary<Category, float>()
+        {
+            { Category.FaceShape, 1 },
+            { Category.EyeShape, 1 },
+            { Category.EyeColor, 1 },
+            { Category.EyebrowStyle, 1 },
+            { Category.NoseShape, 1 },
+            { Category.LipShape, 1 },
+            { Category.BeardStyle, 1 },
+            { Category.HairStyle, 1 },
+            { Category.Outfit, 1 },
+            { Category.Shirt, 1 },
+            { Category.Glasses, 0.3f },
+            { Category.FaceMask, 0.1f },
+            { Category.Facewear, 0.4f },
+            { Category.Headwear, 0.1f }
+        };
+
+        public Dictionary<Category, object> GetRandomAssets()
+        {
+            var assets = new Dictionary<Category, object>();
+            foreach (var category in assetsByCategory)
+            {
+                if (category.Key == Category.BeardStyle && gender == OutfitGender.Feminine)
+                {
+                    continue;
+                }
+
+                var shouldChange = Random.Range(0f, 1f);
+
+                var value = probabilityToChangeByCategory[category.Key];
+                if (value <= 0.9f && shouldChange > probabilityToChangeByCategory[category.Key])
+                {
+                    continue;
+                }
+                    
+                var randomValue = Random.Range(0, category.Value.Count);
+                var randomAsset = category.Value[randomValue];
+                assets.Add(category.Key, randomAsset.Id);
+            }
+
+            return assets;
+        }
+
         public async Task GetAssets()
         {
             var startTime = Time.time;
 
             foreach (var category in CategoryHelper.AssetAPISupportedCategory)
             {
-                assets = await partnerAssetsRequests.Get(category, bodyType, gender, ctxSource.Token);
+                var assets = await partnerAssetsRequests.Get(category, bodyType, gender, ctxSource.Token);
                 if (assetsByCategory.TryGetValue(category, out List<PartnerAsset> value))
                 {
                     value.AddRange(assets);
@@ -89,9 +134,9 @@ namespace ReadyPlayerMe.AvatarCreator
             }
         }
 
-        public bool IsLockedAssetCategories(string id)
+        public bool IsLockedAssetCategories(Category category, string id)
         {
-            var asset = assets.FirstOrDefault(x => x.Id == id);
+            var asset = assetsByCategory[category].FirstOrDefault(x => x.Id == id);
             return asset.LockedCategories != null && asset.LockedCategories.Length > 0;
         }
 

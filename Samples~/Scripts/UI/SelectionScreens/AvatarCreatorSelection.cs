@@ -11,6 +11,7 @@ namespace ReadyPlayerMe
 {
     public class AvatarCreatorSelection : State, IDisposable
     {
+        private const string TAG = nameof(AvatarCreatorSelection);
         private const string UPDATING_YOUR_AVATAR_LOADING_TEXT = "Updating your avatar";
 
         [SerializeField] private CategoryUICreator categoryUICreator;
@@ -19,6 +20,7 @@ namespace ReadyPlayerMe
         [SerializeField] private AvatarConfig inCreatorConfig;
         [SerializeField] private RuntimeAnimatorController animator;
         [SerializeField] private AccountCreationPopup accountCreationPopup;
+        [SerializeField] private Button randomize;
 
         private PartnerAssetsManager partnerAssetManager;
         private AvatarManager avatarManager;
@@ -43,6 +45,7 @@ namespace ReadyPlayerMe
             accountCreationPopup.OnSendEmail += OnSendEmail;
             accountCreationPopup.OnContinueWithoutSignup += Save;
             categoryUICreator.OnCategorySelected += OnCategorySelected;
+            randomize.onClick.AddListener(Randomize);
             Setup();
         }
 
@@ -52,6 +55,7 @@ namespace ReadyPlayerMe
             accountCreationPopup.OnSendEmail -= OnSendEmail;
             accountCreationPopup.OnContinueWithoutSignup -= Save;
             categoryUICreator.OnCategorySelected -= OnCategorySelected;
+            randomize.onClick.RemoveListener(Randomize);
             Cleanup();
         }
 
@@ -86,8 +90,8 @@ namespace ReadyPlayerMe
             {
                 return;
             }
-            
-            if (partnerAssetManager.IsLockedAssetCategories(outfitId.ToString()))
+
+            if (partnerAssetManager.IsLockedAssetCategories(Category.Outfit, outfitId.ToString()))
             {
                 categoryUICreator.SetActiveCategoryButtons(false);
                 categoryUICreator.SetDefaultSelection(Category.Outfit);
@@ -136,10 +140,11 @@ namespace ReadyPlayerMe
             CreateUI(AvatarCreatorData.AvatarProperties.BodyType);
             categoriesAssetsLoaded = new List<Category>();
             
+
             await partnerAssetManager.GetAssets();
             await CreateAssetsByCategory(Category.FaceShape);
 
-            DebugPanel.AddLogWithDuration("Got all partner assets", Time.time - startTime);
+            SDKLogger.Log( TAG,$"Got all partner assets {Time.time - startTime}");
         }
 
         private async void OnCategorySelected(Category category)
@@ -180,7 +185,7 @@ namespace ReadyPlayerMe
 
             ProcessAvatar(avatar);
 
-            DebugPanel.AddLogWithDuration("Avatar loaded", Time.time - startTime);
+            SDKLogger.Log("Avatar loaded", Time.time - startTime);
             return avatar;
         }
 
@@ -189,7 +194,7 @@ namespace ReadyPlayerMe
             var startTime = Time.time;
             var colors = await avatarManager.LoadAvatarColors();
             assetButtonCreator.CreateColorUI(colors, UpdateAvatar);
-            DebugPanel.AddLogWithDuration("All colors loaded", Time.time - startTime);
+            SDKLogger.Log("All colors loaded", Time.time - startTime);
         }
 
         private void CreateUI(BodyType bodyType)
@@ -203,7 +208,7 @@ namespace ReadyPlayerMe
 
         private async Task CreateAssetsByCategory(Category category)
         {
-            if(!categoriesAssetsLoaded.Contains(category))
+            if (!categoriesAssetsLoaded.Contains(category))
             {
                 categoriesAssetsLoaded.Add(category);
             }
@@ -228,7 +233,7 @@ namespace ReadyPlayerMe
 
         private void OnAssetButtonClicked(string id, Category category)
         {
-            categoryUICreator.SetActiveCategoryButtons(!partnerAssetManager.IsLockedAssetCategories(id));
+            categoryUICreator.SetActiveCategoryButtons(!partnerAssetManager.IsLockedAssetCategories(category, id));
             UpdateAvatar(id, category);
         }
 
@@ -257,9 +262,9 @@ namespace ReadyPlayerMe
             var startTime = Time.time;
             var avatarId = await avatarManager.Save();
             AvatarCreatorData.AvatarProperties.Id = avatarId;
-            DebugPanel.AddLogWithDuration("Avatar saved", Time.time - startTime);
+            SDKLogger.Log("Avatar saved", Time.time - startTime);
             StateMachine.SetState(StateType.End);
-          
+
             LoadingManager.DisableLoading();
         }
 
@@ -279,12 +284,6 @@ namespace ReadyPlayerMe
         {
             var startTime = Time.time;
 
-            var payload = new AvatarProperties
-            {
-                Assets = new Dictionary<Category, object>()
-            };
-
-            payload.Assets.Add(category, assetId);
             lastRotation = currentAvatar.transform.rotation;
             LoadingManager.EnableLoading(UPDATING_YOUR_AVATAR_LOADING_TEXT, LoadingManager.LoadingType.Popup);
             var avatar = await avatarManager.UpdateAsset(category, assetId);
@@ -296,7 +295,30 @@ namespace ReadyPlayerMe
             ProcessAvatar(avatar);
             currentAvatar = avatar;
             LoadingManager.DisableLoading();
-            DebugPanel.AddLogWithDuration("Avatar updated", Time.time - startTime);
+            SDKLogger.Log("Avatar updated", Time.time - startTime);
+        }
+
+        private async void Randomize()
+        {
+            var startTime = Time.time;
+
+            var payload = new AvatarProperties
+            {
+                Assets = partnerAssetManager.GetRandomAssets()
+            };
+
+            lastRotation = currentAvatar.transform.rotation;
+            LoadingManager.EnableLoading(UPDATING_YOUR_AVATAR_LOADING_TEXT, LoadingManager.LoadingType.Popup);
+            var avatar = await avatarManager.UpdateMultipleAsset(payload.Assets);
+            if (avatar == null)
+            {
+                return;
+            }
+
+            ProcessAvatar(avatar);
+            currentAvatar = avatar;
+            LoadingManager.DisableLoading();
+            SDKLogger.Log("Avatar updated", Time.time - startTime);
         }
 
         private void ProcessAvatar(GameObject avatar)
