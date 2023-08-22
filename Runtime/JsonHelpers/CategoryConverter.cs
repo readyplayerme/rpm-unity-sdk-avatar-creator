@@ -4,11 +4,11 @@ using Newtonsoft.Json.Linq;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
-    public class AssetTypeConverter : JsonConverter
+    public class CategoryConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(AssetType);
+            return objectType == typeof(Category);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -21,7 +21,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var token = JToken.Load(reader);
             if (token.Type == JTokenType.String)
             {
-                return AssetTypeHelper.PartnerAssetTypeMap[token.ToString()];
+                return CategoryHelper.PartnerCategoryMap[token.ToString()];
             }
             throw new JsonSerializationException("Expected string value");
         }

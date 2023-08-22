@@ -13,21 +13,22 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public class PartnerAssetsManager : IDisposable
     {
-        private const string EYE_MASK_SIZE_PARAM = "?w=256";
+        private const string TAG = nameof(PartnerAssetsManager);
+        private const string EYE_MASK_SIZE_SIZE = "?w=256";
+        private const string ASSET_ICON_SIZE = "?w=64";
 
         private readonly PartnerAssetsRequests partnerAssetsRequests;
-        private readonly Dictionary<AssetType, List<PartnerAsset>> assetsByType;
+        private readonly Dictionary<Category, List<PartnerAsset>> assetsByCategory;
         public Action<string> OnError { get; set; }
 
         private BodyType bodyType;
         private OutfitGender gender;
-        private PartnerAsset[] assets;
         private CancellationTokenSource ctxSource;
 
         public PartnerAssetsManager()
         {
-            partnerAssetsRequests = new PartnerAssetsRequests();
-            assetsByType = new Dictionary<AssetType, List<PartnerAsset>>();
+            partnerAssetsRequests = new PartnerAssetsRequests(CoreSettingsHandler.CoreSettings.AppId);
+            assetsByCategory = new Dictionary<Category, List<PartnerAsset>>();
         }
 
         public void SetAvatarProperties(BodyType assetBodyType, OutfitGender assetGender, CancellationToken token = default)
@@ -37,39 +38,42 @@ namespace ReadyPlayerMe.AvatarCreator
             ctxSource = CancellationTokenSource.CreateLinkedTokenSource(token);
         }
 
-        public async Task<List<string>> GetAssetsByCategory(AssetType type)
+        public async Task GetAssets()
         {
             var startTime = Time.time;
-            if (assetsByType.TryGetValue(type, out List<PartnerAsset> _))
-            {
-                return new List<string>();
-            }
 
-            assets = await partnerAssetsRequests.Get(type, ctxSource.Token);
-            Debug.Log($"Asset by category {type} received: {Time.time - startTime}s");
-            if (assetsByType.TryGetValue(type, out List<PartnerAsset> value))
+            foreach (var category in CategoryHelper.AssetAPISupportedCategory)
             {
-                value.AddRange(assets);
+                var assets = await partnerAssetsRequests.Get(category, bodyType, gender, ctxSource.Token);
+                if (assetsByCategory.TryGetValue(category, out List<PartnerAsset> value))
+                {
+                    value.AddRange(assets);
+                }
+                else
+                {
+                    assetsByCategory.Add(category, assets.ToList());
+                }
             }
-            else
-            {
-                assetsByType.Add(type, assets.ToList());
-            }
-
-            return assets.Select(x => x.Id).ToList();
+            
+            SDKLogger.Log(TAG,$"All asset received: {Time.time - startTime}s");
         }
 
-        public async void DownloadAssetsIcon(AssetType assetType, Action<string, Texture> onDownload)
+        public List<string> GetAssetsByCategory(Category category)
+        {
+            return assetsByCategory.TryGetValue(category, out List<PartnerAsset> _) ? assetsByCategory[category].Select(x => x.Id).ToList() : new List<string>();
+        }
+
+        public async Task DownloadAssetsIcon(Category category, Action<string, Texture> onDownload)
         {
             var startTime = Time.time;
-            var chunkList = assetsByType[assetType].ChunkBy(20);
-
+            var chunkList = assetsByCategory[category].ChunkBy(20);
+            
             foreach (var list in chunkList)
             {
                 try
                 {
                     await DownloadIcons(list, onDownload);
-                    Debug.Log($"Download chunk of {assetType} icons: " + (Time.time - startTime) + "s");
+                    SDKLogger.Log(TAG,$"Download chunk of {category} icons: " + (Time.time - startTime) + "s");
                 }
                 catch (Exception e)
                 {
@@ -85,9 +89,9 @@ namespace ReadyPlayerMe.AvatarCreator
             }
         }
 
-        public bool IsLockedAssetCategories(string id)
+        public bool IsLockedAssetCategories(Category category,string id)
         {
-            var asset = assets.FirstOrDefault(x => x.Id == id);
+            var asset = assetsByCategory[category].FirstOrDefault(x => x.Id == id);
             return asset.LockedCategories != null && asset.LockedCategories.Length > 0;
         }
 
@@ -97,7 +101,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
             foreach (var asset in chunk)
             {
-                var url = asset.AssetType == AssetType.EyeColor ? asset.Mask + EYE_MASK_SIZE_PARAM : asset.Icon + "?w=64";
+                var url = asset.Category == Category.EyeColor ? asset.Mask + EYE_MASK_SIZE_SIZE : asset.Icon + ASSET_ICON_SIZE;
                 var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(ctxSource.Token);
                 var iconTask = partnerAssetsRequests.GetAssetIcon(url, icon =>
                     {
@@ -115,10 +119,10 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public void DeleteAssets()
         {
-            assetsByType.Clear();
+            assetsByCategory.Clear();
             ctxSource?.Cancel();
         }
-        
+
         public void Dispose() => DeleteAssets();
     }
 }

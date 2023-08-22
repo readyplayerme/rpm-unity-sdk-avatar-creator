@@ -5,12 +5,12 @@ namespace ReadyPlayerMe.AvatarCreator
     [Serializable]
     public struct ColorPalette
     {
-        public AssetType assetType;
+        public Category category;
         public string[] hexColors;
 
-        public ColorPalette(AssetType assetType, string[] hexColors)
+        public ColorPalette(Category category, string[] hexColors)
         {
-            this.assetType = assetType;
+            this.category = category;
             this.hexColors = hexColors;
         }
     }

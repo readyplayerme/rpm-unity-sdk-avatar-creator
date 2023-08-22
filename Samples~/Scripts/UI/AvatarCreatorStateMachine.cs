@@ -21,6 +21,12 @@ namespace ReadyPlayerMe
 
         private void Start()
         {
+            if (string.IsNullOrEmpty(CoreSettingsHandler.CoreSettings.AppId))
+            {
+                Debug.LogError("App id is not set in settings.");
+                return;
+            }
+
             avatarCreatorData.AvatarProperties.Partner = CoreSettingsHandler.CoreSettings.Subdomain;
             Initialize();
             

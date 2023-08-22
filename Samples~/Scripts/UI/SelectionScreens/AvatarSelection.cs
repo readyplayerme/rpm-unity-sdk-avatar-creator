@@ -52,7 +52,7 @@ namespace ReadyPlayerMe
             {
                 avatarPartnerMap = await avatarAPIRequests.GetUserAvatars(AuthManager.UserSession.Id);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 AuthManager.Logout();
                 LoadingManager.DisableLoading();

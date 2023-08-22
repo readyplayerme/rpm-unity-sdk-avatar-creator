@@ -18,21 +18,21 @@ namespace ReadyPlayerMe
             ctx?.Cancel();
         }
 
-        public void MoveToNear()
+        public void ToFaceView()
         {
             ctx?.Cancel();
             ctx = new CancellationTokenSource();
             _ = cameraTransform.LerpPosition(nearTransform.position, defaultDuration, ctx.Token);
         }
 
-        public void MoveToFar()
+        public void ToFullbodyView()
         {
             ctx?.Cancel();
             ctx = new CancellationTokenSource();
             _ = cameraTransform.LerpPosition(farTransform.position, defaultDuration, ctx.Token);
         }
 
-        public void MoveToHalfBody()
+        public void ToHalfBody()
         {
             cameraTransform.position = halfBodyTransform.transform.position;
         }

@@ -13,21 +13,16 @@ namespace ReadyPlayerMe.AvatarCreator
     public struct PartnerAsset
     {
         public string Id;
-        [JsonProperty("type"), JsonConverter(typeof(AssetTypeConverter))]
-        public AssetType AssetType;
+        [JsonProperty("type"), JsonConverter(typeof(CategoryConverter))]
+        public Category Category;
         [JsonConverter(typeof(GenderConverter))]
         public OutfitGender Gender;
         [JsonProperty("iconUrl")]
         public string Icon;
         [JsonProperty("maskUrl")]
         public string Mask;
-        public LockedCategories[] LockedCategories;
-    }
-
-    public class LockedCategories
-    {
-        public string Name;
-        public KeyValuePair<string, string>[] CustomizationCategories;
+        [JsonProperty("lockedCategories")]
+        public string[] LockedCategories;
     }
 
     public struct Pagination

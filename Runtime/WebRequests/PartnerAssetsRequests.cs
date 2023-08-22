@@ -13,47 +13,50 @@ namespace ReadyPlayerMe.AvatarCreator
 {
     public class PartnerAssetsRequests
     {
+        private const string TAG = nameof(PartnerAssetsRequests);
         private const int LIMIT = 100;
 
-        private readonly string token;
-
         private readonly AuthorizedRequest authorizedRequest;
-        private string appId = "645b4dd53aef3a0696a2b32c";
-
+        private readonly string appId;
         private readonly Dictionary<string, Texture> icons;
 
-        public PartnerAssetsRequests()
+        public PartnerAssetsRequests(string appId)
         {
             authorizedRequest = new AuthorizedRequest();
             icons = new Dictionary<string, Texture>();
+            this.appId = appId;
         }
 
-        public async Task<PartnerAsset[]> Get(AssetType assetType, CancellationToken ctx = new CancellationToken())
+        public async Task<PartnerAsset[]> Get(Category category, BodyType bodyType, OutfitGender gender, CancellationToken ctx = new CancellationToken())
         {
             var assets = new HashSet<PartnerAsset>();
-            var assetData = await GetRequest(LIMIT, 1, assetType, ctx: ctx);
+            var assetData = await GetRequest(LIMIT, 1, category, gender, bodyType, ctx: ctx);
             assets.UnionWith(assetData.Assets);
 
-            for (int i = 2; i <= assetData.Pagination.TotalPages; i++)
+            for (var i = 2; i <= assetData.Pagination.TotalPages; i++)
             {
-                assetData = await GetRequest(LIMIT, i, assetType, ctx: ctx);
+                assetData = await GetRequest(LIMIT, i, category, gender, bodyType, ctx: ctx);
                 assets.UnionWith(assetData.Assets);
             }
 
             return assets.ToArray();
         }
 
-        private async Task<AssetData> GetRequest(int limit, int pageNumber, AssetType? assetType = null, CancellationToken ctx = new CancellationToken())
+        private async Task<AssetData> GetRequest(int limit, int pageNumber, Category category, OutfitGender gender, BodyType bodyType, CancellationToken ctx = new CancellationToken())
         {
-            var url = $"{Endpoints.ASSET_API_V2}?filter=viewable-by-user-and-app&filterUserId={AuthManager.UserSession.Id}&filterApplicationId={appId}";
-            url += $"&limit={limit}&page={pageNumber}";
+            var startTime = Time.time;
+            var url = $"{Endpoints.ASSET_API_V2}?" +
+                      $"filter=viewable-by-user-and-app&" +
+                      $"filterUserId={AuthManager.UserSession.Id}&" +
+                      $"filterApplicationId={appId}&" +
+                      $"bodyType={bodyType.ToString().ToLower()}&" +
+                      $"gender={(gender == OutfitGender.Masculine ? "male" : "female")}&" +
+                      $"gender=neutral&" +
+                      $"&limit={limit}&page={pageNumber}&";
 
-            if (assetType != null)
-            {
-                var type = AssetTypeHelper.PartnerAssetTypeMap.First(x => x.Value == assetType).Key;
-                url += $"&type={type}";
-            }
-            Debug.Log($"url: {url}");
+            var type = CategoryHelper.PartnerCategoryMap.First(x => x.Value == category).Key;
+            url += $"type={type}";
+
             var response = await authorizedRequest.SendRequest<Response>(new RequestData
             {
                 Url = url,
@@ -61,10 +64,12 @@ namespace ReadyPlayerMe.AvatarCreator
             }, ctx);
             response.ThrowIfError();
 
-            JObject json = JObject.Parse(response.Text);
-            PartnerAsset[] partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
+            var json = JObject.Parse(response.Text);
+            var partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
             var pagination = JsonConvert.DeserializeObject<Pagination>(json["pagination"]!.ToString());
-            Debug.Log($"Deserialized");
+
+            SDKLogger.Log(TAG, $"Asset by category {category} with page {pageNumber} received: {Time.time - startTime}s");
+
             return new AssetData
             {
                 Assets = partnerAssets,
@@ -89,8 +94,13 @@ namespace ReadyPlayerMe.AvatarCreator
             }, ctx: ctx);
 
             response.ThrowIfError();
-            
-            icons.Add(url, response.Texture);
+
+            // This check is needed because the same url can be requested multiple times
+            if (!icons.ContainsKey(url))
+            {
+                icons.Add(url, response.Texture);
+            }
+
             completed?.Invoke(response.Texture);
             return response.Texture;
         }
