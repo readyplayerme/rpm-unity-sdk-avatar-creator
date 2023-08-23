@@ -65,7 +65,7 @@ namespace ReadyPlayerMe
                 return;
             }
 
-            SDKLogger.Log(TAG, $"Fetch all users templates in {Time.time - startTime} seconds ");
+            SDKLogger.Log(TAG, $"Fetch all users templates in {Time.time - startTime:F2}s ");
 
             avatarButtonsMap = new Dictionary<string, GameObject>();
             foreach (var avatar in avatarPartnerMap)

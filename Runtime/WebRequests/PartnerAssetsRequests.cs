@@ -68,7 +68,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
             var pagination = JsonConvert.DeserializeObject<Pagination>(json["pagination"]!.ToString());
 
-            SDKLogger.Log(TAG, $"Asset by category {category} with page {pageNumber} received: {Time.time - startTime}s");
+            SDKLogger.Log(TAG, $"Asset by category {category} with page {pageNumber} received: {Time.time - startTime:F2}s");
 
             return new AssetData
             {

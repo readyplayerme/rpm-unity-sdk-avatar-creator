@@ -141,7 +141,7 @@ namespace ReadyPlayerMe
             await partnerAssetManager.GetAssets();
             await CreateAssetsByCategory(Category.FaceShape);
 
-            SDKLogger.Log(TAG, $"Got all partner assets {Time.time - startTime}");
+            SDKLogger.Log(TAG, $"Got all partner assets {Time.time - startTime:F2}s");
         }
 
         private async void OnCategorySelected(Category category)
@@ -182,7 +182,7 @@ namespace ReadyPlayerMe
 
             ProcessAvatar(avatar);
 
-            SDKLogger.Log(TAG, $"Avatar loaded {Time.time - startTime}");
+            SDKLogger.Log(TAG, $"Avatar loaded {Time.time - startTime:F2}s");
             return avatar;
         }
 
@@ -191,7 +191,7 @@ namespace ReadyPlayerMe
             var startTime = Time.time;
             var colors = await avatarManager.LoadAvatarColors();
             assetButtonCreator.CreateColorUI(colors, UpdateAvatar);
-            SDKLogger.Log(TAG, $"All colors loaded {Time.time - startTime}");
+            SDKLogger.Log(TAG, $"All colors loaded {Time.time - startTime:F2}s");
         }
 
         private void CreateUI(BodyType bodyType)
@@ -260,7 +260,7 @@ namespace ReadyPlayerMe
             AvatarCreatorData.AvatarProperties.Id = avatarId;
             StateMachine.SetState(StateType.End);
             LoadingManager.DisableLoading();
-            SDKLogger.Log(TAG, $"Avatar saved {Time.time - startTime}");
+            SDKLogger.Log(TAG, $"Avatar saved {Time.time - startTime:F2}s");
         }
 
         private Dictionary<Category, object> GetDefaultAssets()
@@ -296,7 +296,7 @@ namespace ReadyPlayerMe
             ProcessAvatar(avatar);
             currentAvatar = avatar;
             LoadingManager.DisableLoading();
-            SDKLogger.Log(TAG, $"Avatar updated {Time.time - startTime}");
+            SDKLogger.Log(TAG, $"Avatar updated {Time.time - startTime:F2}s");
         }
 
         private void ProcessAvatar(GameObject avatar)

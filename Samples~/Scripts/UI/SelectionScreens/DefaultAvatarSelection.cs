@@ -69,7 +69,7 @@ namespace ReadyPlayerMe
 
             avatarAPIRequests = new AvatarAPIRequests();
             var templateAvatars = await avatarAPIRequests.GetTemplates();
-            SDKLogger.Log(TAG, $"Fetch all avatar templates in {Time.time - startTime} seconds ");
+            SDKLogger.Log(TAG, $"Fetch all avatar templates in {Time.time - startTime:F2}s ");
             foreach (var template in templateAvatars)
             {
                 if (!avatarRenderMap.ContainsKey(template))
