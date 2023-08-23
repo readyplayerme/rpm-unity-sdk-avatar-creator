@@ -115,13 +115,14 @@ namespace ReadyPlayerMe
 
         private void OnErrorCallback(string error)
         {
-            Debug.Log(error);
+            SDKLogger.Log(TAG,$"And error occured: {error}");
             avatarManager.OnError -= OnErrorCallback;
             partnerAssetManager.OnError -= OnErrorCallback;
 
             ctxSource?.Cancel();
             StateMachine.GoToPreviousState();
             LoadingManager.EnableLoading(error, LoadingManager.LoadingType.Popup, false);
+            SDKLogger.Log(TAG,"Going to previous state");
         }
 
         private async Task LoadAssets()
@@ -140,7 +141,7 @@ namespace ReadyPlayerMe
             await partnerAssetManager.GetAssets();
             await CreateAssetsByCategory(Category.FaceShape);
 
-            SDKLogger.Log(TAG, "Got all partner assets {Time.time - startTime}");
+            SDKLogger.Log(TAG, $"Got all partner assets {Time.time - startTime}");
         }
 
         private async void OnCategorySelected(Category category)
@@ -253,15 +254,13 @@ namespace ReadyPlayerMe
 
         private async void Save()
         {
-            LoadingManager.EnableLoading("Saving avatar...", LoadingManager.LoadingType.Popup);
-
             var startTime = Time.time;
+            LoadingManager.EnableLoading("Saving avatar...", LoadingManager.LoadingType.Popup);
             var avatarId = await avatarManager.Save();
             AvatarCreatorData.AvatarProperties.Id = avatarId;
-            SDKLogger.Log(TAG, "Avatar saved {Time.time - startTime}");
             StateMachine.SetState(StateType.End);
-          
             LoadingManager.DisableLoading();
+            SDKLogger.Log(TAG, $"Avatar saved {Time.time - startTime}");
         }
 
         private Dictionary<Category, object> GetDefaultAssets()
