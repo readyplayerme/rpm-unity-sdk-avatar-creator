@@ -23,7 +23,7 @@ namespace ReadyPlayerMe
         {
             if (string.IsNullOrEmpty(CoreSettingsHandler.CoreSettings.AppId))
             {
-                Debug.LogError("App id is not set in settings.");
+                Debug.LogError("App ID is missing. Please put your App-ID in Ready Player Me > Settings.");
                 return;
             }
 

@@ -32,7 +32,8 @@ The installation steps can be found [here.](Documentation~/QuickStart.md)
 
 ## Important
 
-The plugin is currently in **alpha** stage. We recommend not to use it in the production until the stable version is released.
+- The plugin is currently in **beta** stage. We recommend not to use it in the production until the stable version is released.
+- AvatarCreator requires the App Id property to be set. Make sure that you set the AppId of your application in the Ready Player Me > Settings > App Id. You can find the AppId of your application in the Studio.
 
 ## Features
 - Avatar creation through image.
