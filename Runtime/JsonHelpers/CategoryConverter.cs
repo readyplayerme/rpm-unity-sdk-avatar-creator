@@ -19,11 +19,17 @@ namespace ReadyPlayerMe.AvatarCreator
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var token = JToken.Load(reader);
-            if (token.Type == JTokenType.String)
+            if (token.Type != JTokenType.String)
             {
-                return CategoryHelper.PartnerCategoryMap[token.ToString()];
+                throw new JsonSerializationException("Expected string value");
             }
-            throw new JsonSerializationException("Expected string value");
+            
+            if (!CategoryHelper.PartnerCategoryMap.ContainsKey(token.ToString()))
+            {
+                return Category.None;
+            }
+                
+            return CategoryHelper.PartnerCategoryMap[token.ToString()];
         }
     }
 }

@@ -2,6 +2,7 @@
 {
     public enum Category
     {
+        None,
         SkinColor,
         BeardStyle,
         EyeColor,
