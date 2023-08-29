@@ -6,7 +6,8 @@ namespace ReadyPlayerMe.AvatarCreator
 {
     public static class AnalyticsRuntimeLoggerExtension
     {
-        private const string RUN_AVATAR_CREATOR_SAMPLE = "Run avatar creator sample";
+        private const string RUN_AVATAR_CREATOR_SAMPLE = "run avatar creator sample";
+        private const string APP_ID = "app id";
 
         public static void LogAvatarCreatorSample(this IAnalyticsRuntimeLogger _, string appId)
         {
@@ -15,7 +16,7 @@ namespace ReadyPlayerMe.AvatarCreator
 #if UNITY_EDITOR
             AmplitudeEventLogger.LogEvent(RUN_AVATAR_CREATOR_SAMPLE, new Dictionary<string, object>()
             {
-                { "AppId", appId }
+                { APP_ID, appId }
             });
 #endif
 
