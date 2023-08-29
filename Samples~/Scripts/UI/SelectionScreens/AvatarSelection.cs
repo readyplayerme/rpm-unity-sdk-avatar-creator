@@ -58,14 +58,14 @@ namespace ReadyPlayerMe
             }
             catch (Exception e)
             {
-                SDKLogger.Log(TAG, $"Fetching  all users failed with exception: {e}");
+                SDKLogger.Log(TAG, $"Fetching all users failed with exception: {e}");
                 SDKLogger.Log(TAG, "Logging out user");
                 AuthManager.Logout();
                 LoadingManager.DisableLoading();
                 return;
             }
 
-            SDKLogger.Log(TAG, $"Fetch all users templates in {Time.time - startTime:F2}s ");
+            SDKLogger.Log(TAG, $"Fetched all users templates in {Time.time - startTime:F2}s ");
 
             avatarButtonsMap = new Dictionary<string, GameObject>();
             foreach (var avatar in avatarPartnerMap)

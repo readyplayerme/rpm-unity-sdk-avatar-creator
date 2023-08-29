@@ -115,7 +115,7 @@ namespace ReadyPlayerMe
 
         private void OnErrorCallback(string error)
         {
-            SDKLogger.Log(TAG,$"And error occured: {error}");
+            SDKLogger.Log(TAG,$"An error occured: {error}");
             avatarManager.OnError -= OnErrorCallback;
             partnerAssetManager.OnError -= OnErrorCallback;
 
@@ -141,7 +141,7 @@ namespace ReadyPlayerMe
             await partnerAssetManager.GetAssets();
             await CreateAssetsByCategory(Category.FaceShape);
 
-            SDKLogger.Log(TAG, $"Got all partner assets {Time.time - startTime:F2}s");
+            SDKLogger.Log(TAG, $"Loaded all partner assets {Time.time - startTime:F2}s");
         }
 
         private async void OnCategorySelected(Category category)
@@ -182,7 +182,7 @@ namespace ReadyPlayerMe
 
             ProcessAvatar(avatar);
 
-            SDKLogger.Log(TAG, $"Avatar loaded {Time.time - startTime:F2}s");
+            SDKLogger.Log(TAG, $"Avatar loaded in {Time.time - startTime:F2}s");
             return avatar;
         }
 
@@ -191,7 +191,7 @@ namespace ReadyPlayerMe
             var startTime = Time.time;
             var colors = await avatarManager.LoadAvatarColors();
             assetButtonCreator.CreateColorUI(colors, UpdateAvatar);
-            SDKLogger.Log(TAG, $"All colors loaded {Time.time - startTime:F2}s");
+            SDKLogger.Log(TAG, $"All colors loaded in {Time.time - startTime:F2}s");
         }
 
         private void CreateUI(BodyType bodyType)
@@ -260,7 +260,7 @@ namespace ReadyPlayerMe
             AvatarCreatorData.AvatarProperties.Id = avatarId;
             StateMachine.SetState(StateType.End);
             LoadingManager.DisableLoading();
-            SDKLogger.Log(TAG, $"Avatar saved {Time.time - startTime:F2}s");
+            SDKLogger.Log(TAG, $"Avatar saved in {Time.time - startTime:F2}s");
         }
 
         private Dictionary<Category, object> GetDefaultAssets()
@@ -296,7 +296,7 @@ namespace ReadyPlayerMe
             ProcessAvatar(avatar);
             currentAvatar = avatar;
             LoadingManager.DisableLoading();
-            SDKLogger.Log(TAG, $"Avatar updated {Time.time - startTime:F2}s");
+            SDKLogger.Log(TAG, $"Avatar updated in {Time.time - startTime:F2}s");
         }
 
         private void ProcessAvatar(GameObject avatar)
