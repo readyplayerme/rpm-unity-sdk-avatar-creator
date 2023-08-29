@@ -1,4 +1,6 @@
 using System.Linq;
+using ReadyPlayerMe.AvatarCreator.Editor;
+using ReadyPlayerMe.Core.Analytics;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEngine;
@@ -10,8 +12,6 @@ public static class AvatarCreatorEditorAnalytics
 
     static AvatarCreatorEditorAnalytics()
     {
-        Debug.Log("Avatar Creator AvatarCreatorEditorAnalytics");
-        
         Events.registeredPackages += OnRegisteredPackages;
     }
 
@@ -21,11 +21,12 @@ public static class AvatarCreatorEditorAnalytics
 #if RPM_DEVELOPMENT
             return;
 #endif
-        Debug.Log("Avatar Creator Call");
-        
-        if (args.added != null && args.added.Any(p => p.name == AVATAR_CREATOR_MODULE_NAME))
+        var package = args.added.FirstOrDefault(p => p.name == AVATAR_CREATOR_MODULE_NAME);
+
+        if (args.added != null && package != null)
         {
-            Debug.Log("Avatar Creator module installed");
+            Debug.Log(package.version);
+            AnalyticsEditorLogger.EventLogger.LogAvatarCreatorImported(package.version);
         }
     }
 }

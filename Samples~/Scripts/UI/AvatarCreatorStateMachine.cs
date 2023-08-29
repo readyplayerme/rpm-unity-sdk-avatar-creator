@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.Core;
+using ReadyPlayerMe.Core.Analytics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +24,8 @@ namespace ReadyPlayerMe
 
         private void Start()
         {
+            AnalyticsRuntimeLogger.EventLogger.LogAvatarCreatorSample(CoreSettingsHandler.CoreSettings.AppId);
+            
             if (string.IsNullOrEmpty(CoreSettingsHandler.CoreSettings.AppId))
             {
                 Debug.LogError("App ID is missing. Please put your App-ID in Ready Player Me > Settings.");

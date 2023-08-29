@@ -1,7 +1,10 @@
 {
     "name": "ReadyPlayerMe.AvatarCreator.Editor",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "ReadyPlayerMe.Core.Editor",
+        "ReadyPlayerMe.Core"
+    ],
     "includePlatforms": [
         "Editor"
     ],
