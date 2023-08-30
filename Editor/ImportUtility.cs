@@ -1,32 +1,27 @@
-using System.Linq;
 using ReadyPlayerMe.Core.Analytics;
 using UnityEditor;
-using UnityEditor.PackageManager;
 
 namespace ReadyPlayerMe.AvatarCreator.Editor
 {
     [InitializeOnLoad]
-    public static class ImportUtility
+    public class ImportUtility
     {
-        private const string AVATAR_CREATOR_MODULE_NAME = "com.readyplayerme.avatarcreator";
+        private const string AVATAR_CREATOR_VERSION = "v1.0.0";
 
         static ImportUtility()
         {
-            Events.registeredPackages += OnRegisteredPackages;
+            EditorApplication.delayCall += OnRegisteredPackages;
         }
 
-        private static void OnRegisteredPackages(PackageRegistrationEventArgs args)
+        ~ImportUtility()
         {
-            Events.registeredPackages -= OnRegisteredPackages;
-#if RPM_DEVELOPMENT
-            return;
-#endif
-            var package = args.added.FirstOrDefault(p => p.name == AVATAR_CREATOR_MODULE_NAME);
+            EditorApplication.delayCall += OnRegisteredPackages;
+        }
 
-            if (args.added != null && package != null)
-            {
-                AnalyticsEditorLogger.EventLogger.LogAvatarCreatorImported(package.version);
-            }
+
+        private static void OnRegisteredPackages()
+        {
+            AnalyticsEditorLogger.EventLogger.LogAvatarCreatorImported(AVATAR_CREATOR_VERSION);
         }
     }
 }
