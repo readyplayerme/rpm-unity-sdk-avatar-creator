@@ -27,7 +27,33 @@ namespace ReadyPlayerMe.AvatarCreator
             this.appId = appId;
         }
 
-        public async Task<PartnerAsset[]> Get(Category category, BodyType bodyType, OutfitGender gender, CancellationToken ctx = new CancellationToken())
+        public async Task<PartnerAsset[]> Get(BodyType bodyType, OutfitGender gender, CancellationToken ctx = new CancellationToken())
+        {
+            var assets = new HashSet<PartnerAsset>();
+            var assetData = await GetRequest(LIMIT, 1, null, gender, bodyType, ctx: ctx);
+            assets.UnionWith(assetData.Assets);
+
+            var assetRequests = new Task<AssetData>[assetData.Pagination.TotalPages - 1];
+
+            for (var i = 2; i <= assetData.Pagination.TotalPages; i++)
+            {
+                assetRequests[i - 2] = GetRequest(LIMIT, i, null, gender, bodyType, ctx: ctx);
+            }
+
+            while (!assetRequests.All(x => x.IsCompleted) && !ctx.IsCancellationRequested)
+            {
+                await Task.Yield();
+            }
+
+            foreach (var request in assetRequests)
+            {
+                assets.UnionWith(request.Result.Assets);
+            }
+
+            return assets.ToArray();
+        }
+
+        public async Task<PartnerAsset[]> Get(Category? category, BodyType bodyType, OutfitGender gender, CancellationToken ctx = new CancellationToken())
         {
             var assets = new HashSet<PartnerAsset>();
             var assetData = await GetRequest(LIMIT, 1, category, gender, bodyType, ctx: ctx);
@@ -42,7 +68,7 @@ namespace ReadyPlayerMe.AvatarCreator
             return assets.ToArray();
         }
 
-        private async Task<AssetData> GetRequest(int limit, int pageNumber, Category category, OutfitGender gender, BodyType bodyType, CancellationToken ctx = new CancellationToken())
+        private async Task<AssetData> GetRequest(int limit, int pageNumber, Category? category, OutfitGender gender, BodyType bodyType, CancellationToken ctx = new CancellationToken())
         {
             var startTime = Time.time;
             var url = $"{Endpoints.ASSET_API_V2}?" +
@@ -54,8 +80,11 @@ namespace ReadyPlayerMe.AvatarCreator
                       $"gender=neutral&" +
                       $"&limit={limit}&page={pageNumber}&";
 
-            var type = CategoryHelper.PartnerCategoryMap.First(x => x.Value == category).Key;
-            url += $"type={type}";
+            if (category != null)
+            {
+                var type = CategoryHelper.PartnerCategoryMap.First(x => x.Value == category).Key;
+                url += $"type={type}";
+            }
 
             var response = await authorizedRequest.SendRequest<Response>(new RequestData
             {
@@ -68,7 +97,14 @@ namespace ReadyPlayerMe.AvatarCreator
             var partnerAssets = JsonConvert.DeserializeObject<PartnerAsset[]>(json["data"]!.ToString());
             var pagination = JsonConvert.DeserializeObject<Pagination>(json["pagination"]!.ToString());
 
-            SDKLogger.Log(TAG, $"Asset by category {category} with page {pageNumber} received: {Time.time - startTime:F2}s");
+            if (category != null)
+            {
+                SDKLogger.Log(TAG, $"Asset by category {category} with page {pageNumber} received: {Time.time - startTime}s");
+            }
+            else
+            {
+                SDKLogger.Log(TAG, $"Asset with page {pageNumber} received: {Time.time - startTime}s");
+            }
 
             return new AssetData
             {
