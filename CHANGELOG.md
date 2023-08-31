@@ -5,11 +5,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
-## [1.0.0] - UNRELEASED
+## [1.0.0] - 2023 August 31
+
+### Added
+- Analytics events
+- New asset endpoint
 
 ### Updated
-- New asset api 
 - Asset loading strategy
+- Renamed asset type to category
 
 ## [0.5.0] - 2023 August 11
 
