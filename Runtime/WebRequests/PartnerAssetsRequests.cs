@@ -45,9 +45,16 @@ namespace ReadyPlayerMe.AvatarCreator
                 await Task.Yield();
             }
 
-            foreach (var request in assetRequests)
+            foreach (var request in assetRequests.Where(request => request.IsCompleted))
             {
-                assets.UnionWith(request.Result.Assets);
+                try
+                {
+                    assets.UnionWith(request.Result.Assets);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
 
             return assets.ToArray();
@@ -78,12 +85,12 @@ namespace ReadyPlayerMe.AvatarCreator
                       $"bodyType={bodyType.ToString().ToLower()}&" +
                       $"gender={(gender == OutfitGender.Masculine ? "male" : "female")}&" +
                       $"gender=neutral&" +
-                      $"&limit={limit}&page={pageNumber}&";
+                      $"&limit={limit}&page={pageNumber}";
 
             if (category != null)
             {
                 var type = CategoryHelper.PartnerCategoryMap.First(x => x.Value == category).Key;
-                url += $"type={type}";
+                url += $"&type={type}";
             }
 
             var response = await authorizedRequest.SendRequest<Response>(new RequestData
