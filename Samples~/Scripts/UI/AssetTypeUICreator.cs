@@ -12,7 +12,7 @@ namespace ReadyPlayerMe
     {
         private const string PANEL_SUFFIX = "Panel";
         private const string BUTTON_SUFFIX = "Button";
-        
+
         [Serializable]
         private class AssetTypeIcon
         {
@@ -57,6 +57,8 @@ namespace ReadyPlayerMe
             CreateAssetTypePanel(AssetType.SkinColor, leftSidePanelPrefab, assetTypeUI.panelParent);
             foreach (var assetType in assetTypes)
             {
+                if (assetType == AssetType.Bottom || assetType == AssetType.Top || assetType == AssetType.Footwear) continue;
+
                 if (assetType.IsColorAsset())
                 {
                     CreateAssetTypePanel(assetType, leftSidePanelPrefab, assetTypeUI.panelParent);
@@ -87,6 +89,7 @@ namespace ReadyPlayerMe
 
         public void SetDefaultSelection(AssetType assetType)
         {
+            if (assetType == AssetType.Bottom || assetType == AssetType.Top || assetType == AssetType.Footwear) return;
             SwitchZoomByAssetType(assetType);
             assetTypeButtonsMap[assetType].SetSelect(true);
             selectedAssetTypeButton.SetSelect(false);
@@ -94,11 +97,11 @@ namespace ReadyPlayerMe
             selectedAssetTypeButton = assetTypeButtonsMap[assetType];
             PanelSwitcher.Switch(assetType);
         }
-        
+
         public void SetActiveAssetTypeButtons(bool enable)
         {
             faceAssetTypeButton.SetInteractable(enable);
-            foreach (var assetTypeButton in assetTypeButtonsMap)
+            foreach (KeyValuePair<AssetType, AssetTypeButton> assetTypeButton in assetTypeButtonsMap)
             {
                 if (assetTypeButton.Key != AssetType.Outfit)
                 {
@@ -117,7 +120,7 @@ namespace ReadyPlayerMe
                 return;
             }
 
-            foreach (var assetTypeButton in assetTypeButtonsMap)
+            foreach (KeyValuePair<AssetType, AssetTypeButton> assetTypeButton in assetTypeButtonsMap)
             {
                 Destroy(assetTypeButton.Value.gameObject);
             }
@@ -128,6 +131,7 @@ namespace ReadyPlayerMe
 
         private void CreateAssetTypePanel(AssetType assetType, GameObject panelPrefab, Transform parent)
         {
+            if (assetType == AssetType.Bottom || assetType == AssetType.Top || assetType == AssetType.Footwear) return;
             var assetTypePanel = Instantiate(panelPrefab, parent);
             assetTypePanel.name = assetType + PANEL_SUFFIX;
             assetTypePanel.SetActive(false);
@@ -137,6 +141,7 @@ namespace ReadyPlayerMe
 
         private void CreateAssetTypeButton(AssetType assetType, Transform parent)
         {
+            if (assetType == AssetType.Bottom || assetType == AssetType.Top || assetType == AssetType.Footwear) return;
             var assetTypeButtonGameObject = Instantiate(assetTypeUI.buttonPrefab, parent);
             var assetTypeButton = assetTypeButtonGameObject.GetComponent<AssetTypeButton>();
             assetTypeButton.name = assetType + BUTTON_SUFFIX;

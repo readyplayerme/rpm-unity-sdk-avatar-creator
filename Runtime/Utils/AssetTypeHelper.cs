@@ -13,7 +13,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 .Where(assetType => assetType.IsCompatibleAssetType(bodyType))
                 .ToList();
         }
-        
+
         public static readonly Dictionary<string, AssetType> PartnerAssetTypeMap = new Dictionary<string, AssetType>
         {
             { "faceshape", AssetType.FaceShape },
@@ -33,7 +33,10 @@ namespace ReadyPlayerMe.AvatarCreator
             { "hairColor", AssetType.HairColor },
             { "eyebrowColor", AssetType.EyebrowColor },
             { "beardColor", AssetType.BeardColor },
-            { "faceStyle", AssetType.FaceStyle }
+            { "faceStyle", AssetType.FaceStyle },
+            { "bottom", AssetType.Bottom },
+            { "top", AssetType.Top },
+            { "footwear", AssetType.Footwear }
         };
 
         public static bool IsFaceAsset(this AssetType assetType)
@@ -52,10 +55,10 @@ namespace ReadyPlayerMe.AvatarCreator
                     return false;
             }
         }
-        
+
         private static bool IsCompatibleAssetType(this AssetType assetType, BodyType bodyType)
         {
-            if (assetType == AssetType.FaceStyle)
+            if (assetType == AssetType.FaceStyle || assetType == AssetType.Bottom || assetType == AssetType.Top || assetType == AssetType.Footwear)
             {
                 return false;
             }
@@ -67,7 +70,7 @@ namespace ReadyPlayerMe.AvatarCreator
             }
             return assetType != AssetType.Outfit;
         }
-        
+
         public static bool IsOptionalAsset(this AssetType assetType)
         {
             switch (assetType)
@@ -80,7 +83,7 @@ namespace ReadyPlayerMe.AvatarCreator
                     return !assetType.IsColorAsset();
             }
         }
-        
+
         public static bool IsColorAsset(this AssetType assetType)
         {
             switch (assetType)

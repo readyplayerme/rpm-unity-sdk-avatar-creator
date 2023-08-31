@@ -20,6 +20,9 @@
         HairColor,
         EyebrowColor,
         BeardColor,
-        FaceStyle
+        FaceStyle,
+        Bottom,
+        Top,
+        Footwear
     }
 }

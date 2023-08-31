@@ -105,6 +105,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private bool FilterAssets(PartnerAsset asset)
         {
+            if (asset.AssetType == AssetType.Bottom || asset.AssetType == AssetType.Top || asset.AssetType == AssetType.Footwear) return false;
             // Outfit is only for full body and Shirt is only for half body.
             // Both outfit and shirt are gender specific.
             if (bodyType == BodyType.HalfBody)
