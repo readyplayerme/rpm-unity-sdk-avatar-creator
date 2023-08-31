@@ -30,8 +30,17 @@ namespace ReadyPlayerMe.AvatarCreator
         public async Task<PartnerAsset[]> Get(BodyType bodyType, OutfitGender gender, CancellationToken ctx = new CancellationToken())
         {
             var assets = new HashSet<PartnerAsset>();
-            var assetData = await GetRequest(LIMIT, 1, null, gender, bodyType, ctx: ctx);
-            assets.UnionWith(assetData.Assets);
+            AssetData assetData;
+
+            try
+            {
+                assetData = await GetRequest(LIMIT, 1, null, gender, bodyType, ctx: ctx);
+                assets.UnionWith(assetData.Assets);
+            }
+            catch (Exception)
+            {
+                return assets.ToArray();
+            }
 
             var assetRequests = new Task<AssetData>[assetData.Pagination.TotalPages - 1];
 
