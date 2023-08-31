@@ -9,6 +9,8 @@ namespace ReadyPlayerMe
 {
     public class AvatarCreatorStateMachine : StateMachine
     {
+        private const string TAG = nameof(AvatarCreatorStateMachine);
+        
         [SerializeField] private List<State> states;
         [SerializeField] private Button backButton;
         [SerializeField] private Button saveButton;
@@ -66,6 +68,7 @@ namespace ReadyPlayerMe
         private void OnSessionRefreshed(UserSession userSession)
         {
             profileManager.SaveSession(userSession);
+            SDKLogger.Log(TAG, $"Session refreshed for userId: {userSession.Id}");
         }
 
         private void Initialize()

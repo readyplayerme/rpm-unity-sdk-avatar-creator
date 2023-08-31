@@ -115,13 +115,14 @@ namespace ReadyPlayerMe
 
         private void OnErrorCallback(string error)
         {
-            Debug.Log(error);
+            SDKLogger.Log(TAG,$"An error occured: {error}");
             avatarManager.OnError -= OnErrorCallback;
             partnerAssetManager.OnError -= OnErrorCallback;
 
             ctxSource?.Cancel();
             StateMachine.GoToPreviousState();
             LoadingManager.EnableLoading(error, LoadingManager.LoadingType.Popup, false);
+            SDKLogger.Log(TAG,"Going to previous state");
         }
 
         private async Task LoadAssets()
@@ -140,7 +141,7 @@ namespace ReadyPlayerMe
             await partnerAssetManager.GetAssets();
             await CreateAssetsByCategory(Category.FaceShape);
 
-            SDKLogger.Log(TAG, "Got all partner assets {Time.time - startTime}");
+            SDKLogger.Log(TAG, $"Loaded all partner assets {Time.time - startTime:F2}s");
         }
 
         private async void OnCategorySelected(Category category)
@@ -181,7 +182,7 @@ namespace ReadyPlayerMe
 
             ProcessAvatar(avatar);
 
-            SDKLogger.Log(TAG, $"Avatar loaded {Time.time - startTime}");
+            SDKLogger.Log(TAG, $"Avatar loaded in {Time.time - startTime:F2}s");
             return avatar;
         }
 
@@ -190,7 +191,7 @@ namespace ReadyPlayerMe
             var startTime = Time.time;
             var colors = await avatarManager.LoadAvatarColors();
             assetButtonCreator.CreateColorUI(colors, UpdateAvatar);
-            SDKLogger.Log(TAG, $"All colors loaded {Time.time - startTime}");
+            SDKLogger.Log(TAG, $"All colors loaded in {Time.time - startTime:F2}s");
         }
 
         private void CreateUI(BodyType bodyType)
@@ -253,15 +254,13 @@ namespace ReadyPlayerMe
 
         private async void Save()
         {
-            LoadingManager.EnableLoading("Saving avatar...", LoadingManager.LoadingType.Popup);
-
             var startTime = Time.time;
+            LoadingManager.EnableLoading("Saving avatar...", LoadingManager.LoadingType.Popup);
             var avatarId = await avatarManager.Save();
             AvatarCreatorData.AvatarProperties.Id = avatarId;
-            SDKLogger.Log(TAG, "Avatar saved {Time.time - startTime}");
             StateMachine.SetState(StateType.End);
-          
             LoadingManager.DisableLoading();
+            SDKLogger.Log(TAG, $"Avatar saved in {Time.time - startTime:F2}s");
         }
 
         private Dictionary<Category, object> GetDefaultAssets()
@@ -297,7 +296,7 @@ namespace ReadyPlayerMe
             ProcessAvatar(avatar);
             currentAvatar = avatar;
             LoadingManager.DisableLoading();
-            SDKLogger.Log(TAG, $"Avatar updated {Time.time - startTime}");
+            SDKLogger.Log(TAG, $"Avatar updated in {Time.time - startTime:F2}s");
         }
 
         private void ProcessAvatar(GameObject avatar)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ namespace ReadyPlayerMe
 {
     public class DefaultAvatarSelection : State
     {
+        private const string TAG = nameof(DefaultAvatarSelection);
         private const string LOADING_MESSAGE = "Fetching default avatars";
 
         [SerializeField] private Transform parent;
@@ -61,11 +63,13 @@ namespace ReadyPlayerMe
 
         private async Task FetchTemplates()
         {
+            var startTime = Time.time;
             var downloadRenderTasks = new List<Task>();
             ctxSource = new CancellationTokenSource();
 
             avatarAPIRequests = new AvatarAPIRequests();
             var templateAvatars = await avatarAPIRequests.GetTemplates();
+            SDKLogger.Log(TAG, $"Fetched all avatar templates in {Time.time - startTime:F2}s ");
             foreach (var template in templateAvatars)
             {
                 if (!avatarRenderMap.ContainsKey(template))

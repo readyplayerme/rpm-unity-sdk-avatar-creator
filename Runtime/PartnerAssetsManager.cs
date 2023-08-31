@@ -55,7 +55,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 }
             }
             
-            SDKLogger.Log(TAG,$"All asset received: {Time.time - startTime}s");
+            SDKLogger.Log(TAG,$"All asset received: {Time.time - startTime:F2}s");
         }
 
         public List<string> GetAssetsByCategory(Category category)
