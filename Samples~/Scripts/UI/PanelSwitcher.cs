@@ -6,91 +6,91 @@ namespace ReadyPlayerMe
 {
     public static class PanelSwitcher
     {
-        public static Dictionary<AssetType, GameObject> AssetTypePanelMap { get; private set; }
+        public static Dictionary<Category, GameObject> CategoryPanelMap { get; private set; }
 
         public static GameObject FaceTypePanel;
 
-        private static AssetType currentAssetType;
+        private static Category currentCategory;
 
-        public static void AddPanel(AssetType assetType, GameObject widget)
+        public static void AddPanel(Category category, GameObject widget)
         {
-            AssetTypePanelMap ??= new Dictionary<AssetType, GameObject>();
-            AssetTypePanelMap.Add(assetType, widget);
+            CategoryPanelMap ??= new Dictionary<Category, GameObject>();
+            CategoryPanelMap.Add(category, widget);
         }
 
         public static void Clear()
         {
-            if (AssetTypePanelMap == null)
+            if (CategoryPanelMap == null)
             {
                 return;
             }
-            foreach (var assetTypePanels in AssetTypePanelMap)
+            foreach (var assetTypePanels in CategoryPanelMap)
             {
                 Object.Destroy(assetTypePanels.Value);
             }
-            AssetTypePanelMap.Clear();
+            CategoryPanelMap.Clear();
         }
 
-        public static void Switch(AssetType assetType)
+        public static void Switch(Category category)
         {
-            SetActivePanel(currentAssetType, false);
+            SetActivePanel(currentCategory, false);
             DisableColorPanels();
 
-            switch (assetType)
+            switch (category)
             {
-                case AssetType.FaceShape:
+                case Category.FaceShape:
                     FaceTypePanel.SetActive(true);
-                    SetActivePanel(assetType, true);
-                    SetActivePanel(AssetType.SkinColor, true);
+                    SetActivePanel(category, true);
+                    SetActivePanel(Category.SkinColor, true);
                     break;
-                case AssetType.EyebrowStyle:
+                case Category.EyebrowStyle:
                     FaceTypePanel.SetActive(true);
-                    SetActivePanel(assetType, true);
-                    SetActivePanel(AssetType.EyebrowColor, true);
+                    SetActivePanel(category, true);
+                    SetActivePanel(Category.EyebrowColor, true);
                     break;
-                case AssetType.BeardStyle:
+                case Category.BeardStyle:
                     FaceTypePanel.SetActive(true);
-                    SetActivePanel(assetType, true);
-                    SetActivePanel(AssetType.BeardColor, true);
+                    SetActivePanel(category, true);
+                    SetActivePanel(Category.BeardColor, true);
                     break;
-                case AssetType.HairStyle:
+                case Category.HairStyle:
                     FaceTypePanel.SetActive(false);
-                    SetActivePanel(assetType, true);
-                    SetActivePanel(AssetType.HairColor, true);
+                    SetActivePanel(category, true);
+                    SetActivePanel(Category.HairColor, true);
                     break;
-                case AssetType.NoseShape:
-                case AssetType.LipShape:
+                case Category.NoseShape:
+                case Category.LipShape:
                     FaceTypePanel.SetActive(true);
-                    SetActivePanel(assetType, true);
+                    SetActivePanel(category, true);
                     break;
-                case AssetType.EyeShape:
+                case Category.EyeShape:
                     FaceTypePanel.SetActive(true);
-                    SetActivePanel(assetType, true);
-                    SetActivePanel(AssetType.EyeColor, true);
+                    SetActivePanel(category, true);
+                    SetActivePanel(Category.EyeColor, true);
                     break;
                 default:
                     FaceTypePanel.SetActive(false);
-                    SetActivePanel(assetType, true);
+                    SetActivePanel(category, true);
                     break;
             }
 
-            currentAssetType = assetType;
+            currentCategory = category;
         }
         
         private static void DisableColorPanels()
         {
-            SetActivePanel(AssetType.EyeColor, false);
-            SetActivePanel(AssetType.SkinColor, false);
-            SetActivePanel(AssetType.BeardColor, false);
-            SetActivePanel(AssetType.HairColor, false);
-            SetActivePanel(AssetType.EyebrowColor, false);
+            SetActivePanel(Category.EyeColor, false);
+            SetActivePanel(Category.SkinColor, false);
+            SetActivePanel(Category.BeardColor, false);
+            SetActivePanel(Category.HairColor, false);
+            SetActivePanel(Category.EyebrowColor, false);
         }
 
-        private static void SetActivePanel(AssetType assetType, bool enable)
+        private static void SetActivePanel(Category category, bool enable)
         {
-            if (AssetTypePanelMap.ContainsKey(assetType))
+            if (CategoryPanelMap.ContainsKey(category))
             {
-                AssetTypePanelMap[assetType].SetActive(enable);
+                CategoryPanelMap[category].SetActive(enable);
             }
         }
     }

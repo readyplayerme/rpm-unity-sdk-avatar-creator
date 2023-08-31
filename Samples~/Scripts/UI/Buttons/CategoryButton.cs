@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace ReadyPlayerMe
 {
-    public class AssetTypeButton : MonoBehaviour
+    public class CategoryButton : MonoBehaviour
     {
         [SerializeField] private Image icon;
         [SerializeField] private Button button;

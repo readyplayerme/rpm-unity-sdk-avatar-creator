@@ -4,30 +4,30 @@ namespace ReadyPlayerMe.AvatarCreator
 {
     public static class AvatarPropertiesConstants
     {
-        public static readonly Dictionary<AssetType, object> MaleDefaultAssets =
-            new Dictionary<AssetType, object>
+        public static readonly Dictionary<Category, object> MaleDefaultAssets =
+            new Dictionary<Category, object>
             {
-                { AssetType.SkinColor, 5 },
-                { AssetType.EyeColor, "9781796" },
-                { AssetType.HairStyle, "9247476" },
-                { AssetType.EyebrowStyle, "16858292" },
-                { AssetType.Outfit, "109373713" },
-                { AssetType.HairColor, 0 },
-                { AssetType.EyebrowColor, 0 },
-                { AssetType.BeardColor, 0 }
+                { Category.SkinColor, 5 },
+                { Category.EyeColor, "9781796" },
+                { Category.HairStyle, "9247476" },
+                { Category.EyebrowStyle, "16858292" },
+                { Category.Outfit, "109373713" },
+                { Category.HairColor, 0 },
+                { Category.EyebrowColor, 0 },
+                { Category.BeardColor, 0 }
             };
             
-        public static readonly Dictionary<AssetType, object> FemaleDefaultAssets =
-            new Dictionary<AssetType, object>
+        public static readonly Dictionary<Category, object> FemaleDefaultAssets =
+            new Dictionary<Category, object>
             {
-                { AssetType.SkinColor, 5 },
-                { AssetType.EyeColor, "9781796" },
-                { AssetType.HairStyle, "9247476" },
-                { AssetType.EyebrowStyle, "16858292" },
-                { AssetType.Outfit, "109376347" },
-                { AssetType.HairColor, 0 },
-                { AssetType.EyebrowColor, 0 },
-                { AssetType.BeardColor, 0 }
+                { Category.SkinColor, 5 },
+                { Category.EyeColor, "9781796" },
+                { Category.HairStyle, "9247476" },
+                { Category.EyebrowStyle, "16858292" },
+                { Category.Outfit, "109376347" },
+                { Category.HairColor, 0 },
+                { Category.EyebrowColor, 0 },
+                { Category.BeardColor, 0 }
             };
     }
 }

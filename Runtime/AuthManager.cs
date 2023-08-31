@@ -10,11 +10,13 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public static class AuthManager
     {
+        private const string TAG = nameof(AuthManager);
         private static readonly AuthenticationRequests AuthenticationRequests;
         private static UserSession userSession;
         public static UserSession UserSession => userSession;
 
         public static bool IsSignedIn;
+        public static bool IsSignedInAnonymously;
 
         public static Action<UserSession> OnSignedIn;
         public static Action<UserSession> OnSessionRefreshed;
@@ -29,6 +31,7 @@ namespace ReadyPlayerMe.AvatarCreator
         public static async Task LoginAsAnonymous()
         {
             userSession = await AuthenticationRequests.LoginAsAnonymous();
+            IsSignedInAnonymously = true;
         }
 
         public static void SetUser(UserSession session)
@@ -73,7 +76,7 @@ namespace ReadyPlayerMe.AvatarCreator
             }
             catch (Exception e)
             {
-                Debug.Log("Refreshing token failed with error: " + e.Message);
+                SDKLogger.Log(TAG, "Refreshing token failed with error: " + e.Message);
                 throw;
             }
 
@@ -85,6 +88,7 @@ namespace ReadyPlayerMe.AvatarCreator
         public static void Logout()
         {
             IsSignedIn = false;
+            IsSignedInAnonymously = false;
             userSession = new UserSession();
             OnSignedOut?.Invoke();
         }

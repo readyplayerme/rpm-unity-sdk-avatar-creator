@@ -1,0 +1,5 @@
+﻿<linker>
+    <assembly fullname="ReadyPlayerMe.AvatarCreator">
+        <type fullname="ReadyPlayerMe.AvatarCreator.*Converter" preserve="all"/>
+    </assembly>
+</linker>

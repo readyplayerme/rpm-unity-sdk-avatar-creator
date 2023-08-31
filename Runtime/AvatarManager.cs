@@ -152,16 +152,16 @@ namespace ReadyPlayerMe.AvatarCreator
         /// Update an asset of the avatar.
         /// </summary>
         /// <param name="assetId"></param>
-        /// <param name="assetType"></param>
+        /// <param name="category"></param>
         /// <returns>Avatar gameObject</returns>
-        public async Task<GameObject> UpdateAsset(AssetType assetType, object assetId)
+        public async Task<GameObject> UpdateAsset(Category category, object assetId)
         {
             var payload = new AvatarProperties
             {
-                Assets = new Dictionary<AssetType, object>()
+                Assets = new Dictionary<Category, object>()
             };
 
-            payload.Assets.Add(assetType, assetId);
+            payload.Assets.Add(category, assetId);
 
             byte[] data;
             try
@@ -228,6 +228,21 @@ namespace ReadyPlayerMe.AvatarCreator
             {
                 OnError?.Invoke(e.Message);
             }
+        }
+        
+        public async Task<ColorPalette[]> LoadAvatarColors()
+        {
+            ColorPalette[] colors = null;
+            try
+            {
+                colors = await avatarAPIRequests.GetAllAvatarColors(avatarId);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+            }
+
+            return colors;
         }
 
         public void Dispose()

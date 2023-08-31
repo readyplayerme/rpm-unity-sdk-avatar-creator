@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ReadyPlayerMe.AvatarCreator;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,8 @@ namespace ReadyPlayerMe
 {
     public class AvatarSelection : State
     {
+        private const string TAG = nameof(AvatarSelection);
+        
         [SerializeField] private Button partnerAvatarsButton;
         [SerializeField] private Button allAvatarsButton;
         [SerializeField] private Button createAvatarButton;
@@ -40,6 +43,7 @@ namespace ReadyPlayerMe
         
         private async void CreateAvatarButtons()
         {
+            var startTime = Time.time;
             if (avatarPartnerMap != null && avatarPartnerMap.Count != 0)
             {
                 return;
@@ -54,10 +58,14 @@ namespace ReadyPlayerMe
             }
             catch (Exception e)
             {
+                SDKLogger.Log(TAG, $"Fetching all users failed with exception: {e}");
+                SDKLogger.Log(TAG, "Logging out user");
                 AuthManager.Logout();
                 LoadingManager.DisableLoading();
                 return;
             }
+
+            SDKLogger.Log(TAG, $"Fetched all users templates in {Time.time - startTime:F2}s ");
 
             avatarButtonsMap = new Dictionary<string, GameObject>();
             foreach (var avatar in avatarPartnerMap)

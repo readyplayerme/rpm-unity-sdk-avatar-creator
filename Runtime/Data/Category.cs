@@ -1,7 +1,8 @@
 ﻿namespace ReadyPlayerMe.AvatarCreator
 {
-    public enum AssetType
+    public enum Category
     {
+        None,
         SkinColor,
         BeardStyle,
         EyeColor,
@@ -20,6 +21,5 @@
         HairColor,
         EyebrowColor,
         BeardColor,
-        FaceStyle
     }
 }
