@@ -16,6 +16,7 @@ namespace ReadyPlayerMe.AvatarCreator
         public static UserSession UserSession => userSession;
 
         public static bool IsSignedIn;
+        public static bool IsSignedInAnonymously;
 
         public static Action<UserSession> OnSignedIn;
         public static Action<UserSession> OnSessionRefreshed;
@@ -30,6 +31,7 @@ namespace ReadyPlayerMe.AvatarCreator
         public static async Task LoginAsAnonymous()
         {
             userSession = await AuthenticationRequests.LoginAsAnonymous();
+            IsSignedInAnonymously = true;
         }
 
         public static void SetUser(UserSession session)
@@ -86,6 +88,7 @@ namespace ReadyPlayerMe.AvatarCreator
         public static void Logout()
         {
             IsSignedIn = false;
+            IsSignedInAnonymously = false;
             userSession = new UserSession();
             OnSignedOut?.Invoke();
         }

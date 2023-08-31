@@ -32,24 +32,25 @@ namespace ReadyPlayerMe
 
         public override async void ActivateState()
         {
+            LoadingManager.EnableLoading(LOADING_MESSAGE);
+
+            if (!AuthManager.IsSignedIn && !AuthManager.IsSignedInAnonymously)
+            {
+                await AuthManager.LoginAsAnonymous();
+            }
+
             if (avatarRenderMap.Count == 0)
             {
                 LoadingManager.EnableLoading(LOADING_MESSAGE);
-
-                if (!AuthManager.IsSignedIn)
-                {
-                    await AuthManager.LoginAsAnonymous();
-                }
-
                 await FetchTemplates();
-               
-                LoadingManager.DisableLoading();
             }
 
             foreach (var template in avatarRenderMap)
             {
                 avatarRenderMap[template.Key].SetActive(template.Key.Gender == AvatarCreatorData.AvatarProperties.Gender);
             }
+
+            LoadingManager.DisableLoading();
         }
 
         public override void DeactivateState()
