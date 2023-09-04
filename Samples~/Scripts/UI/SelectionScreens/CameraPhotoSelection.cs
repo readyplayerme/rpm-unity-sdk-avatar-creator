@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,9 +16,13 @@ namespace ReadyPlayerMe
 
         private WebCamTexture camTexture;
 
-        public override void ActivateState()
+        public override async void ActivateState()
         {
             cameraButton.onClick.AddListener(OnCameraButton);
+            if (!AuthManager.IsSignedIn && !AuthManager.IsSignedInAnonymously)
+            {
+                await AuthManager.LoginAsAnonymous();
+            }
             OpenCamera();
         }
 
