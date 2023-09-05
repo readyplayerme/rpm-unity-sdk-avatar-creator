@@ -25,5 +25,7 @@
 
 ![image](https://user-images.githubusercontent.com/1121080/216086222-a5165359-e660-45fa-895a-b7fed7dd70d6.png)
 
-**7.** Run and test.
+**7.** Set subdomain & AppID in CoreSettings scriptable object. **Important! AppID must belong to the subdomain you set otherwise authorization will fail.**
+
+**8.** Run and test.
 ![image](https://user-images.githubusercontent.com/1121080/216086593-df4a9e24-25c1-42d6-8b7f-4946352fdebb.png)

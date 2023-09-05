@@ -6,7 +6,7 @@ namespace ReadyPlayerMe.AvatarCreator.Editor
     [InitializeOnLoad]
     public class ImportUtility
     {
-        private const string AVATAR_CREATOR_VERSION = "v1.0.0";
+        private const string AVATAR_CREATOR_VERSION = "v1.0.1";
 
         static ImportUtility()
         {
@@ -17,7 +17,6 @@ namespace ReadyPlayerMe.AvatarCreator.Editor
         {
             EditorApplication.delayCall += OnRegisteredPackages;
         }
-
 
         private static void OnRegisteredPackages()
         {
