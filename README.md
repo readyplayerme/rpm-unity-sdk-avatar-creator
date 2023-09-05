@@ -4,7 +4,7 @@
 
 ![image](https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator/assets/1121080/ec555611-829a-44b7-b215-10e188a25b85)
 
-**Ready Player Me Avatar Creator** is an extension to www.readyplayer.me avatar platform, which helps you create avatars natively.
+**Ready Player Me Avatar Creator** is an extension to the www.readyplayer.me avatar platform, which helps you create avatars natively.
 
 Please visit the online documentation and join our public `discord` community.
 
@@ -31,8 +31,8 @@ The installation steps can be found [here.](Documentation~/QuickStart.md)
 
 ## Important
 
-- The plugin is currently in **beta** stage. We recommend not to use it in the production until the stable version is released.
-- AvatarCreator requires the App Id property to be set. Make sure that you set the AppId of your application in the Ready Player Me > Settings > App Id. You can find the AppId of your application in the Studio.
+- The plugin is currently in **beta** stage. We recommend not to use it in production until the stable version is released.
+- AvatarCreator requires the App Id property to be set. Make sure that you set the App Id of your application in the Ready Player Me > Settings > App Id. You can find the App Id of your application in the Studio.
 
 ## Features
 - Avatar creation through image.
@@ -44,7 +44,7 @@ The installation steps can be found [here.](Documentation~/QuickStart.md)
 
 ## Structure
 - The package contains APIs required for creating, customizing and loading the avatar. 
-- It also contains a sample which demonstrate the usage of the APIs and replicates RPM web avatar creator.
+- It also contains a sample which demonstrates the usage of the APIs and replicates RPM web avatar creator.
 - The documentation of provided sample can be found [here.](Documentation~/SampleStructure.md)
 
 ## Customization
@@ -53,6 +53,6 @@ The documentation for customization can be found [here.](Documentation~/Customiz
 
 ## Note
 
-- [*]Camera support is currently only available for PC using Unity’s webcam native API.
+- [*]Camera support is only provided for Windows and WebGL, using Unity’s webcam native API.
 - Unity does not have a native file picker, so we have discontinued support for this feature.
-- To add support for camera on other platforms and file picker, you will need to implement it yourself.
+- To add support for file picker (for selfies) you have to implement it yourself
