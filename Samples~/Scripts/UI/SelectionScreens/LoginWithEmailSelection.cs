@@ -1,10 +1,13 @@
 using ReadyPlayerMe;
 using ReadyPlayerMe.AvatarCreator;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LoginWithEmailSelection : State
 {
+    private const string TAG = nameof(LoginWithEmailSelection);
+
     [SerializeField] private Button sendActivationCodeButton;
     [SerializeField] private Button haveCodeButton;
     [SerializeField] private Button changeEmailButton;
@@ -64,6 +67,7 @@ public class LoginWithEmailSelection : State
             OnChangeEmail();
             LoadingManager.DisableLoading();
             StateMachine.SetState(StateType.AvatarSelection);
+            SDKLogger.Log(TAG, "Login successful");
         }
     }
 
@@ -71,5 +75,6 @@ public class LoginWithEmailSelection : State
     {
         AuthManager.OnSignInError -= OnSignInError;
         LoadingManager.EnableLoading(error, LoadingManager.LoadingType.Popup, false);
+        SDKLogger.Log(TAG, $"Login failed with error: {error}");
     }
 }

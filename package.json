@@ -1,6 +1,6 @@
 {
   "name": "com.readyplayerme.avatarcreator",
-  "version": "0.5.0",
+  "version": "1.0.1",
   "displayName": "Ready Player Me Avatar Creator",
   "description": "For creating RPM avatars in Unity",
   "unity": "2020.3",
@@ -25,7 +25,7 @@
   "samples": [
     {
       "displayName": "AvatarCreatorExample",
-      "description": "Create an avatar.",
+      "description": "This sample demonstrates how to implement a Ready Player Me Avatar Creator using Unity's built in UI system without the need for an embedded Web Browser.",
       "path": "Samples~"
     }
   ]

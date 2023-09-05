@@ -9,6 +9,7 @@ namespace ReadyPlayerMe
 {
     public class ProfileManager : MonoBehaviour
     {
+        private const string TAG = nameof(ProfileManager);
         private const string DIRECTORY_NAME = "Ready Player Me";
         private const string FILE_NAME = "User";
 
@@ -40,6 +41,7 @@ namespace ReadyPlayerMe
         {
             if (!File.Exists(filePath))
             {
+                SDKLogger.Log(TAG, $"Session file not found in {filePath}");
                 return false;
             }
             var bytes = File.ReadAllBytes(filePath);
@@ -47,8 +49,9 @@ namespace ReadyPlayerMe
             var userSession = JsonConvert.DeserializeObject<UserSession>(json);
             AuthManager.SetUser(userSession);
             SetProfileData(userSession);
-            return true;
 
+            SDKLogger.Log(TAG, $"Loaded session from {filePath}");    
+            return true;
         }
 
         public void SaveSession(UserSession userSession)
@@ -57,8 +60,9 @@ namespace ReadyPlayerMe
             DirectoryUtility.ValidateDirectory(directoryPath);
             File.WriteAllBytes(filePath, Encoding.UTF8.GetBytes(json));
             SetProfileData(userSession);
+            
+            SDKLogger.Log(TAG, $"Saved session to {filePath}");
         }
-
 
         private void SetProfileData(UserSession userSession)
         {
@@ -75,7 +79,8 @@ namespace ReadyPlayerMe
                 File.Delete(filePath);
             }
             profileUI.ClearProfile();
+            
+            SDKLogger.Log(TAG, $"Deleted session at {filePath}");
         }
-
     }
 }

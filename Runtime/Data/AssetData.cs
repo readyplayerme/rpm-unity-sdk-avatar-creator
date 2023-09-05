@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using ReadyPlayerMe.Core;
 
 namespace ReadyPlayerMe.AvatarCreator
@@ -27,8 +26,6 @@ namespace ReadyPlayerMe.AvatarCreator
 
     public struct Pagination
     {
-        public int TotalDocs;
         public int TotalPages;
-        public int Page;
     }
 }

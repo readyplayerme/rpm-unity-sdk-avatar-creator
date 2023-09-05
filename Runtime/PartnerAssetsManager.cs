@@ -42,20 +42,23 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             var startTime = Time.time;
 
-            foreach (var category in CategoryHelper.AssetAPISupportedCategory)
+            var assets = await partnerAssetsRequests.Get(bodyType, gender, ctxSource.Token);
+            foreach (PartnerAsset asset in assets)
             {
-                var assets = await partnerAssetsRequests.Get(category, bodyType, gender, ctxSource.Token);
-                if (assetsByCategory.TryGetValue(category, out List<PartnerAsset> value))
+                if (assetsByCategory.TryGetValue(asset.Category, out List<PartnerAsset> value))
                 {
-                    value.AddRange(assets);
+                    value.Add(asset);
                 }
                 else
                 {
-                    assetsByCategory.Add(category, assets.ToList());
+                    assetsByCategory.Add(asset.Category, new List<PartnerAsset> { asset });
                 }
             }
-            
-            SDKLogger.Log(TAG,$"All asset received: {Time.time - startTime}s");
+
+            if (assets.Length != 0)
+            {
+                SDKLogger.Log(TAG, $"All asset received: {Time.time - startTime:F2}s");
+            }
         }
 
         public List<string> GetAssetsByCategory(Category category)
@@ -73,7 +76,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 try
                 {
                     await DownloadIcons(list, onDownload);
-                    SDKLogger.Log(TAG,$"Download chunk of {category} icons: " + (Time.time - startTime) + "s");
+                    SDKLogger.Log(TAG, $"Download chunk of {category} icons: " + (Time.time - startTime) + "s");
                 }
                 catch (Exception e)
                 {
@@ -89,8 +92,13 @@ namespace ReadyPlayerMe.AvatarCreator
             }
         }
 
-        public bool IsLockedAssetCategories(Category category,string id)
+        public bool IsLockedAssetCategories(Category category, string id)
         {
+            if (!assetsByCategory.ContainsKey(category))
+            {
+                return false;
+            }
+
             var asset = assetsByCategory[category].FirstOrDefault(x => x.Id == id);
             return asset.LockedCategories != null && asset.LockedCategories.Length > 0;
         }

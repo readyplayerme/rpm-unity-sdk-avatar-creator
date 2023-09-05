@@ -17,8 +17,7 @@ Please visit the online documentation and join our public `discord` community.
 ## Requirements
 - Unity Version 2020.3 or higher
 - [Git](https://git-scm.com) needs to be installed to fetch the Unity package. [Download here](https://git-scm.com/downloads)
-- [Ready Player Me Core](https://github.com/readyplayerme/rpm-unity-sdk-core) -  v3.0.0+  
-- [Ready Player Me WebView](https://github.com/readyplayerme/rpm-unity-sdk-webview) - v1.2.0
+- [Ready Player Me Core](https://github.com/readyplayerme/rpm-unity-sdk-core) -  v3.2.0+  
 - [glTFast](https://github.com/atteneder/glTFast) - v5.0.0
 
 ## Supported Platforms
@@ -32,7 +31,9 @@ The installation steps can be found [here.](Documentation~/QuickStart.md)
 
 ## Important
 
-The plugin is currently in **alpha** stage. We recommend not to use it in the production until the stable version is released.
+- The plugin is currently in **beta** stage. We recommend not to use it in the production until the stable version is released.
+- AvatarCreator requires the App Id property to be set. Make sure that you set the AppId of your application in the Ready Player Me > Settings > App Id. You can find the AppId of your application in the Studio.
+- **Important! AppID must belong to the subdomain you set otherwise authorization will fail.** Login to [studio.readyplayer.me](https://studio.readyplayer.me/applications) to check your subdomain and AppID.
 
 ## Features
 - Avatar creation through image.

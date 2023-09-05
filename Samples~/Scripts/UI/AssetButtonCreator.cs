@@ -16,6 +16,11 @@ namespace ReadyPlayerMe
         private Dictionary<Category, AssetButton> selectedButtonsByCategory;
         private Dictionary<Category, object> selectedAssets;
 
+        private void Start()
+        {
+            buttonsById = new Dictionary<object, AssetButton>();
+        }
+
         public void SetSelectedAssets(Dictionary<Category, object> assets)
         {
             selectedAssets = assets;

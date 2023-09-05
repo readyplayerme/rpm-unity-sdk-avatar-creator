@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.Core;
+using ReadyPlayerMe.Core.Analytics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ namespace ReadyPlayerMe
 {
     public class AvatarCreatorStateMachine : StateMachine
     {
+        private const string TAG = nameof(AvatarCreatorStateMachine);
+        
         [SerializeField] private List<State> states;
         [SerializeField] private Button backButton;
         [SerializeField] private Button saveButton;
@@ -21,9 +24,11 @@ namespace ReadyPlayerMe
 
         private void Start()
         {
+            AnalyticsRuntimeLogger.EventLogger.LogAvatarCreatorSample(CoreSettingsHandler.CoreSettings.AppId);
+            
             if (string.IsNullOrEmpty(CoreSettingsHandler.CoreSettings.AppId))
             {
-                Debug.LogError("App id is not set in settings.");
+                Debug.LogError("App ID is missing. Please put your App-ID in Ready Player Me > Settings.");
                 return;
             }
 
@@ -66,6 +71,7 @@ namespace ReadyPlayerMe
         private void OnSessionRefreshed(UserSession userSession)
         {
             profileManager.SaveSession(userSession);
+            SDKLogger.Log(TAG, $"Session refreshed for userId: {userSession.Id}");
         }
 
         private void Initialize()

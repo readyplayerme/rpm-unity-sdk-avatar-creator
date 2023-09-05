@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.1] - 2023 September 5
+
+### Fixed
+
+- an issue that caused avatar creation from image to fail when not signed in
+
+## [1.0.0] - 2023 August 31
+
+### Added
+- Analytics events
+- New asset endpoint
+
+### Updated
+- Asset loading strategy
+- Renamed asset type to category
+
 ## [0.5.0] - 2023 August 11
 
 ### Updated
