@@ -25,7 +25,7 @@
   "samples": [
     {
       "displayName": "AvatarCreatorExample",
-      "description": "Create an avatar.",
+      "description": "This sample demonstrates how to implement a Ready Player Me Avatar Creator using Unity's built in UI system without the need for an embedded Web Browser.",
       "path": "Samples~"
     }
   ]
