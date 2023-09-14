@@ -94,7 +94,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 type = CategoryHelper.PartnerCategoryMap.First(x => x.Value == category).Key;
             }
             
-            var url = Endpoints.GetAssetEndpoint(type, limit, pageNumber, AuthManager.UserSession.Id, appId, gender == OutfitGender.Masculine ? "male" : "female");
+            var url = AssetEndpoints.GetAssetEndpoint(type, limit, pageNumber, AuthManager.UserSession.Id, appId, gender == OutfitGender.Masculine ? "male" : "female");
        
             var response = await authorizedRequest.SendRequest<Response>(new RequestData
             {

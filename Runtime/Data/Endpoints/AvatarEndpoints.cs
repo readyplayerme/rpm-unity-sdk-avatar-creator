@@ -1,42 +1,10 @@
 ﻿namespace ReadyPlayerMe.AvatarCreator
 {
-    public static class Endpoints
+    public abstract class AvatarEndpoints : Endpoints
     {
-        private const string API_ENDPOINT = "https://{0}.readyplayer.me/api{1}";
-        private const string AVATAR_API_V2_ENDPOINT = "https://api.readyplayer.me/v2/avatars";
-        private const string AVATAR_API_V1_ENDPOINT = "https://api.readyplayer.me/v1/avatars";
-        private const string ASSET_ENDPOINT = "https://api.readyplayer.me/v1/assets?limit={0}&page={1}&filter=viewable-by-user-and-app&filterUserId={2}&filterApplicationId={3}&gender=neutral&gender={4}";
+        private const string AVATAR_API_V2_ENDPOINT = API_V2_ENDPOINT + "avatars";
+        private const string AVATAR_API_V1_ENDPOINT = API_V1_ENDPOINT + "avatars";
         private const string MODELS_URL_PREFIX = "https://models.readyplayer.me";
-
-        public static string GetAuthAnonymousEndpoint(string subdomain)
-        {
-            return string.Format(API_ENDPOINT, subdomain, "/users");
-        }
-
-        public static string GetAuthStartEndpoint(string subdomain)
-        {
-            return string.Format(API_ENDPOINT, subdomain, "/auth/start");
-        }
-
-        public static string GetConfirmCodeEndpoint(string subdomain)
-        {
-            return string.Format(API_ENDPOINT, subdomain, "/auth/login");
-        }
-
-        public static string GetTokenRefreshEndpoint(string subdomain)
-        {
-            return string.Format(API_ENDPOINT, subdomain, "/auth/refresh");
-        }
-
-        public static string GetAssetEndpoint(string type, int limit, int page, string userId, string appId, string gender)
-        {
-            if (string.IsNullOrEmpty(type))
-            {
-                return string.Format(ASSET_ENDPOINT, limit, page, userId, appId, gender);
-            }
-
-            return string.Format(ASSET_ENDPOINT, limit, page, userId, appId, gender) + "&type=" + type;
-        }
 
         public static string GetColorEndpoint(string avatarId)
         {
@@ -84,9 +52,9 @@
             {
                 parameters = parameters.Substring(1);
             }
-            
-            var previewParamStr = isPreview ? "preview=true&" : "";
-            return $"{AVATAR_API_V2_ENDPOINT}/{avatarId}.glb?{previewParamStr}{parameters}";
+
+            var preview = isPreview ? "preview=true&" : "";
+            return $"{AVATAR_API_V2_ENDPOINT}/{avatarId}.glb?{preview}{parameters}";
         }
 
         public static string GetUpdateAvatarEndpoint(string avatarId, string parameters)
@@ -95,7 +63,7 @@
             {
                 parameters = parameters.Substring(1);
             }
-            
+
             return $"{AVATAR_API_V2_ENDPOINT}/{avatarId}?responseType=glb&{parameters}";
         }
 
@@ -106,8 +74,8 @@
 
         public static string GetDeleteAvatarEndpoint(string avatarId, bool isDraft)
         {
-            var draftStr = isDraft ? "draft" : "";
-            return $"{AVATAR_API_V2_ENDPOINT}/{avatarId}/{draftStr}";
+            var draft = isDraft ? "draft" : "";
+            return $"{AVATAR_API_V2_ENDPOINT}/{avatarId}/{draft}";
         }
     }
 }

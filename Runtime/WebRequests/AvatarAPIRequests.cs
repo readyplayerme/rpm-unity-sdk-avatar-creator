@@ -32,7 +32,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = Endpoints.GetUserAvatarsEndpoint(userId),
+                    Url = AvatarEndpoints.GetUserAvatarsEndpoint(userId),
                     Method = HttpMethod.GET
                 },
                 ctx: ctx
@@ -49,7 +49,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = Endpoints.GetAllAvatarTemplatesEndpoint(),
+                    Url = AvatarEndpoints.GetAllAvatarTemplatesEndpoint(),
                     Method = HttpMethod.GET
                 },
                 ctx: ctx
@@ -84,7 +84,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = Endpoints.GetAvatarTemplatesEndpoint(templateId),
+                    Url = AvatarEndpoints.GetAvatarTemplatesEndpoint(templateId),
                     Method = HttpMethod.POST,
                     Payload = payload
                 },
@@ -103,7 +103,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = Endpoints.GetColorEndpoint(avatarId),
+                    Url = AvatarEndpoints.GetColorEndpoint(avatarId),
                     Method = HttpMethod.GET
                 },
                 ctx: ctx
@@ -118,7 +118,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = Endpoints.GetAvatarMetadataEndpoint(avatarId),
+                    Url = AvatarEndpoints.GetAvatarMetadataEndpoint(avatarId),
                     Method = HttpMethod.GET
                 },
                 ctx: ctx
@@ -136,7 +136,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = Endpoints.GetCreateEndpoint(),
+                    Url = AvatarEndpoints.GetCreateEndpoint(),
                     Method = HttpMethod.POST,
                     Payload = avatarProperties.ToJson()
                 },
@@ -151,7 +151,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<byte[]> GetPreviewAvatar(string avatarId, string parameters = null)
         {
-            var url = Endpoints.GetAvatarModelEndpoint(avatarId,true, parameters);
+            var url = AvatarEndpoints.GetAvatarModelEndpoint(avatarId,true, parameters);
 
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
@@ -171,7 +171,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url =Endpoints.GetAvatarModelEndpoint(avatarId, false, parameters),
+                    Url =AvatarEndpoints.GetAvatarModelEndpoint(avatarId, false, parameters),
                     Method = HttpMethod.GET
                 },
                 ctx: ctx);
@@ -182,7 +182,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<byte[]> UpdateAvatar(string avatarId, AvatarProperties avatarProperties, string parameters = null)
         {
-            var url = Endpoints.GetUpdateAvatarEndpoint(avatarId, parameters);
+            var url = AvatarEndpoints.GetUpdateAvatarEndpoint(avatarId, parameters);
 
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
@@ -202,7 +202,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = Endpoints.GetSaveAvatarEndpoint(avatarId),
+                    Url = AvatarEndpoints.GetSaveAvatarEndpoint(avatarId),
                     Method = HttpMethod.PUT
                 },
                 ctx: ctx);
@@ -216,7 +216,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = Endpoints.GetDeleteAvatarEndpoint(avatarId, isDraft),
+                    Url = AvatarEndpoints.GetDeleteAvatarEndpoint(avatarId, isDraft),
                     Method = HttpMethod.DELETE
                 },
                 ctx: ctx);

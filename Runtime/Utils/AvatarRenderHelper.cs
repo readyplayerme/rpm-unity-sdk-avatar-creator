@@ -11,7 +11,7 @@ namespace ReadyPlayerMe.AvatarCreator
         public static async Task<Texture2D> GetPortrait(string avatarId, CancellationToken token = default)
         {
             var webRequestDispatcher = new WebRequestDispatcher();
-            var response = await webRequestDispatcher.SendRequest<ResponseTexture>(Endpoints.GetRenderEndpoint(avatarId), HttpMethod.GET,
+            var response = await webRequestDispatcher.SendRequest<ResponseTexture>(AvatarEndpoints.GetRenderEndpoint(avatarId), HttpMethod.GET,
                 downloadHandler: new DownloadHandlerTexture(), ctx: token);
             response.ThrowIfError();
             return response.Texture;
