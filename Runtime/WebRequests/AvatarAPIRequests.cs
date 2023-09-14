@@ -160,7 +160,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var url = string.IsNullOrEmpty(parameters)
                 ? $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb?{PREVIEW_PARAMETER}"
                 : $"{Endpoints.AVATAR_API_V2}/{avatarId}.glb{parameters}&{PREVIEW_PARAMETER}";
-
+            Debug.Log($"PREVIEW URL = {url}");
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
@@ -169,9 +169,35 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx);
 
-
             response.ThrowIfError();
             return response.Data;
+        }
+
+        [System.Serializable]
+        public class Payload
+        {
+            public Dictionary<string, object> Data;
+        }
+
+        public async Task PrecompileAvatar(string avatarId, PrecompileData precompileData, string parameters = null)
+        {
+            var startTime = Time.time;
+            var url = string.IsNullOrEmpty(parameters)
+                ? $"{Endpoints.AVATAR_API_V2}/{avatarId}/precompile"
+                : $"{Endpoints.AVATAR_API_V2}/{avatarId}/precompile{parameters}";
+            var json = JsonConvert.SerializeObject(precompileData);
+
+            var response = await authorizedRequest.SendRequest<Response>(
+                new RequestData
+                {
+                    Url = url,
+                    Method = HttpMethod.POST,
+                    Payload = json
+                },
+                ctx: ctx);
+            Debug.Log($"Response status = {response.IsSuccess} \n Response text = {response.Text}");
+            Debug.Log($"PRECOMPILE URL = {url} \n PRECOMPILE PAYLOAD= {json} timeElapsed = {Time.time - startTime}");
+            response.ThrowIfError();
         }
 
         public async Task<byte[]> GetAvatar(string avatarId, string parameters = null)
@@ -190,9 +216,11 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<byte[]> UpdateAvatar(string avatarId, AvatarProperties avatarProperties, string parameters = null)
         {
+            var startTime = Time.time;
             var url = string.IsNullOrEmpty(parameters)
                 ? $"{Endpoints.AVATAR_API_V2}/{avatarId}?{RESPONSE_TYPE_PARAMETER}"
                 : $"{Endpoints.AVATAR_API_V2}/{avatarId}{parameters}&{RESPONSE_TYPE_PARAMETER}";
+            Debug.Log($"UpdateAvatar URL = {url}");
 
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
@@ -204,6 +232,8 @@ namespace ReadyPlayerMe.AvatarCreator
                 ctx: ctx);
 
             response.ThrowIfError();
+            Debug.Log($"Update URL = {url} \n timeElapsed = {Time.time - startTime}");
+
             return response.Data;
         }
 

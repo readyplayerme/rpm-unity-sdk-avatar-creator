@@ -8,6 +8,11 @@ using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
+    [Serializable]
+    public struct PrecompileData
+    {
+        public Dictionary<string, string[]> data;
+    }
     /// <summary>
     /// For downloading and filtering all partner assets.
     /// </summary>
@@ -24,6 +29,12 @@ namespace ReadyPlayerMe.AvatarCreator
         private BodyType bodyType;
         private OutfitGender gender;
         private CancellationTokenSource ctxSource;
+
+        public PrecompileData GetPrecompileData(Category[] categories)
+        {
+            var dictionary = categories.ToDictionary(category => category.ToString().ToLowerInvariant(), category => GetAssetsByCategory(category).ToArray().Take(20).ToArray());
+            return new PrecompileData { data = dictionary };
+        }
 
         public PartnerAssetsManager()
         {
@@ -70,7 +81,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             var startTime = Time.time;
             var chunkList = assetsByCategory[category].ChunkBy(20);
-            
+
             foreach (var list in chunkList)
             {
                 try
