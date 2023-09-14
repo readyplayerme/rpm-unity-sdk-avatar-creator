@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace ReadyPlayerMe.AvatarCreator
+﻿namespace ReadyPlayerMe.AvatarCreator
 {
     public static class Endpoints
     {
@@ -88,8 +86,6 @@ namespace ReadyPlayerMe.AvatarCreator
             }
             
             var previewParamStr = isPreview ? "preview=true&" : "";
-            var url = $"{AVATAR_API_V2_ENDPOINT}/{avatarId}.glb?{previewParamStr}{parameters}";
-            Debug.Log(url);
             return $"{AVATAR_API_V2_ENDPOINT}/{avatarId}.glb?{previewParamStr}{parameters}";
         }
 
