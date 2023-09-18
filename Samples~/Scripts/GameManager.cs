@@ -35,7 +35,7 @@ namespace ReadyPlayerMe
                 DebugPanel.AddLogWithDuration("Created avatar loaded", Time.time - startTime);
             };
 
-            avatarObjectLoader.LoadAvatar(AvatarEndpoints.GetAvatarModelEndpoint(avatarId,false,null));
+            avatarObjectLoader.LoadAvatar(AvatarEndpoints.GetAvatarPublicUrl(avatarId));
         }
     }
 }
