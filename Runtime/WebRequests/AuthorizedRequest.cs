@@ -27,7 +27,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 {
                     await AuthManager.RefreshToken();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     throw;
                 }
