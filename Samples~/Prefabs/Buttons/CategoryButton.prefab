@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5991138053554704077}
   - component: {fileID: 2817714258603272685}
   m_Layer: 5
-  m_Name: AssetTypeButton
+  m_Name: CategoryButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,3 +157,5 @@ MonoBehaviour:
   icon: {fileID: -6268092569946826088}
   button: {fileID: 768200207545839123}
   selectedColor: {r: 1, g: 0, b: 1, a: 1}
+  defaultColor: {r: 0.3529412, g: 0.36078432, b: 0.4745098, a: 1}
+  category: 0

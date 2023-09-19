@@ -10,17 +10,12 @@ namespace ReadyPlayerMe
         [SerializeField] private Image icon;
         [SerializeField] private Button button;
         [SerializeField] private Color selectedColor;
+        [SerializeField] private Color defaultColor;
         [SerializeField] private Category category;
 
         public Category Category => category;
 
-        private Color defaultColor;
         private Action onClickAction;
-
-        private void Awake()
-        {
-            defaultColor = icon.color;
-        }
 
         public void AddListener(Action action)
         {
