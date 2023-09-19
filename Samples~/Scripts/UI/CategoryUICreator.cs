@@ -4,77 +4,46 @@ using System.Linq;
 using ReadyPlayerMe.AvatarCreator;
 using ReadyPlayerMe.Core;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace ReadyPlayerMe
 {
     public class CategoryUICreator : MonoBehaviour
     {
-        private const string PANEL_SUFFIX = "Panel";
-        private const string BUTTON_SUFFIX = "Button";
-        
         [Serializable]
         private class CategoryIcon
         {
             public Category category;
-            public Sprite icon;
+            public GameObject panelParent;
         }
 
-        [Serializable]
-        private class CategoryUI
-        {
-            public GameObject buttonPrefab;
-            public Transform buttonParent;
-            public GameObject panelPrefab;
-            public Transform panelParent;
-        }
-
-        [SerializeField] private CategoryUI categoryUI;
         [SerializeField] private CategoryButton faceCategoryButton;
         [SerializeField] private GameObject faceCategoryPanel;
-        [SerializeField] private GameObject faceAssetPanelPrefab;
-        [SerializeField] private GameObject leftSidePanelPrefab;
-        [SerializeField] private List<CategoryIcon> categoryIcons;
-
+        [SerializeField] private List<CategoryButton> categoryButtons;
+        [SerializeField] private List<CategoryIcon> categoryPanels;
+        
         private Dictionary<Category, CategoryButton> categoryButtonsMap;
         public Action<Category> OnCategorySelected;
         private CategoryButton selectedCategoryButton;
 
         private CameraZoom cameraZoom;
         private BodyType bodyType;
-        
+
         private void Awake()
         {
             cameraZoom = FindObjectOfType<CameraZoom>();
+            Configure();
         }
 
-        public void CreateUI(BodyType bodyType, IEnumerable<Category> categories)
+        private void Configure()
         {
-            this.bodyType = bodyType;
-            DefaultZoom();
-
             categoryButtonsMap = new Dictionary<Category, CategoryButton>();
             PanelSwitcher.FaceTypePanel = faceCategoryPanel;
-            CreateCategoryPanel(Category.SkinColor, leftSidePanelPrefab, categoryUI.panelParent);
-            foreach (var category in categories)
-            {
-                if (category.IsColorAsset())
-                {
-                    CreateCategoryPanel(category, leftSidePanelPrefab, categoryUI.panelParent);
-                }
-                else if (category.IsFaceAsset())
-                {
-                    CreateCategoryPanel(category, faceAssetPanelPrefab, categoryUI.panelParent);
-                    CreateCategoryButton(category, faceCategoryPanel.GetComponent<ScrollRect>().content.transform);
-                }
-                else
-                {
-                    CreateCategoryPanel(category, categoryUI.panelPrefab, categoryUI.panelParent);
-                    CreateCategoryButton(category, categoryUI.buttonParent);
-                }
-            }
 
-            DefaultSelection();
+            foreach (CategoryButton categoryButton in categoryButtons)
+            {
+                ConfigureCategoryButton(categoryButton.Category, categoryButton);
+            }
+            
             faceCategoryButton.AddListener(() =>
             {
                 if (selectedCategoryButton != null)
@@ -84,6 +53,24 @@ namespace ReadyPlayerMe
 
                 DefaultSelection();
             });
+            
+            foreach (var category in categoryPanels)
+            {
+                PanelSwitcher.AddPanel(category.category, category.panelParent);
+            }
+        }
+
+        public void CreateUI(BodyType bodyType)
+        {
+            this.bodyType = bodyType;
+            DefaultZoom();
+            
+            foreach (var category in categoryPanels)
+            {
+                category.panelParent.SetActive(false);
+            }
+
+            DefaultSelection();
         }
 
         public void SetDefaultSelection(Category category)
@@ -95,7 +82,7 @@ namespace ReadyPlayerMe
             selectedCategoryButton = categoryButtonsMap[category];
             PanelSwitcher.Switch(category);
         }
-        
+
         public void SetActiveCategoryButtons(bool enable)
         {
             faceCategoryButton.SetInteractable(enable);
@@ -118,49 +105,30 @@ namespace ReadyPlayerMe
                 return;
             }
 
-            foreach (var categoryButton in categoryButtonsMap)
+            foreach (var categoryButton in categoryButtons)
             {
-                Destroy(categoryButton.Value.gameObject);
+                categoryButton.SetSelect(false);
             }
-
-            faceCategoryButton.RemoveListener();
-            categoryButtonsMap.Clear();
         }
 
-        private void CreateCategoryPanel(Category category, GameObject panelPrefab, Transform parent)
+        private void ConfigureCategoryButton(Category category, CategoryButton categoryButton)
         {
-            var categoryPanel = Instantiate(panelPrefab, parent);
-            categoryPanel.name = category + PANEL_SUFFIX;
-            categoryPanel.SetActive(false);
-
-            PanelSwitcher.AddPanel(category, categoryPanel);
-        }
-
-        private void CreateCategoryButton(Category category, Transform parent)
-        {
-            var categoryButtonGameObject = Instantiate(categoryUI.buttonPrefab, parent);
-            var categoryButton = categoryButtonGameObject.GetComponent<CategoryButton>();
-            categoryButton.name = category + BUTTON_SUFFIX;
-            var categoryIcon = categoryIcons.FirstOrDefault(x => x.category == category);
-            if (categoryIcon != null)
-            {
-                categoryButton.SetIcon(categoryIcon.icon);
-            }
-
             categoryButton.AddListener(() =>
             {
                 SetDefaultSelection(category);
                 OnCategorySelected?.Invoke(category);
             });
+            
             categoryButtonsMap.Add(category, categoryButton);
         }
 
         private void DefaultSelection()
         {
             faceCategoryButton.SetSelect(true);
-            categoryButtonsMap[Category.FaceShape].SetSelect(true);
+            var button = categoryButtons.First(x => x.Category == Category.FaceShape);
+            button.SetSelect(true);
             PanelSwitcher.Switch(Category.FaceShape);
-            selectedCategoryButton = categoryButtonsMap[Category.FaceShape];
+            selectedCategoryButton = button;
         }
 
         private void DefaultZoom()

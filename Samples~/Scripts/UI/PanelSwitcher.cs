@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ReadyPlayerMe
 {
@@ -26,9 +27,11 @@ namespace ReadyPlayerMe
             }
             foreach (var assetTypePanels in CategoryPanelMap)
             {
-                Object.Destroy(assetTypePanels.Value);
+                foreach (Transform child in assetTypePanels.Value.GetComponent<ScrollRect>().content)
+                {
+                    Object.Destroy(child.gameObject);
+                }
             }
-            CategoryPanelMap.Clear();
         }
 
         public static void Switch(Category category)
