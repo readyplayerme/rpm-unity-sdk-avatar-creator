@@ -26,12 +26,6 @@ namespace ReadyPlayerMe.AvatarCreator
         private OutfitGender gender;
         private CancellationTokenSource ctxSource;
 
-        public PrecompileData GetPrecompileData(Category[] categories, int numberOfAssetsPerCategory)
-        {
-            var dictionary = categories.ToDictionary(category => category.ToString().PascalToCamelCase(), category => GetAssetsByCategory(category).ToArray().Take(numberOfAssetsPerCategory).ToArray());
-            return new PrecompileData { data = dictionary };
-        }
-
         public PartnerAssetsManager()
         {
             partnerAssetsRequests = new PartnerAssetsRequests(CoreSettingsHandler.CoreSettings.AppId);
@@ -139,5 +133,17 @@ namespace ReadyPlayerMe.AvatarCreator
         }
 
         public void Dispose() => DeleteAssets();
+        
+        public PrecompileData GetPrecompileData(Category[] categories, int numberOfAssetsPerCategory)
+        {
+            var categoriesFromMap = CategoryHelper.PartnerCategoryMap
+                .Where(kvp => categories.Contains(kvp.Value))
+                .Select(kvp => kvp.Key)
+                .ToArray();
+
+            var dictionary = categoriesFromMap.ToDictionary(category => category, category => GetAssetsByCategory(CategoryHelper.PartnerCategoryMap[category]).ToArray().Take(numberOfAssetsPerCategory).ToArray());
+            
+            return new PrecompileData { data = dictionary };
+        }
     }
 }

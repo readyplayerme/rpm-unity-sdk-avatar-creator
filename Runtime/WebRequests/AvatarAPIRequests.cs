@@ -204,7 +204,6 @@ namespace ReadyPlayerMe.AvatarCreator
                 },
                 ctx: ctx);
 
-            Debug.Log($"Precompile IS Success = {response.IsSuccess}");
             response.ThrowIfError();
         }
 
