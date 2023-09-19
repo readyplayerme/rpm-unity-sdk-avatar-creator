@@ -12,6 +12,7 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public class AvatarManager : IDisposable
     {
+        private const string TAG = nameof(AvatarManager);
         private readonly BodyType bodyType;
         private readonly OutfitGender gender;
         private readonly AvatarAPIRequests avatarAPIRequests;
@@ -126,17 +127,16 @@ namespace ReadyPlayerMe.AvatarCreator
             try
             {
                 avatarAPIRequests.PrecompileAvatar(avatarId, precompileData, avatarConfigParameters);
-                Debug.Log("Precompiled avatar.");
             }
             catch (Exception e)
             {
                 OnError?.Invoke(e.Message);
-                Debug.LogError("Precompiled avatar request failed.");
+                SDKLogger.LogWarning(TAG, "Precompiled avatar request failed.");
             }
 
             if (ctxSource.IsCancellationRequested)
             {
-                Debug.LogWarning("Precompiled avatar request cancelled.");
+                SDKLogger.LogWarning(TAG, "Precompiled avatar request cancelled.");
             }
         }
 
