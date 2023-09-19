@@ -87,21 +87,15 @@ namespace ReadyPlayerMe.AvatarCreator
         private async Task<AssetData> GetRequest(int limit, int pageNumber, Category? category, OutfitGender gender, BodyType bodyType, CancellationToken ctx = new CancellationToken())
         {
             var startTime = Time.time;
-            var url = $"{Endpoints.ASSET_API_V2}?" +
-                      $"filter=viewable-by-user-and-app&" +
-                      $"filterUserId={AuthManager.UserSession.Id}&" +
-                      $"filterApplicationId={appId}&" +
-                      $"bodyType={bodyType.ToString().ToLower()}&" +
-                      $"gender={(gender == OutfitGender.Masculine ? "male" : "female")}&" +
-                      $"gender=neutral&" +
-                      $"&limit={limit}&page={pageNumber}";
 
+            var type = string.Empty;
             if (category != null)
             {
-                var type = CategoryHelper.PartnerCategoryMap.First(x => x.Value == category).Key;
-                url += $"&type={type}";
+                type = CategoryHelper.PartnerCategoryMap.First(x => x.Value == category).Key;
             }
-
+            
+            var url = AssetEndpoints.GetAssetEndpoint(type, limit, pageNumber, AuthManager.UserSession.Id, appId, gender == OutfitGender.Masculine ? "male" : "female");
+       
             var response = await authorizedRequest.SendRequest<Response>(new RequestData
             {
                 Url = url,

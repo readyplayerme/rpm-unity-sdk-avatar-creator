@@ -226,7 +226,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             try
             {
-                await avatarAPIRequests.DeleteAvatarDraft(avatarId);
+                await avatarAPIRequests.DeleteAvatar(avatarId, true);
             }
             catch (Exception e)
             {
