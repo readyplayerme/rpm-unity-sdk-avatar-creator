@@ -163,12 +163,6 @@ namespace ReadyPlayerMe.AvatarCreator
             return response.Data;
         }
 
-        [System.Serializable]
-        public class Payload
-        {
-            public Dictionary<string, object> Data;
-        }
-
         public async Task<byte[]> GetAvatar(string avatarId, string parameters = null)
         {
             var response = await authorizedRequest.SendRequest<Response>(
@@ -209,6 +203,8 @@ namespace ReadyPlayerMe.AvatarCreator
                     Payload = json
                 },
                 ctx: ctx);
+
+            Debug.Log($"Precompile IS Success = {response.IsSuccess}");
             response.ThrowIfError();
         }
 

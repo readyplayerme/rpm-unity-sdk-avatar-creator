@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using ReadyPlayerMe.Core;
 using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
-    [Serializable]
-    public struct PrecompileData
-    {
-        public Dictionary<string, string[]> data;
-    }
     /// <summary>
     /// For downloading and filtering all partner assets.
     /// </summary>
@@ -30,9 +26,9 @@ namespace ReadyPlayerMe.AvatarCreator
         private OutfitGender gender;
         private CancellationTokenSource ctxSource;
 
-        public PrecompileData GetPrecompileData(Category[] categories)
+        public PrecompileData GetPrecompileData(Category[] categories, int numberOfAssetsPerCategory)
         {
-            var dictionary = categories.ToDictionary(category => category.ToString().ToLowerInvariant(), category => GetAssetsByCategory(category).ToArray().Take(20).ToArray());
+            var dictionary = categories.ToDictionary(category => category.ToString().PascalToCamelCase(), category => GetAssetsByCategory(category).ToArray().Take(numberOfAssetsPerCategory).ToArray());
             return new PrecompileData { data = dictionary };
         }
 

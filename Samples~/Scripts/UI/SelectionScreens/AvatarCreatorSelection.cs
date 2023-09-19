@@ -34,6 +34,8 @@ namespace ReadyPlayerMe
         public override StateType StateType => StateType.Editor;
         public override StateType NextState => StateType.End;
 
+        private const int NUMBER_OF_ASSETS_TO_PRECOMPILE = 20;
+
         private void Start()
         {
             partnerAssetManager = new PartnerAssetsManager();
@@ -148,7 +150,7 @@ namespace ReadyPlayerMe
         private async void OnCategorySelected(Category category)
         {
             await CreateAssetsByCategory(category);
-            avatarManager.PrecompileAvatar(AvatarCreatorData.AvatarProperties.Id, partnerAssetManager.GetPrecompileData(new[] { category }));
+            avatarManager.PrecompileAvatar(AvatarCreatorData.AvatarProperties.Id, partnerAssetManager.GetPrecompileData(new[] { category }, NUMBER_OF_ASSETS_TO_PRECOMPILE));
         }
 
         private async Task<GameObject> LoadAvatar()
@@ -216,8 +218,6 @@ namespace ReadyPlayerMe
             }
 
             var assets = partnerAssetManager.GetAssetsByCategory(category);
-
-            var firstTenArray = assets.Take(10).ToArray();
             if (assets == null || assets.Count == 0)
             {
                 return;
