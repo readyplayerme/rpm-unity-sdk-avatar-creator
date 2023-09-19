@@ -14,24 +14,6 @@ namespace ReadyPlayerMe.AvatarCreator
                 .ToList();
         }
 
-        public static readonly Category[] AssetAPISupportedCategory = {
-            Category.FaceShape,
-            Category.EyeShape,
-            Category.EyeColor,
-            Category.EyebrowStyle,
-            Category.NoseShape,
-            Category.LipShape,
-            Category.BeardStyle,
-            Category.HairStyle,
-            Category.Outfit,
-            Category.Shirt,
-            Category.Glasses,
-            Category.FaceMask,
-            Category.Facewear,
-            Category.Headwear,
-        };
-        
-        
         public static readonly Dictionary<string, Category> PartnerCategoryMap = new Dictionary<string, Category>
         {
             { "faceshape", Category.FaceShape },

@@ -65,6 +65,17 @@ namespace ReadyPlayerMe
             this.bodyType = bodyType;
             DefaultZoom();
             
+            if(this.bodyType == BodyType.HalfBody)
+            {
+                categoryButtons.First(x=> x.Category == Category.Outfit).gameObject.SetActive(false);
+                categoryButtons.First(x=> x.Category == Category.Shirt).gameObject.SetActive(true);
+            }
+            else
+            {
+                categoryButtons.First(x=> x.Category == Category.Shirt).gameObject.SetActive(false);
+                categoryButtons.First(x=> x.Category == Category.Outfit).gameObject.SetActive(true);
+            }
+            
             foreach (var category in categoryPanels)
             {
                 category.panelParent.SetActive(false);
