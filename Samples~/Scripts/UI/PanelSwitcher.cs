@@ -8,8 +8,9 @@ namespace ReadyPlayerMe
     public static class PanelSwitcher
     {
         public static Dictionary<Category, GameObject> CategoryPanelMap { get; private set; }
+        public static GameObject OutfitCategoryPanel;
 
-        public static GameObject FaceTypePanel;
+        public static GameObject FaceCategoryPanel;
 
         private static Category currentCategory;
 
@@ -25,6 +26,7 @@ namespace ReadyPlayerMe
             {
                 return;
             }
+            
             foreach (var assetTypePanels in CategoryPanelMap)
             {
                 foreach (Transform child in assetTypePanels.Value.GetComponent<ScrollRect>().content)
@@ -42,37 +44,52 @@ namespace ReadyPlayerMe
             switch (category)
             {
                 case Category.FaceShape:
-                    FaceTypePanel.SetActive(true);
+                    FaceCategoryPanel.SetActive(true);
+                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.SkinColor, true);
                     break;
                 case Category.EyebrowStyle:
-                    FaceTypePanel.SetActive(true);
+                    FaceCategoryPanel.SetActive(true);
+                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.EyebrowColor, true);
                     break;
                 case Category.BeardStyle:
-                    FaceTypePanel.SetActive(true);
+                    FaceCategoryPanel.SetActive(true);
+                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.BeardColor, true);
                     break;
                 case Category.HairStyle:
-                    FaceTypePanel.SetActive(false);
+                    FaceCategoryPanel.SetActive(false);
+                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.HairColor, true);
                     break;
                 case Category.NoseShape:
                 case Category.LipShape:
-                    FaceTypePanel.SetActive(true);
+                    FaceCategoryPanel.SetActive(true);
+                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     break;
                 case Category.EyeShape:
-                    FaceTypePanel.SetActive(true);
+                    FaceCategoryPanel.SetActive(true);
+                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.EyeColor, true);
                     break;
+                case Category.Top:
+                case Category.Bottom:
+                case Category.Footwear:
+                case Category.Outfit:
+                    FaceCategoryPanel.SetActive(false);
+                    OutfitCategoryPanel.SetActive(true);
+                    SetActivePanel(category, true);
+                    break;
                 default:
-                    FaceTypePanel.SetActive(false);
+                    FaceCategoryPanel.SetActive(false);
+                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     break;
             }

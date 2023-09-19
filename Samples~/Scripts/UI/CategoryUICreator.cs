@@ -18,9 +18,11 @@ namespace ReadyPlayerMe
 
         [SerializeField] private CategoryButton faceCategoryButton;
         [SerializeField] private GameObject faceCategoryPanel;
+        [SerializeField] private CategoryButton outfitCategoryButton;
+        [SerializeField] private GameObject outfitCategoryPanel;
         [SerializeField] private List<CategoryButton> categoryButtons;
         [SerializeField] private List<CategoryIcon> categoryPanels;
-        
+
         private Dictionary<Category, CategoryButton> categoryButtonsMap;
         public Action<Category> OnCategorySelected;
         private CategoryButton selectedCategoryButton;
@@ -31,57 +33,60 @@ namespace ReadyPlayerMe
         private void Awake()
         {
             cameraZoom = FindObjectOfType<CameraZoom>();
-            Configure();
+            Initialize();
         }
 
-        private void Configure()
+        private void OnEnable()
+        {
+            faceCategoryButton.AddListener(SelectFaceShapeCategory);
+            outfitCategoryButton.AddListener(SelectOutfitTopCategory);
+        }
+
+        private void OnDisable()
+        {
+            faceCategoryButton.RemoveListener();
+            outfitCategoryButton.RemoveListener();
+        }
+
+        private void Initialize()
         {
             categoryButtonsMap = new Dictionary<Category, CategoryButton>();
-            PanelSwitcher.FaceTypePanel = faceCategoryPanel;
+            PanelSwitcher.FaceCategoryPanel = faceCategoryPanel;
+            PanelSwitcher.OutfitCategoryPanel = outfitCategoryPanel;
 
             foreach (CategoryButton categoryButton in categoryButtons)
             {
                 ConfigureCategoryButton(categoryButton.Category, categoryButton);
             }
-            
-            faceCategoryButton.AddListener(() =>
-            {
-                if (selectedCategoryButton != null)
-                {
-                    selectedCategoryButton.SetSelect(false);
-                }
 
-                DefaultSelection();
-            });
-            
             foreach (var category in categoryPanels)
             {
                 PanelSwitcher.AddPanel(category.category, category.panelParent);
             }
         }
-
-        public void CreateUI(BodyType bodyType)
-        {
+        
+        public void Setup(BodyType bodyType)
+        { 
             this.bodyType = bodyType;
             DefaultZoom();
-            
-            if(this.bodyType == BodyType.HalfBody)
+
+            if (this.bodyType == BodyType.HalfBody)
             {
-                categoryButtons.First(x=> x.Category == Category.Outfit).gameObject.SetActive(false);
-                categoryButtons.First(x=> x.Category == Category.Shirt).gameObject.SetActive(true);
+                categoryButtons.First(x => x.Category == Category.Outfit).gameObject.SetActive(false);
+                categoryButtons.First(x => x.Category == Category.Shirt).gameObject.SetActive(true);
             }
             else
             {
-                categoryButtons.First(x=> x.Category == Category.Shirt).gameObject.SetActive(false);
-                categoryButtons.First(x=> x.Category == Category.Outfit).gameObject.SetActive(true);
+                categoryButtons.First(x => x.Category == Category.Shirt).gameObject.SetActive(false);
+                categoryButtons.First(x => x.Category == Category.Outfit).gameObject.SetActive(true);
             }
-            
+
             foreach (var category in categoryPanels)
             {
                 category.panelParent.SetActive(false);
             }
 
-            DefaultSelection();
+            SelectFaceShapeCategory();
         }
 
         public void SetDefaultSelection(Category category)
@@ -90,6 +95,7 @@ namespace ReadyPlayerMe
             categoryButtonsMap[category].SetSelect(true);
             selectedCategoryButton.SetSelect(false);
             faceCategoryButton.SetSelect(category.IsFaceAsset());
+            outfitCategoryButton.SetSelect(category.IsOutfitAsset());
             selectedCategoryButton = categoryButtonsMap[category];
             PanelSwitcher.Switch(category);
         }
@@ -111,11 +117,6 @@ namespace ReadyPlayerMe
             PanelSwitcher.Clear();
             DefaultZoom();
 
-            if (categoryButtonsMap == null)
-            {
-                return;
-            }
-
             foreach (var categoryButton in categoryButtons)
             {
                 categoryButton.SetSelect(false);
@@ -129,17 +130,37 @@ namespace ReadyPlayerMe
                 SetDefaultSelection(category);
                 OnCategorySelected?.Invoke(category);
             });
-            
+
             categoryButtonsMap.Add(category, categoryButton);
         }
-
-        private void DefaultSelection()
+        
+        private void SelectFaceShapeCategory()
         {
+            if (selectedCategoryButton != null)
+            {
+                selectedCategoryButton.SetSelect(false);
+            }
+            
             faceCategoryButton.SetSelect(true);
             var button = categoryButtons.First(x => x.Category == Category.FaceShape);
             button.SetSelect(true);
             PanelSwitcher.Switch(Category.FaceShape);
             selectedCategoryButton = button;
+        }
+        
+        private void SelectOutfitTopCategory()
+        {
+            if (selectedCategoryButton != null)
+            {
+                selectedCategoryButton.SetSelect(false);
+            }
+
+            outfitCategoryButton.SetSelect(true);
+            var button = categoryButtons.First(x => x.Category == Category.Top);
+            button.SetSelect(true);
+            PanelSwitcher.Switch(Category.Top);
+            selectedCategoryButton = button;
+            OnCategorySelected?.Invoke(Category.Top);
         }
 
         private void DefaultZoom()

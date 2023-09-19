@@ -200,7 +200,7 @@ namespace ReadyPlayerMe
 
         private void CreateUI(BodyType bodyType)
         {
-            categoryUICreator.CreateUI(bodyType);
+            categoryUICreator.Setup(bodyType);
             assetButtonCreator.SetSelectedAssets(AvatarCreatorData.AvatarProperties.Assets);
             assetButtonCreator.CreateClearButton(UpdateAvatar);
             saveButton.gameObject.SetActive(true);

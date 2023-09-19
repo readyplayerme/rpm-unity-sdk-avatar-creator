@@ -33,8 +33,26 @@ namespace ReadyPlayerMe.AvatarCreator
             { "hairColor", Category.HairColor },
             { "eyebrowColor", Category.EyebrowColor },
             { "beardColor", Category.BeardColor },
+            { "bottom", Category.Bottom },
+            { "top", Category.Top },
+            { "footwear", Category.Footwear }
         };
 
+        public static bool IsOutfitAsset(this Category category)
+        {
+            switch (category)
+            {
+                case Category.Outfit:
+                case Category.Shirt:
+                case Category.Bottom:
+                case Category.Top:
+                case Category.Footwear:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        
         public static bool IsFaceAsset(this Category category)
         {
             switch (category)
