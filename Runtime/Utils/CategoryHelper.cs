@@ -84,6 +84,9 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             switch (category)
             {
+                case Category.Top:
+                case Category.Bottom:
+                case Category.Footwear:
                 case Category.Outfit:
                 case Category.Shirt:
                 case Category.EyebrowStyle:

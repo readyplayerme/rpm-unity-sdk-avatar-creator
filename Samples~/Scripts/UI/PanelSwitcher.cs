@@ -9,10 +9,7 @@ namespace ReadyPlayerMe
     {
         public static Dictionary<Category, GameObject> CategoryPanelMap { get; private set; }
         public static GameObject OutfitCategoryPanel;
-
         public static GameObject FaceCategoryPanel;
-
-        private static Category currentCategory;
 
         public static void AddPanel(Category category, GameObject widget)
         {
@@ -38,44 +35,36 @@ namespace ReadyPlayerMe
 
         public static void Switch(Category category)
         {
-            SetActivePanel(currentCategory, false);
-            DisableColorPanels();
+            DisableAllPanels();
 
             switch (category)
             {
                 case Category.FaceShape:
                     FaceCategoryPanel.SetActive(true);
-                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.SkinColor, true);
                     break;
                 case Category.EyebrowStyle:
                     FaceCategoryPanel.SetActive(true);
-                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.EyebrowColor, true);
                     break;
                 case Category.BeardStyle:
                     FaceCategoryPanel.SetActive(true);
-                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.BeardColor, true);
                     break;
                 case Category.HairStyle:
-                    FaceCategoryPanel.SetActive(false);
-                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.HairColor, true);
                     break;
                 case Category.NoseShape:
                 case Category.LipShape:
                     FaceCategoryPanel.SetActive(true);
-                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     break;
                 case Category.EyeShape:
                     FaceCategoryPanel.SetActive(true);
-                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.EyeColor, true);
                     break;
@@ -83,34 +72,31 @@ namespace ReadyPlayerMe
                 case Category.Bottom:
                 case Category.Footwear:
                 case Category.Outfit:
-                    FaceCategoryPanel.SetActive(false);
                     OutfitCategoryPanel.SetActive(true);
                     SetActivePanel(category, true);
                     break;
                 default:
-                    FaceCategoryPanel.SetActive(false);
-                    OutfitCategoryPanel.SetActive(false);
                     SetActivePanel(category, true);
                     break;
             }
-
-            currentCategory = category;
         }
-        
-        private static void DisableColorPanels()
+
+        private static void DisableAllPanels()
         {
-            SetActivePanel(Category.EyeColor, false);
-            SetActivePanel(Category.SkinColor, false);
-            SetActivePanel(Category.BeardColor, false);
-            SetActivePanel(Category.HairColor, false);
-            SetActivePanel(Category.EyebrowColor, false);
+            foreach (var panels in CategoryPanelMap)
+            {
+                panels.Value.SetActive(false);
+            }
+            
+            FaceCategoryPanel.SetActive(false);
+            OutfitCategoryPanel.SetActive(false);
         }
 
         private static void SetActivePanel(Category category, bool enable)
         {
-            if (CategoryPanelMap.ContainsKey(category))
+            if (CategoryPanelMap.TryGetValue(category, out GameObject panel))
             {
-                CategoryPanelMap[category].SetActive(enable);
+                panel.SetActive(enable);
             }
         }
     }

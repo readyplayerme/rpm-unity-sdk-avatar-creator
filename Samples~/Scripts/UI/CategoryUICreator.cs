@@ -136,15 +136,15 @@ namespace ReadyPlayerMe
         
         private void SelectFaceShapeCategory()
         {
-            SelectYo(Category.FaceShape);
+            SelectCategoryGroup(Category.FaceShape);
         }
         
         private void SelectOutfitTopCategory()
         {
-            SelectYo(Category.Top);
+            SelectCategoryGroup(Category.Top);
         }
         
-        private void SelectYo(Category category)
+        private void SelectCategoryGroup(Category category)
         {
             if (selectedCategoryButton != null)
             {

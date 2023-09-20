@@ -19,17 +19,23 @@ namespace ReadyPlayerMe
         private void Start()
         {
             buttonsById = new Dictionary<object, AssetButton>();
+            selectedButtonsByCategory = new Dictionary<Category, AssetButton>();
+        }
+
+        private void OnDisable()
+        {
+            selectedButtonsByCategory.Clear();
         }
 
         public void SetSelectedAssets(Dictionary<Category, object> assets)
         {
             selectedAssets = assets;
-            selectedButtonsByCategory = new Dictionary<Category, AssetButton>();
+            Debug.Log("Called: SetSelectedAssets" + assets.Count);
         }
 
         public void CreateAssetButtons(IEnumerable<string> assets, Category category, Action<string, Category> onClick)
         {
-            selectedButtonsByCategory = new Dictionary<Category, AssetButton>();
+            Debug.Log("Called: CreateAssetButtons: " + category);
             buttonsById = new Dictionary<object, AssetButton>();
 
             var parentPanel = PanelSwitcher.CategoryPanelMap[category];
@@ -135,6 +141,8 @@ namespace ReadyPlayerMe
         
         private void SelectButton(Category category, AssetButton assetButton)
         {
+            ConfigureOutfitSelection(category);
+            
             if (selectedButtonsByCategory.ContainsKey(category))
             {
                 selectedButtonsByCategory[category].SetSelect(false);
@@ -142,9 +150,45 @@ namespace ReadyPlayerMe
             }
             else
             {
+                Debug.Log(selectedButtonsByCategory.Count);
                 selectedButtonsByCategory.Add(category, assetButton);
             }
             assetButton.SetSelect(true);
+        }
+
+        private void ConfigureOutfitSelection(Category category)
+        {
+            switch (category)
+            {
+                case Category.Top:
+                case Category.Bottom:
+                case Category.Footwear:
+                {
+                    if (selectedButtonsByCategory.TryGetValue(Category.Outfit, out AssetButton outfitButton))
+                    {
+                        outfitButton.SetSelect(false);
+                    }
+                    break;
+                }
+                case Category.Outfit:
+                {
+                    if (selectedButtonsByCategory.TryGetValue(Category.Top, out AssetButton topButton))
+                    {
+                        topButton.SetSelect(false);
+                    }
+                
+                    if (selectedButtonsByCategory.TryGetValue(Category.Bottom, out AssetButton bottomButton))
+                    {
+                        bottomButton.SetSelect(false);
+                    }
+                
+                    if (selectedButtonsByCategory.TryGetValue(Category.Footwear, out AssetButton footwearButton))
+                    {
+                        footwearButton.SetSelect(false);
+                    }
+                    break;
+                }
+            }
         }
 
         private void AddClearSelectionButton(Transform parent, Category category, Action<string, Category> onClick)
