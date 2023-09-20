@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using ReadyPlayerMe.Core;
 using UnityEngine;
 
@@ -70,7 +71,7 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             var startTime = Time.time;
             var chunkList = assetsByCategory[category].ChunkBy(20);
-            
+
             foreach (var list in chunkList)
             {
                 try
@@ -132,5 +133,17 @@ namespace ReadyPlayerMe.AvatarCreator
         }
 
         public void Dispose() => DeleteAssets();
+        
+        public PrecompileData GetPrecompileData(Category[] categories, int numberOfAssetsPerCategory)
+        {
+            var categoriesFromMap = CategoryHelper.PartnerCategoryMap
+                .Where(kvp => categories.Contains(kvp.Value))
+                .Select(kvp => kvp.Key)
+                .ToArray();
+
+            var dictionary = categoriesFromMap.ToDictionary(category => category, category => GetAssetsByCategory(CategoryHelper.PartnerCategoryMap[category]).ToArray().Take(numberOfAssetsPerCategory).ToArray());
+            
+            return new PrecompileData { data = dictionary };
+        }
     }
 }

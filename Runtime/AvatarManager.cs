@@ -12,6 +12,7 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public class AvatarManager : IDisposable
     {
+        private const string TAG = nameof(AvatarManager);
         private readonly BodyType bodyType;
         private readonly OutfitGender gender;
         private readonly AvatarAPIRequests avatarAPIRequests;
@@ -43,7 +44,7 @@ namespace ReadyPlayerMe.AvatarCreator
             inCreatorAvatarLoader = new InCreatorAvatarLoader();
             avatarAPIRequests = new AvatarAPIRequests(ctxSource.Token);
         }
-        
+
         /// <summary>
         /// Create a new avatar from a provided template.
         /// </summary>
@@ -65,7 +66,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 OnError?.Invoke(e.Message);
                 return avatarProperties;
             }
-            
+
             if (ctxSource.IsCancellationRequested)
             {
                 return avatarProperties;
@@ -119,6 +120,24 @@ namespace ReadyPlayerMe.AvatarCreator
             }
 
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
+        }
+
+        public async void PrecompileAvatar(string avatarId, PrecompileData precompileData)
+        {
+            try
+            {
+                avatarAPIRequests.PrecompileAvatar(avatarId, precompileData, avatarConfigParameters);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                SDKLogger.LogWarning(TAG, "Precompiled avatar request failed.");
+            }
+
+            if (ctxSource.IsCancellationRequested)
+            {
+                SDKLogger.LogWarning(TAG, "Precompiled avatar request cancelled.");
+            }
         }
 
         /// <summary>
@@ -199,7 +218,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
             return avatarId;
         }
-        
+
         /// <summary>
         /// This will delete the avatar draft which have not been saved. 
         /// </summary>
@@ -229,7 +248,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 OnError?.Invoke(e.Message);
             }
         }
-        
+
         public async Task<ColorPalette[]> LoadAvatarColors()
         {
             ColorPalette[] colors = null;

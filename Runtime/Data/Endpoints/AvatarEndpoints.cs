@@ -77,5 +77,10 @@
             var draft = isDraft ? "draft" : "";
             return $"{AVATAR_API_V2_ENDPOINT}/{avatarId}/{draft}";
         }
+
+        public static string GetPrecompileEndpoint(string avatarId, string parameters)
+        {
+            return $"{AVATAR_API_V2_ENDPOINT}/{avatarId}/precompile{parameters ?? string.Empty}";
+        }
     }
 }

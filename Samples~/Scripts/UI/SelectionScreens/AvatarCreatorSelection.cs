@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
@@ -32,6 +33,8 @@ namespace ReadyPlayerMe
 
         public override StateType StateType => StateType.Editor;
         public override StateType NextState => StateType.End;
+
+        private const int NUMBER_OF_ASSETS_TO_PRECOMPILE = 20;
 
         private void Start()
         {
@@ -98,7 +101,7 @@ namespace ReadyPlayerMe
                 categoryUICreator.SetActiveCategoryButtons(true);
             }
         }
-        
+
         private void Cleanup()
         {
             if (currentAvatar != null)
@@ -115,14 +118,14 @@ namespace ReadyPlayerMe
 
         private void OnErrorCallback(string error)
         {
-            SDKLogger.Log(TAG,$"An error occured: {error}");
+            SDKLogger.Log(TAG, $"An error occured: {error}");
             avatarManager.OnError -= OnErrorCallback;
             partnerAssetManager.OnError -= OnErrorCallback;
 
             ctxSource?.Cancel();
             StateMachine.GoToPreviousState();
             LoadingManager.EnableLoading(error, LoadingManager.LoadingType.Popup, false);
-            SDKLogger.Log(TAG,"Going to previous state");
+            SDKLogger.Log(TAG, "Going to previous state");
         }
 
         private async Task LoadAssets()
@@ -137,7 +140,7 @@ namespace ReadyPlayerMe
 
             CreateUI(AvatarCreatorData.AvatarProperties.BodyType);
             categoriesAssetsLoaded = new List<Category>();
-            
+
             await partnerAssetManager.GetAssets();
             await CreateAssetsByCategory(Category.FaceShape);
 
@@ -147,6 +150,7 @@ namespace ReadyPlayerMe
         private async void OnCategorySelected(Category category)
         {
             await CreateAssetsByCategory(category);
+            avatarManager.PrecompileAvatar(AvatarCreatorData.AvatarProperties.Id, partnerAssetManager.GetPrecompileData(new[] { category }, NUMBER_OF_ASSETS_TO_PRECOMPILE));
         }
 
         private async Task<GameObject> LoadAvatar()
@@ -201,7 +205,6 @@ namespace ReadyPlayerMe
             assetButtonCreator.CreateClearButton(UpdateAvatar);
             saveButton.gameObject.SetActive(true);
         }
-
 
         private async Task CreateAssetsByCategory(Category category)
         {

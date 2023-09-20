@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -151,16 +151,13 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<byte[]> GetPreviewAvatar(string avatarId, string parameters = null)
         {
-            var url = AvatarEndpoints.GetAvatarModelEndpoint(avatarId,true, parameters);
-
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = url,
+                    Url = AvatarEndpoints.GetAvatarModelEndpoint(avatarId, true, parameters),
                     Method = HttpMethod.GET
                 },
                 ctx: ctx);
-
 
             response.ThrowIfError();
             return response.Data;
@@ -171,7 +168,7 @@ namespace ReadyPlayerMe.AvatarCreator
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url =AvatarEndpoints.GetAvatarModelEndpoint(avatarId, false, parameters),
+                    Url = AvatarEndpoints.GetAvatarModelEndpoint(avatarId, false, parameters),
                     Method = HttpMethod.GET
                 },
                 ctx: ctx);
@@ -182,12 +179,10 @@ namespace ReadyPlayerMe.AvatarCreator
 
         public async Task<byte[]> UpdateAvatar(string avatarId, AvatarProperties avatarProperties, string parameters = null)
         {
-            var url = AvatarEndpoints.GetUpdateAvatarEndpoint(avatarId, parameters);
-
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = url,
+                    Url = AvatarEndpoints.GetUpdateAvatarEndpoint(avatarId, parameters),
                     Method = HttpMethod.PATCH,
                     Payload = avatarProperties.ToJson(true)
                 },
@@ -195,6 +190,21 @@ namespace ReadyPlayerMe.AvatarCreator
 
             response.ThrowIfError();
             return response.Data;
+        }
+
+        public async Task PrecompileAvatar(string avatarId, PrecompileData precompileData, string parameters = null)
+        {
+            var json = JsonConvert.SerializeObject(precompileData);
+            var response = await authorizedRequest.SendRequest<Response>(
+                new RequestData
+                {
+                    Url = AvatarEndpoints.GetPrecompileEndpoint(avatarId, parameters),
+                    Method = HttpMethod.POST,
+                    Payload = json
+                },
+                ctx: ctx);
+
+            response.ThrowIfError();
         }
 
         public async Task<string> SaveAvatar(string avatarId)
