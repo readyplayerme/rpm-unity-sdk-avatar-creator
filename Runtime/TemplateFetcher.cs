@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace ReadyPlayerMe.AvatarCreator
 {
@@ -39,15 +37,8 @@ namespace ReadyPlayerMe.AvatarCreator
 
         private async Task GetAvatarRender(TemplateData templateData)
         {
-            try
-            {
-                templateData.Texture = await avatarAPIRequests.GetTemplateAvatarImage(templateData.ImageUrl);
-                templates.Add(templateData);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            templateData.Texture = await avatarAPIRequests.GetTemplateAvatarImage(templateData.ImageUrl);
+            templates.Add(templateData);
         }
     }
 }
