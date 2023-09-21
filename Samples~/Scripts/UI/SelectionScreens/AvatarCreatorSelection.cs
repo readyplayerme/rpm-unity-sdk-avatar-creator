@@ -109,7 +109,7 @@ namespace ReadyPlayerMe
                 Destroy(currentAvatar);
             }
 
-            avatarManager.DeleteDraft();
+            avatarManager.Delete(true);
             partnerAssetManager.DeleteAssets();
 
             Dispose();
@@ -162,16 +162,16 @@ namespace ReadyPlayerMe
             if (string.IsNullOrEmpty(AvatarCreatorData.AvatarProperties.Id))
             {
                 AvatarCreatorData.AvatarProperties.Assets ??= GetDefaultAssets();
-
-                AvatarCreatorData.AvatarProperties = await avatarManager.CreateNewAvatar(AvatarCreatorData.AvatarProperties);
-                avatar = await avatarManager.GetPreviewAvatar(AvatarCreatorData.AvatarProperties.Id);
+                avatar = await avatarManager.CreateAvatar(AvatarCreatorData.AvatarProperties);
             }
             else
             {
                 if (!AvatarCreatorData.IsExistingAvatar)
                 {
-                    AvatarCreatorData.AvatarProperties = await avatarManager.CreateFromTemplateAvatar(AvatarCreatorData.AvatarProperties);
-                    avatar = await avatarManager.GetPreviewAvatar(AvatarCreatorData.AvatarProperties.Id);
+                    (avatar, AvatarCreatorData.AvatarProperties) = await avatarManager.CreateAvatarFromTemplate(
+                        AvatarCreatorData.AvatarProperties.Id,
+                        AvatarCreatorData.AvatarProperties.Partner
+                    );
                 }
                 else
                 {
