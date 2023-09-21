@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
@@ -21,13 +19,18 @@ namespace ReadyPlayerMe
         public override StateType StateType => StateType.DefaultAvatarSelection;
         public override StateType NextState => StateType.Editor;
 
-        private Dictionary<TemplateData, GameObject> avatarRenderMap;
-        private AvatarAPIRequests avatarAPIRequests;
+        private Dictionary<TemplateData, GameObject> avatarRenderByTemplateData;
         private CancellationTokenSource ctxSource;
+        private TemplateFetcher templateFetcher;
 
         private void Awake()
         {
-            avatarRenderMap = new Dictionary<TemplateData, GameObject>();
+            avatarRenderByTemplateData = new Dictionary<TemplateData, GameObject>();
+        }
+
+        private void OnDestroy()
+        {
+            ctxSource?.Cancel();
         }
 
         public override async void ActivateState()
@@ -39,15 +42,15 @@ namespace ReadyPlayerMe
                 await AuthManager.LoginAsAnonymous();
             }
 
-            if (avatarRenderMap.Count == 0)
+            if (avatarRenderByTemplateData.Count == 0)
             {
                 LoadingManager.EnableLoading(LOADING_MESSAGE);
                 await FetchTemplates();
             }
 
-            foreach (var template in avatarRenderMap)
+            foreach (var template in avatarRenderByTemplateData)
             {
-                avatarRenderMap[template.Key].SetActive(template.Key.Gender == AvatarCreatorData.AvatarProperties.Gender);
+                avatarRenderByTemplateData[template.Key].SetActive(template.Key.Gender == AvatarCreatorData.AvatarProperties.Gender);
             }
 
             LoadingManager.DisableLoading();
@@ -65,45 +68,27 @@ namespace ReadyPlayerMe
         private async Task FetchTemplates()
         {
             var startTime = Time.time;
-            var downloadRenderTasks = new List<Task>();
             ctxSource = new CancellationTokenSource();
+            templateFetcher = new TemplateFetcher(ctxSource.Token);
 
-            avatarAPIRequests = new AvatarAPIRequests();
-            var templateAvatars = await avatarAPIRequests.GetTemplates();
+            var templates = await templateFetcher.GetTemplates();
             SDKLogger.Log(TAG, $"Fetched all avatar templates in {Time.time - startTime:F2}s ");
-            foreach (var template in templateAvatars)
-            {
-                if (!avatarRenderMap.ContainsKey(template))
-                {
-                    downloadRenderTasks.Add(CreateAvatarRender(template));
-                }
-            }
 
-            while (!downloadRenderTasks.All(x => x.IsCompleted) && !ctxSource.IsCancellationRequested)
+            foreach (var template in templates)
             {
-                await Task.Yield();
+                var button = CreateAvatarRender(template.Id, template.Texture);
+                avatarRenderByTemplateData.Add(template, button);
             }
         }
 
-        private async Task CreateAvatarRender(TemplateData templateData)
+        private GameObject CreateAvatarRender(string id, Texture renderImage)
         {
-            Texture renderImage;
-            try
-            {
-                renderImage = await avatarAPIRequests.GetTemplateAvatarImage(templateData.ImageUrl);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-                return;
-            }
-
             var button = Instantiate(buttonPrefab, parent);
             var rawImage = button.GetComponentInChildren<RawImage>();
-            button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(templateData.Id));
+            button.GetComponent<Button>().onClick.AddListener(() => OnAvatarSelected(id));
             rawImage.texture = renderImage;
             rawImage.SizeToParent();
-            avatarRenderMap.Add(templateData, button);
+            return button;
         }
 
         private void OnAvatarSelected(string avatarId)

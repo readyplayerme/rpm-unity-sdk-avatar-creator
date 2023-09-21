@@ -149,26 +149,12 @@ namespace ReadyPlayerMe.AvatarCreator
             return JsonConvert.DeserializeObject<AvatarProperties>(data);
         }
 
-        public async Task<byte[]> GetPreviewAvatar(string avatarId, string parameters = null)
+        public async Task<byte[]> GetAvatar(string avatarId, bool isPreview = false, string parameters = null)
         {
             var response = await authorizedRequest.SendRequest<Response>(
                 new RequestData
                 {
-                    Url = AvatarEndpoints.GetAvatarModelEndpoint(avatarId, true, parameters),
-                    Method = HttpMethod.GET
-                },
-                ctx: ctx);
-
-            response.ThrowIfError();
-            return response.Data;
-        }
-
-        public async Task<byte[]> GetAvatar(string avatarId, string parameters = null)
-        {
-            var response = await authorizedRequest.SendRequest<Response>(
-                new RequestData
-                {
-                    Url = AvatarEndpoints.GetAvatarModelEndpoint(avatarId, false, parameters),
+                    Url =AvatarEndpoints.GetAvatarModelEndpoint(avatarId, isPreview, parameters),
                     Method = HttpMethod.GET
                 },
                 ctx: ctx);

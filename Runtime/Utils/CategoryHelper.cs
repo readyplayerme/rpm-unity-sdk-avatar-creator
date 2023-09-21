@@ -14,24 +14,6 @@ namespace ReadyPlayerMe.AvatarCreator
                 .ToList();
         }
 
-        public static readonly Category[] AssetAPISupportedCategory = {
-            Category.FaceShape,
-            Category.EyeShape,
-            Category.EyeColor,
-            Category.EyebrowStyle,
-            Category.NoseShape,
-            Category.LipShape,
-            Category.BeardStyle,
-            Category.HairStyle,
-            Category.Outfit,
-            Category.Shirt,
-            Category.Glasses,
-            Category.FaceMask,
-            Category.Facewear,
-            Category.Headwear,
-        };
-        
-        
         public static readonly Dictionary<string, Category> PartnerCategoryMap = new Dictionary<string, Category>
         {
             { "faceshape", Category.FaceShape },
@@ -51,8 +33,26 @@ namespace ReadyPlayerMe.AvatarCreator
             { "hairColor", Category.HairColor },
             { "eyebrowColor", Category.EyebrowColor },
             { "beardColor", Category.BeardColor },
+            { "bottom", Category.Bottom },
+            { "top", Category.Top },
+            { "footwear", Category.Footwear }
         };
 
+        public static bool IsOutfitAsset(this Category category)
+        {
+            switch (category)
+            {
+                case Category.Outfit:
+                case Category.Shirt:
+                case Category.Bottom:
+                case Category.Top:
+                case Category.Footwear:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        
         public static bool IsFaceAsset(this Category category)
         {
             switch (category)
@@ -84,6 +84,9 @@ namespace ReadyPlayerMe.AvatarCreator
         {
             switch (category)
             {
+                case Category.Top:
+                case Category.Bottom:
+                case Category.Footwear:
                 case Category.Outfit:
                 case Category.Shirt:
                 case Category.EyebrowStyle:

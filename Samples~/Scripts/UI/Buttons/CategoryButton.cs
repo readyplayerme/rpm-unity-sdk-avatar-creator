@@ -1,4 +1,5 @@
 ﻿using System;
+using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,14 +10,12 @@ namespace ReadyPlayerMe
         [SerializeField] private Image icon;
         [SerializeField] private Button button;
         [SerializeField] private Color selectedColor;
+        [SerializeField] private Color defaultColor;
+        [SerializeField] private Category category;
 
-        private Color defaultColor;
+        public Category Category => category;
+
         private Action onClickAction;
-
-        private void Awake()
-        {
-            defaultColor = icon.color;
-        }
 
         public void AddListener(Action action)
         {

@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using ReadyPlayerMe.AvatarCreator;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ReadyPlayerMe
 {
     public static class PanelSwitcher
     {
         public static Dictionary<Category, GameObject> CategoryPanelMap { get; private set; }
-
-        public static GameObject FaceTypePanel;
-
-        private static Category currentCategory;
+        public static GameObject OutfitCategoryPanel;
+        public static GameObject FaceCategoryPanel;
 
         public static void AddPanel(Category category, GameObject widget)
         {
@@ -24,73 +23,80 @@ namespace ReadyPlayerMe
             {
                 return;
             }
+            
             foreach (var assetTypePanels in CategoryPanelMap)
             {
-                Object.Destroy(assetTypePanels.Value);
+                foreach (Transform child in assetTypePanels.Value.GetComponent<ScrollRect>().content)
+                {
+                    Object.Destroy(child.gameObject);
+                }
             }
-            CategoryPanelMap.Clear();
         }
 
         public static void Switch(Category category)
         {
-            SetActivePanel(currentCategory, false);
-            DisableColorPanels();
+            DisableAllPanels();
 
             switch (category)
             {
                 case Category.FaceShape:
-                    FaceTypePanel.SetActive(true);
+                    FaceCategoryPanel.SetActive(true);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.SkinColor, true);
                     break;
                 case Category.EyebrowStyle:
-                    FaceTypePanel.SetActive(true);
+                    FaceCategoryPanel.SetActive(true);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.EyebrowColor, true);
                     break;
                 case Category.BeardStyle:
-                    FaceTypePanel.SetActive(true);
+                    FaceCategoryPanel.SetActive(true);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.BeardColor, true);
                     break;
                 case Category.HairStyle:
-                    FaceTypePanel.SetActive(false);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.HairColor, true);
                     break;
                 case Category.NoseShape:
                 case Category.LipShape:
-                    FaceTypePanel.SetActive(true);
+                    FaceCategoryPanel.SetActive(true);
                     SetActivePanel(category, true);
                     break;
                 case Category.EyeShape:
-                    FaceTypePanel.SetActive(true);
+                    FaceCategoryPanel.SetActive(true);
                     SetActivePanel(category, true);
                     SetActivePanel(Category.EyeColor, true);
                     break;
+                case Category.Top:
+                case Category.Bottom:
+                case Category.Footwear:
+                case Category.Outfit:
+                    OutfitCategoryPanel.SetActive(true);
+                    SetActivePanel(category, true);
+                    break;
                 default:
-                    FaceTypePanel.SetActive(false);
                     SetActivePanel(category, true);
                     break;
             }
-
-            currentCategory = category;
         }
-        
-        private static void DisableColorPanels()
+
+        private static void DisableAllPanels()
         {
-            SetActivePanel(Category.EyeColor, false);
-            SetActivePanel(Category.SkinColor, false);
-            SetActivePanel(Category.BeardColor, false);
-            SetActivePanel(Category.HairColor, false);
-            SetActivePanel(Category.EyebrowColor, false);
+            foreach (var panels in CategoryPanelMap)
+            {
+                panels.Value.SetActive(false);
+            }
+            
+            FaceCategoryPanel.SetActive(false);
+            OutfitCategoryPanel.SetActive(false);
         }
 
         private static void SetActivePanel(Category category, bool enable)
         {
-            if (CategoryPanelMap.ContainsKey(category))
+            if (CategoryPanelMap.TryGetValue(category, out GameObject panel))
             {
-                CategoryPanelMap[category].SetActive(enable);
+                panel.SetActive(enable);
             }
         }
     }
