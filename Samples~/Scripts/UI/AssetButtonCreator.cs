@@ -150,7 +150,6 @@ namespace ReadyPlayerMe
             }
             else
             {
-                Debug.Log(selectedButtonsByCategory.Count);
                 selectedButtonsByCategory.Add(category, assetButton);
             }
             assetButton.SetSelect(true);

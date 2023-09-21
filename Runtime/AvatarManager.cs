@@ -79,24 +79,6 @@ namespace ReadyPlayerMe.AvatarCreator
         /// <param name="partner">Partner name</param>
         /// <returns>Avatar gameObject</returns>
         public async Task<(GameObject, AvatarProperties)> CreateAvatarFromTemplate(string id, string partner)
-        public async void PrecompileAvatar(string avatarId, PrecompileData precompileData)
-        {
-            try
-            {
-                avatarAPIRequests.PrecompileAvatar(avatarId, precompileData, avatarConfigParameters);
-            }
-            catch (Exception e)
-            {
-                OnError?.Invoke(e.Message);
-                SDKLogger.LogWarning(TAG, "Precompiled avatar request failed.");
-            }
-
-            if (ctxSource.IsCancellationRequested)
-            {
-                SDKLogger.LogWarning(TAG, "Precompiled avatar request cancelled.");
-            }
-        }
-
         {
             GameObject avatar = null;
             var avatarProperties = new AvatarProperties();
@@ -122,6 +104,29 @@ namespace ReadyPlayerMe.AvatarCreator
             }
 
             return (avatar, avatarProperties);
+        }
+       
+        /// <summary>
+        /// Precompile an avatar on server to increase the fetching speed.
+        /// </summary>
+        /// <param name="id">Avatar id</param>
+        /// <param name="precompileData">Precompiled data for assets</param>
+        public async void PrecompileAvatar(string id, PrecompileData precompileData)
+        {
+            try
+            {
+                await avatarAPIRequests.PrecompileAvatar(id, precompileData, avatarConfigParameters);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                SDKLogger.LogWarning(TAG, "Precompiled avatar request failed.");
+            }
+
+            if (ctxSource.IsCancellationRequested)
+            {
+                SDKLogger.LogWarning(TAG, "Precompiled avatar request cancelled.");
+            }
         }
 
         /// <summary>
