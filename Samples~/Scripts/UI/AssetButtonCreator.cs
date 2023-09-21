@@ -30,12 +30,10 @@ namespace ReadyPlayerMe
         public void SetSelectedAssets(Dictionary<Category, object> assets)
         {
             selectedAssets = assets;
-            Debug.Log("Called: SetSelectedAssets" + assets.Count);
         }
 
         public void CreateAssetButtons(IEnumerable<string> assets, Category category, Action<string, Category> onClick)
         {
-            Debug.Log("Called: CreateAssetButtons: " + category);
             buttonsById = new Dictionary<object, AssetButton>();
 
             var parentPanel = PanelSwitcher.CategoryPanelMap[category];
