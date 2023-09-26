@@ -14,33 +14,30 @@ namespace ReadyPlayerMe
 
         private Dictionary<object, AssetButton> buttonsById;
         private Dictionary<Category, AssetButton> selectedButtonsByCategory;
-        private Dictionary<Category, object> selectedAssets;
+        private Dictionary<Category, object> selectedAssetIdByCategory;
+        private Dictionary<Category, AssetButton> clearButtonByCategory;
 
         private void Start()
         {
             buttonsById = new Dictionary<object, AssetButton>();
             selectedButtonsByCategory = new Dictionary<Category, AssetButton>();
-        }
-
-        private void OnDisable()
-        {
-            selectedButtonsByCategory.Clear();
+            clearButtonByCategory = new Dictionary<Category, AssetButton>();
         }
 
         public void SetSelectedAssets(Dictionary<Category, object> assets)
         {
-            selectedAssets = assets;
+            selectedAssetIdByCategory = assets;
         }
 
         public void CreateAssetButtons(IEnumerable<string> assets, Category category, Action<string, Category> onClick)
         {
-            buttonsById = new Dictionary<object, AssetButton>();
+            buttonsById ??= new Dictionary<object, AssetButton>();
 
             var parentPanel = PanelSwitcher.CategoryPanelMap[category];
             foreach (var asset in assets)
             {
                 AddAssetButton(asset, parentPanel.transform, category, onClick);
-                if (selectedAssets.ContainsValue(asset))
+                if (selectedAssetIdByCategory.ContainsValue(asset))
                 {
                     SetSelectedIcon(asset, category);
                 }
@@ -101,6 +98,24 @@ namespace ReadyPlayerMe
             {
                 button.SetIcon(texture);
             }
+        }
+
+        public void ResetUI()
+        {
+            foreach (var assetButton in buttonsById)
+            {
+                DestroyImmediate(assetButton.Value.gameObject);
+            }
+
+            foreach (var button in clearButtonByCategory)
+            {
+                DestroyImmediate(button.Value.gameObject);
+            }
+
+            buttonsById.Clear();
+            selectedButtonsByCategory.Clear();
+            selectedAssetIdByCategory.Clear();
+            clearButtonByCategory.Clear();
         }
 
         private AssetButton AddColorButton(int index, Transform parent, Category category, Action<object, Category> onClick)
@@ -203,14 +218,16 @@ namespace ReadyPlayerMe
             {
                 SelectButton(category, assetButton);
             }
-            
+            clearButtonByCategory.Add(category, assetButton);
         }
 
         private bool IsSelectedAssetNotPresentForCategory(Category category)
         {
-            return !selectedAssets.ContainsKey(category) ||
-                   selectedAssets[category] as int? == 0 ||
-                   string.IsNullOrEmpty(selectedAssets[category] as string);
+            return !selectedAssetIdByCategory.ContainsKey(category) ||
+                   selectedAssetIdByCategory[category] as int? == 0 ||
+                   string.IsNullOrEmpty(selectedAssetIdByCategory[category] as string);
         }
+
+
     }
 }
