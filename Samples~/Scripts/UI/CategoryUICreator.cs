@@ -114,7 +114,6 @@ namespace ReadyPlayerMe
 
         public void ResetUI()
         {
-            PanelSwitcher.Clear();
             DefaultZoom();
 
             foreach (var categoryButton in categoryButtons)

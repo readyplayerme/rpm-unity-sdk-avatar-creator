@@ -14,7 +14,8 @@ namespace ReadyPlayerMe
     {
         private const string TAG = nameof(AvatarCreatorSelection);
         private const string UPDATING_YOUR_AVATAR_LOADING_TEXT = "Updating your avatar";
-
+        private const int NUMBER_OF_ASSETS_TO_PRECOMPILE = 20;
+        
         [SerializeField] private CategoryUICreator categoryUICreator;
         [SerializeField] private AssetButtonCreator assetButtonCreator;
         [SerializeField] private Button saveButton;
@@ -33,9 +34,7 @@ namespace ReadyPlayerMe
 
         public override StateType StateType => StateType.Editor;
         public override StateType NextState => StateType.End;
-
-        private const int NUMBER_OF_ASSETS_TO_PRECOMPILE = 20;
-
+        
         private void Start()
         {
             partnerAssetManager = new PartnerAssetsManager();
@@ -76,6 +75,8 @@ namespace ReadyPlayerMe
             if (string.IsNullOrEmpty(avatarManager.AvatarId))
                 return;
 
+            CreateUI(AvatarCreatorData.AvatarProperties.BodyType);
+
             await LoadAssets();
             await LoadAvatarColors();
             ToggleCategoryButtons();
@@ -114,6 +115,7 @@ namespace ReadyPlayerMe
 
             Dispose();
             categoryUICreator.ResetUI();
+            assetButtonCreator.ResetUI();
         }
 
         private void OnErrorCallback(string error)
@@ -131,17 +133,11 @@ namespace ReadyPlayerMe
         private async Task LoadAssets()
         {
             var startTime = Time.time;
-            partnerAssetManager.SetAvatarProperties(
-                AvatarCreatorData.AvatarProperties.BodyType,
-                AvatarCreatorData.AvatarProperties.Gender,
-                ctxSource.Token);
 
             partnerAssetManager.OnError += OnErrorCallback;
-
-            CreateUI(AvatarCreatorData.AvatarProperties.BodyType);
             categoriesAssetsLoaded = new List<Category>();
 
-            await partnerAssetManager.GetAssets();
+            await partnerAssetManager.GetAssets(AvatarCreatorData.AvatarProperties.BodyType,AvatarCreatorData.AvatarProperties.Gender, ctxSource.Token);
             await CreateAssetsByCategory(Category.FaceShape);
 
             SDKLogger.Log(TAG, $"Loaded all partner assets {Time.time - startTime:F2}s");
@@ -208,22 +204,20 @@ namespace ReadyPlayerMe
 
         private async Task CreateAssetsByCategory(Category category)
         {
-            if (!categoriesAssetsLoaded.Contains(category))
-            {
-                categoriesAssetsLoaded.Add(category);
-            }
-            else
+            if (categoriesAssetsLoaded.Contains(category))
             {
                 return;
             }
 
+            categoriesAssetsLoaded.Add(category);
+            
             var assets = partnerAssetManager.GetAssetsByCategory(category);
             if (assets == null || assets.Count == 0)
             {
                 return;
             }
             assetButtonCreator.CreateAssetButtons(assets, category, OnAssetButtonClicked);
-            await partnerAssetManager.DownloadAssetsIcon(category, assetButtonCreator.SetAssetIcon);
+            await partnerAssetManager.DownloadIconsByCategory(category, assetButtonCreator.SetAssetIcon, ctxSource.Token);
 
             if (category == Category.EyeShape)
             {

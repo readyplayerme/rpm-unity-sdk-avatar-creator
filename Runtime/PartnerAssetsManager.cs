@@ -19,12 +19,9 @@ namespace ReadyPlayerMe.AvatarCreator
         private const string ASSET_ICON_SIZE = "?w=64";
 
         private readonly PartnerAssetsRequests partnerAssetsRequests;
-        private readonly Dictionary<Category, List<PartnerAsset>> assetsByCategory;
-        public Action<string> OnError { get; set; }
 
-        private BodyType bodyType;
-        private OutfitGender gender;
-        private CancellationTokenSource ctxSource;
+        private Dictionary<Category, List<PartnerAsset>> assetsByCategory;
+        public Action<string> OnError { get; set; }
 
         public PartnerAssetsManager()
         {
@@ -32,34 +29,23 @@ namespace ReadyPlayerMe.AvatarCreator
             assetsByCategory = new Dictionary<Category, List<PartnerAsset>>();
         }
 
-        public void SetAvatarProperties(BodyType assetBodyType, OutfitGender assetGender, CancellationToken token = default)
-        {
-            bodyType = assetBodyType;
-            gender = assetGender;
-            ctxSource = CancellationTokenSource.CreateLinkedTokenSource(token);
-        }
-
-        public async Task GetAssets()
+        public async Task<Dictionary<Category,List<PartnerAsset>>> GetAssets(BodyType bodyType, OutfitGender gender, CancellationToken token = default)
         {
             var startTime = Time.time;
 
-            var assets = await partnerAssetsRequests.Get(bodyType, gender, ctxSource.Token);
-            foreach (PartnerAsset asset in assets)
-            {
-                if (assetsByCategory.TryGetValue(asset.Category, out List<PartnerAsset> value))
-                {
-                    value.Add(asset);
-                }
-                else
-                {
-                    assetsByCategory.Add(asset.Category, new List<PartnerAsset> { asset });
-                }
-            }
+            var assets = await partnerAssetsRequests.Get(bodyType, gender, token);
+
+            assetsByCategory = assets.GroupBy(asset => asset.Category).ToDictionary(
+                group => group.Key,
+                group => group.ToList()
+            );
 
             if (assets.Length != 0)
             {
-                SDKLogger.Log(TAG, $"All asset received: {Time.time - startTime:F2}s");
+                SDKLogger.Log(TAG, $"All assets received: {Time.time - startTime:F2}s");
             }
+
+            return assetsByCategory;
         }
 
         public List<string> GetAssetsByCategory(Category category)
@@ -67,7 +53,7 @@ namespace ReadyPlayerMe.AvatarCreator
             return assetsByCategory.TryGetValue(category, out List<PartnerAsset> _) ? assetsByCategory[category].Select(x => x.Id).ToList() : new List<string>();
         }
 
-        public async Task DownloadAssetsIcon(Category category, Action<string, Texture> onDownload)
+        public async Task DownloadIconsByCategory(Category category, Action<string, Texture> onDownload, CancellationToken token = default)
         {
             var startTime = Time.time;
             var chunkList = assetsByCategory[category].ChunkBy(20);
@@ -76,7 +62,7 @@ namespace ReadyPlayerMe.AvatarCreator
             {
                 try
                 {
-                    await DownloadIcons(list, onDownload);
+                    await DownloadIcons(list, onDownload, token);
                     SDKLogger.Log(TAG, $"Download chunk of {category} icons: " + (Time.time - startTime) + "s");
                 }
                 catch (Exception e)
@@ -85,7 +71,7 @@ namespace ReadyPlayerMe.AvatarCreator
                     return;
                 }
 
-                if (ctxSource.IsCancellationRequested)
+                if (token.IsCancellationRequested)
                 {
                     return;
                 }
@@ -104,14 +90,14 @@ namespace ReadyPlayerMe.AvatarCreator
             return asset.LockedCategories != null && asset.LockedCategories.Length > 0;
         }
 
-        private async Task DownloadIcons(List<PartnerAsset> chunk, Action<string, Texture> onDownload)
+        private async Task DownloadIcons(List<PartnerAsset> chunk, Action<string, Texture> onDownload, CancellationToken token = default)
         {
             var assetIconMap = new Dictionary<string, Task<Texture>>();
 
             foreach (var asset in chunk)
             {
                 var url = asset.Category == Category.EyeColor ? asset.Mask + EYE_MASK_SIZE_SIZE : asset.Icon + ASSET_ICON_SIZE;
-                var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(ctxSource.Token);
+                var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(token);
                 var iconTask = partnerAssetsRequests.GetAssetIcon(url, icon =>
                     {
                         onDownload?.Invoke(asset.Id, icon);
@@ -120,7 +106,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 assetIconMap.Add(asset.Id, iconTask);
             }
 
-            while (!assetIconMap.Values.All(x => x.IsCompleted) && !ctxSource.IsCancellationRequested)
+            while (!assetIconMap.Values.All(x => x.IsCompleted) && !token.IsCancellationRequested)
             {
                 await Task.Yield();
             }
@@ -129,11 +115,10 @@ namespace ReadyPlayerMe.AvatarCreator
         public void DeleteAssets()
         {
             assetsByCategory.Clear();
-            ctxSource?.Cancel();
         }
 
         public void Dispose() => DeleteAssets();
-        
+
         public PrecompileData GetPrecompileData(Category[] categories, int numberOfAssetsPerCategory)
         {
             var categoriesFromMap = CategoryHelper.PartnerCategoryMap
@@ -141,8 +126,11 @@ namespace ReadyPlayerMe.AvatarCreator
                 .Select(kvp => kvp.Key)
                 .ToArray();
 
-            var dictionary = categoriesFromMap.ToDictionary(category => category, category => GetAssetsByCategory(CategoryHelper.PartnerCategoryMap[category]).ToArray().Take(numberOfAssetsPerCategory).ToArray());
-            
+            var dictionary = categoriesFromMap.ToDictionary(category => category, category => 
+                GetAssetsByCategory(CategoryHelper.PartnerCategoryMap[category])
+                    .Take(numberOfAssetsPerCategory)
+                    .ToArray());
+
             return new PrecompileData { data = dictionary };
         }
     }
