@@ -28,7 +28,7 @@ namespace ReadyPlayerMe.AvatarCreator
                 settings.NullValueHandling = NullValueHandling.Ignore;
                 settings.DefaultValueHandling = DefaultValueHandling.Ignore;
             }
-            
+
             return JsonConvert.SerializeObject(data, settings);
         }
     }

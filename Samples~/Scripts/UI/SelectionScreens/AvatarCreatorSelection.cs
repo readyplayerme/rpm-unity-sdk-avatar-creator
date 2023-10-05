@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ReadyPlayerMe.AvatarCreator;
@@ -13,7 +14,8 @@ namespace ReadyPlayerMe
     {
         private const string TAG = nameof(AvatarCreatorSelection);
         private const string UPDATING_YOUR_AVATAR_LOADING_TEXT = "Updating your avatar";
-
+        private const int NUMBER_OF_ASSETS_TO_PRECOMPILE = 20;
+        
         [SerializeField] private CategoryUICreator categoryUICreator;
         [SerializeField] private AssetButtonCreator assetButtonCreator;
         [SerializeField] private Button saveButton;
@@ -32,7 +34,7 @@ namespace ReadyPlayerMe
 
         public override StateType StateType => StateType.Editor;
         public override StateType NextState => StateType.End;
-
+        
         private void Start()
         {
             partnerAssetManager = new PartnerAssetsManager();
@@ -73,6 +75,8 @@ namespace ReadyPlayerMe
             if (string.IsNullOrEmpty(avatarManager.AvatarId))
                 return;
 
+            CreateUI(AvatarCreatorData.AvatarProperties.BodyType);
+
             await LoadAssets();
             await LoadAvatarColors();
             ToggleCategoryButtons();
@@ -98,7 +102,7 @@ namespace ReadyPlayerMe
                 categoryUICreator.SetActiveCategoryButtons(true);
             }
         }
-        
+
         private void Cleanup()
         {
             if (currentAvatar != null)
@@ -106,39 +110,34 @@ namespace ReadyPlayerMe
                 Destroy(currentAvatar);
             }
 
-            avatarManager.DeleteDraft();
+            avatarManager.Delete(true);
             partnerAssetManager.DeleteAssets();
 
             Dispose();
             categoryUICreator.ResetUI();
+            assetButtonCreator.ResetUI();
         }
 
         private void OnErrorCallback(string error)
         {
-            SDKLogger.Log(TAG,$"An error occured: {error}");
+            SDKLogger.Log(TAG, $"An error occured: {error}");
             avatarManager.OnError -= OnErrorCallback;
             partnerAssetManager.OnError -= OnErrorCallback;
 
             ctxSource?.Cancel();
             StateMachine.GoToPreviousState();
             LoadingManager.EnableLoading(error, LoadingManager.LoadingType.Popup, false);
-            SDKLogger.Log(TAG,"Going to previous state");
+            SDKLogger.Log(TAG, "Going to previous state");
         }
 
         private async Task LoadAssets()
         {
             var startTime = Time.time;
-            partnerAssetManager.SetAvatarProperties(
-                AvatarCreatorData.AvatarProperties.BodyType,
-                AvatarCreatorData.AvatarProperties.Gender,
-                ctxSource.Token);
 
             partnerAssetManager.OnError += OnErrorCallback;
-
-            CreateUI(AvatarCreatorData.AvatarProperties.BodyType);
             categoriesAssetsLoaded = new List<Category>();
-            
-            await partnerAssetManager.GetAssets();
+
+            await partnerAssetManager.GetAssets(AvatarCreatorData.AvatarProperties.BodyType,AvatarCreatorData.AvatarProperties.Gender, ctxSource.Token);
             await CreateAssetsByCategory(Category.FaceShape);
 
             SDKLogger.Log(TAG, $"Loaded all partner assets {Time.time - startTime:F2}s");
@@ -147,6 +146,7 @@ namespace ReadyPlayerMe
         private async void OnCategorySelected(Category category)
         {
             await CreateAssetsByCategory(category);
+            avatarManager.PrecompileAvatar(AvatarCreatorData.AvatarProperties.Id, partnerAssetManager.GetPrecompileData(new[] { category }, NUMBER_OF_ASSETS_TO_PRECOMPILE));
         }
 
         private async Task<GameObject> LoadAvatar()
@@ -158,16 +158,16 @@ namespace ReadyPlayerMe
             if (string.IsNullOrEmpty(AvatarCreatorData.AvatarProperties.Id))
             {
                 AvatarCreatorData.AvatarProperties.Assets ??= GetDefaultAssets();
-
-                AvatarCreatorData.AvatarProperties = await avatarManager.CreateNewAvatar(AvatarCreatorData.AvatarProperties);
-                avatar = await avatarManager.GetPreviewAvatar(AvatarCreatorData.AvatarProperties.Id);
+                avatar = await avatarManager.CreateAvatar(AvatarCreatorData.AvatarProperties);
             }
             else
             {
                 if (!AvatarCreatorData.IsExistingAvatar)
                 {
-                    AvatarCreatorData.AvatarProperties = await avatarManager.CreateFromTemplateAvatar(AvatarCreatorData.AvatarProperties);
-                    avatar = await avatarManager.GetPreviewAvatar(AvatarCreatorData.AvatarProperties.Id);
+                    (avatar, AvatarCreatorData.AvatarProperties) = await avatarManager.CreateAvatarFromTemplate(
+                        AvatarCreatorData.AvatarProperties.Id,
+                        AvatarCreatorData.AvatarProperties.Partner
+                    );
                 }
                 else
                 {
@@ -196,31 +196,28 @@ namespace ReadyPlayerMe
 
         private void CreateUI(BodyType bodyType)
         {
-            categoryUICreator.CreateUI(bodyType, CategoryHelper.GetCategories(bodyType));
+            categoryUICreator.Setup(bodyType);
             assetButtonCreator.SetSelectedAssets(AvatarCreatorData.AvatarProperties.Assets);
             assetButtonCreator.CreateClearButton(UpdateAvatar);
             saveButton.gameObject.SetActive(true);
         }
 
-
         private async Task CreateAssetsByCategory(Category category)
         {
-            if (!categoriesAssetsLoaded.Contains(category))
-            {
-                categoriesAssetsLoaded.Add(category);
-            }
-            else
+            if (categoriesAssetsLoaded.Contains(category))
             {
                 return;
             }
 
+            categoriesAssetsLoaded.Add(category);
+            
             var assets = partnerAssetManager.GetAssetsByCategory(category);
             if (assets == null || assets.Count == 0)
             {
                 return;
             }
             assetButtonCreator.CreateAssetButtons(assets, category, OnAssetButtonClicked);
-            await partnerAssetManager.DownloadAssetsIcon(category, assetButtonCreator.SetAssetIcon);
+            await partnerAssetManager.DownloadIconsByCategory(category, assetButtonCreator.SetAssetIcon, ctxSource.Token);
 
             if (category == Category.EyeShape)
             {

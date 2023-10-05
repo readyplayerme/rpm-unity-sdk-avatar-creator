@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.0] - 2023 October 4
+
+### Added
+
+- support for modular clothing assets
+- basic avatar precompile support
+
+### Updated
+
+- refactor of endpoints and partner asset manager
+
 ## [1.0.1] - 2023 September 5
 
 ### Fixed

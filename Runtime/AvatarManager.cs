@@ -12,6 +12,7 @@ namespace ReadyPlayerMe.AvatarCreator
     /// </summary>
     public class AvatarManager : IDisposable
     {
+        private const string TAG = nameof(AvatarManager);
         private readonly BodyType bodyType;
         private readonly OutfitGender gender;
         private readonly AvatarAPIRequests avatarAPIRequests;
@@ -22,7 +23,6 @@ namespace ReadyPlayerMe.AvatarCreator
         public Action<string> OnError { get; set; }
 
         public string AvatarId => avatarId;
-
         private string avatarId;
 
         /// <param name="bodyType">Body type of avatar</param>
@@ -43,96 +43,105 @@ namespace ReadyPlayerMe.AvatarCreator
             inCreatorAvatarLoader = new InCreatorAvatarLoader();
             avatarAPIRequests = new AvatarAPIRequests(ctxSource.Token);
         }
-        
-        /// <summary>
-        /// Create a new avatar from a provided template.
-        /// </summary>
-        /// <param name="avatarProperties">Properties which describes avatar</param>
-        /// <returns>Avatar gameObject</returns>
-        public async Task<AvatarProperties> CreateFromTemplateAvatar(AvatarProperties avatarProperties)
-        {
-            try
-            {
-                avatarProperties = await avatarAPIRequests.CreateFromTemplateAvatar(
-                    avatarProperties.Id,
-                    avatarProperties.Partner,
-                    bodyType
-                );
-                avatarId = avatarProperties.Id;
-            }
-            catch (Exception e)
-            {
-                OnError?.Invoke(e.Message);
-                return avatarProperties;
-            }
-            
-            if (ctxSource.IsCancellationRequested)
-            {
-                return avatarProperties;
-            }
-
-            return avatarProperties;
-        }
 
         /// <summary>
         /// Create a new avatar.
         /// </summary>
         /// <param name="avatarProperties">Properties which describes avatar</param>
         /// <returns>Avatar gameObject</returns>
-        public async Task<AvatarProperties> CreateNewAvatar(AvatarProperties avatarProperties)
+        public async Task<GameObject> CreateAvatar(AvatarProperties avatarProperties)
         {
+            GameObject avatar = null;
             try
             {
                 avatarProperties = await avatarAPIRequests.CreateNewAvatar(avatarProperties);
+                if (ctxSource.IsCancellationRequested)
+                {
+                    return null;
+                }
+
                 avatarId = avatarProperties.Id;
+                avatar = await GetAvatar(avatarId, true);
             }
             catch (Exception e)
             {
                 OnError?.Invoke(e.Message);
-                return avatarProperties;
+                return avatar;
             }
 
-            if (ctxSource.IsCancellationRequested)
-            {
-                return avatarProperties;
-            }
-
-            return avatarProperties;
-        }
-
-        public async Task<GameObject> GetPreviewAvatar(string id)
-        {
-            byte[] data;
-            try
-            {
-                data = await avatarAPIRequests.GetPreviewAvatar(id, avatarConfigParameters);
-            }
-            catch (Exception e)
-            {
-                OnError?.Invoke(e.Message);
-                return null;
-            }
-
-            if (ctxSource.IsCancellationRequested)
-            {
-                return null;
-            }
-
-            return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
+            return avatar;
         }
 
         /// <summary>
-        /// Download and import pre-created avatar.
+        /// Create a new avatar from a provided template.
+        /// </summary>
+        /// <param name="id">Template id</param>
+        /// <param name="partner">Partner name</param>
+        /// <returns>Avatar gameObject</returns>
+        public async Task<(GameObject, AvatarProperties)> CreateAvatarFromTemplate(string id, string partner)
+        {
+            GameObject avatar = null;
+            var avatarProperties = new AvatarProperties();
+            try
+            {
+                avatarProperties = await avatarAPIRequests.CreateFromTemplateAvatar(
+                    id,
+                    partner,
+                    bodyType
+                );
+                if (ctxSource.IsCancellationRequested)
+                {
+                    return (null, avatarProperties);
+                }
+
+                avatarId = avatarProperties.Id;
+                avatar = await GetAvatar(avatarId, true);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                return (avatar, avatarProperties);
+            }
+
+            return (avatar, avatarProperties);
+        }
+       
+        /// <summary>
+        /// Precompile an avatar on server to increase the fetching speed.
         /// </summary>
         /// <param name="id">Avatar id</param>
+        /// <param name="precompileData">Precompiled data for assets</param>
+        public async void PrecompileAvatar(string id, PrecompileData precompileData)
+        {
+            try
+            {
+                await avatarAPIRequests.PrecompileAvatar(id, precompileData, avatarConfigParameters);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+                SDKLogger.LogWarning(TAG, "Precompiled avatar request failed.");
+            }
+
+            if (ctxSource.IsCancellationRequested)
+            {
+                SDKLogger.LogWarning(TAG, "Precompiled avatar request cancelled.");
+            }
+        }
+
+        /// <summary>
+        /// Download and import avatar.
+        /// </summary>
+        /// <param name="id">Avatar id</param>
+        /// <param name="isPreview">Whether its a preview avatar</param>
         /// <returns>Avatar gameObject</returns>
-        public async Task<GameObject> GetAvatar(string id)
+        public async Task<GameObject> GetAvatar(string id, bool isPreview = false)
         {
             avatarId = id;
             byte[] data;
             try
             {
-                data = await avatarAPIRequests.GetAvatar(avatarId, avatarConfigParameters);
+                data = await avatarAPIRequests.GetAvatar(avatarId, isPreview, avatarConfigParameters);
             }
             catch (Exception e)
             {
@@ -161,6 +170,11 @@ namespace ReadyPlayerMe.AvatarCreator
                 Assets = new Dictionary<Category, object>()
             };
 
+            if (category == Category.Top || category == Category.Bottom || category == Category.Footwear)
+            {
+                payload.Assets.Add(Category.Outfit, string.Empty);
+            }
+
             payload.Assets.Add(category, assetId);
 
             byte[] data;
@@ -182,6 +196,21 @@ namespace ReadyPlayerMe.AvatarCreator
             return await inCreatorAvatarLoader.Load(avatarId, bodyType, gender, data);
         }
 
+        public async Task<ColorPalette[]> LoadAvatarColors()
+        {
+            ColorPalette[] colors = null;
+            try
+            {
+                colors = await avatarAPIRequests.GetAllAvatarColors(avatarId);
+            }
+            catch (Exception e)
+            {
+                OnError?.Invoke(e.Message);
+            }
+
+            return colors;
+        }
+
         /// <summary>
         /// Saves the avatar from temp to permanent storage. 
         /// </summary>
@@ -199,50 +228,20 @@ namespace ReadyPlayerMe.AvatarCreator
 
             return avatarId;
         }
-        
+
         /// <summary>
         /// This will delete the avatar draft which have not been saved. 
         /// </summary>
-        public async void DeleteDraft()
+        public async void Delete(bool isDraft)
         {
             try
             {
-                await avatarAPIRequests.DeleteAvatarDraft(avatarId);
+                await avatarAPIRequests.DeleteAvatar(avatarId, isDraft);
             }
             catch (Exception e)
             {
                 OnError?.Invoke(e.Message);
             }
-        }
-
-        /// <summary>
-        /// This will delete the avatar completely even from database. 
-        /// </summary>
-        public async Task Delete()
-        {
-            try
-            {
-                await avatarAPIRequests.DeleteAvatar(avatarId);
-            }
-            catch (Exception e)
-            {
-                OnError?.Invoke(e.Message);
-            }
-        }
-        
-        public async Task<ColorPalette[]> LoadAvatarColors()
-        {
-            ColorPalette[] colors = null;
-            try
-            {
-                colors = await avatarAPIRequests.GetAllAvatarColors(avatarId);
-            }
-            catch (Exception e)
-            {
-                OnError?.Invoke(e.Message);
-            }
-
-            return colors;
         }
 
         public void Dispose()
