@@ -1,6 +1,6 @@
 {
   "name": "com.readyplayerme.avatarcreator",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "displayName": "Ready Player Me Avatar Creator",
   "description": "For creating RPM avatars in Unity",
   "unity": "2020.3",
