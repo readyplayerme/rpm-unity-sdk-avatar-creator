@@ -105,7 +105,7 @@ namespace ReadyPlayerMe.AvatarCreator
 
             return (avatar, avatarProperties);
         }
-       
+
         /// <summary>
         /// Precompile an avatar on server to increase the fetching speed.
         /// </summary>
@@ -113,6 +113,11 @@ namespace ReadyPlayerMe.AvatarCreator
         /// <param name="precompileData">Precompiled data for assets</param>
         public async void PrecompileAvatar(string id, PrecompileData precompileData)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                SDKLogger.LogWarning(TAG, "ID not set. Precompiled avatar request cancelled.");
+                return;
+            }
             try
             {
                 await avatarAPIRequests.PrecompileAvatar(id, precompileData, avatarConfigParameters);

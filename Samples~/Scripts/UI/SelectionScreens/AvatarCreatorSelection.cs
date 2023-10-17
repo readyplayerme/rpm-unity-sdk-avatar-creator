@@ -15,7 +15,7 @@ namespace ReadyPlayerMe
         private const string TAG = nameof(AvatarCreatorSelection);
         private const string UPDATING_YOUR_AVATAR_LOADING_TEXT = "Updating your avatar";
         private const int NUMBER_OF_ASSETS_TO_PRECOMPILE = 20;
-        
+
         [SerializeField] private CategoryUICreator categoryUICreator;
         [SerializeField] private AssetButtonCreator assetButtonCreator;
         [SerializeField] private Button saveButton;
@@ -34,7 +34,7 @@ namespace ReadyPlayerMe
 
         public override StateType StateType => StateType.Editor;
         public override StateType NextState => StateType.End;
-        
+
         private void Start()
         {
             partnerAssetManager = new PartnerAssetsManager();
@@ -137,7 +137,7 @@ namespace ReadyPlayerMe
             partnerAssetManager.OnError += OnErrorCallback;
             categoriesAssetsLoaded = new List<Category>();
 
-            await partnerAssetManager.GetAssets(AvatarCreatorData.AvatarProperties.BodyType,AvatarCreatorData.AvatarProperties.Gender, ctxSource.Token);
+            await partnerAssetManager.GetAssets(AvatarCreatorData.AvatarProperties.BodyType, AvatarCreatorData.AvatarProperties.Gender, ctxSource.Token);
             await CreateAssetsByCategory(Category.FaceShape);
 
             SDKLogger.Log(TAG, $"Loaded all partner assets {Time.time - startTime:F2}s");
@@ -210,7 +210,7 @@ namespace ReadyPlayerMe
             }
 
             categoriesAssetsLoaded.Add(category);
-            
+
             var assets = partnerAssetManager.GetAssetsByCategory(category);
             if (assets == null || assets.Count == 0)
             {
