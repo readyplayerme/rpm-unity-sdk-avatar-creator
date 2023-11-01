@@ -1,4 +1,10 @@
-# Ready Player Me Unity SDK Avatar Creator
+# Ready Player Me Unity SDK Avatar Creator DEPRECATED
+
+**This repository has been deprecated as it has been merged into: [Ready Player Me Core](https://github.com/readyplayerme/rpm-unity-sdk-core.git).**
+
+Please note that this repository is no longer actively maintained or supported. We recommend that you update to Ready Player Me Core 4.0 or later.
+
+For historical purposes, the code and documentation will remain available in this repository.
 
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/readyplayerme/rpm-unity-sdk-avatar-creator?include_prereleases)](https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator/releases/latest) [![GitHub Discussions](https://img.shields.io/github/discussions/readyplayerme/rpm-unity-sdk-avatar-creator)](https://github.com/readyplayerme/rpm-unity-sdk-avatar-creator/discussions)
 
